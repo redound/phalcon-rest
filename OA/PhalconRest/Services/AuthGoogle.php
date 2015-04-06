@@ -5,7 +5,9 @@ namespace OA\PhalconRest\Services;
 use OA\PhalconRest\UserException,
 	OA\PhalconRest\CoreException,
 	OA\PhalconRest\Constants\AccountTypes,
-	OA\PhalconRest\Services\ErrorService as ERR;
+	OA\PhalconRest\Services\ErrorService as ERR,
+	OA\PhalconRest\Models\Users,
+	OA\PhalconRest\Models\GoogleAccounts;
 
 class AuthGoogle extends \Phalcon\Mvc\User\Plugin
 {
@@ -14,12 +16,13 @@ class AuthGoogle extends \Phalcon\Mvc\User\Plugin
 
 	public function __construct(\Google_Client $googleClient = null)
 	{
+		$google = $this->config->phalconRest->google;
 
 		$this->client = $googleClient;
-		$this->client->setClientId(GOOGLE_CLIENTID);
-		$this->client->setClientSecret(GOOGLE_CLIENTSECRET);
-		$this->client->setRedirectUri(GOOGLE_REDIRECTURI);
-		$this->client->setScopes(GOOGLE_SCOPES);
+		$this->client->setClientId($google->clientId);
+		$this->client->setClientSecret($google->clientSecret);
+		$this->client->setRedirectUri($google->redirectUri);
+		$this->client->setScopes($google->scopes);
 	}
 
 	public function codeValid($code)
@@ -80,7 +83,7 @@ class AuthGoogle extends \Phalcon\Mvc\User\Plugin
 	protected function register($payload, $userinfo)
 	{
 
-		$user = new \Users();
+		$user = new Users();
 		$user->name             = $userinfo['displayName'];
 		$user->email            = $payload['email'];
 		$user->addAccountType(AccountTypes::GOOGLE);
@@ -92,7 +95,7 @@ class AuthGoogle extends \Phalcon\Mvc\User\Plugin
 		    throw new CoreException(ERR::USER_REGISTERFAIL, 'User could not be created');
 		}
 
-		$googleAccount             	= new \GoogleAccounts();
+		$googleAccount             	= new GoogleAccounts();
 		$googleAccount->userId   	= $user->id;
 		$googleAccount->googleId   	= $userinfo['id'];
 		$googleAccount->email      	= $payload['email'];
@@ -124,7 +127,7 @@ class AuthGoogle extends \Phalcon\Mvc\User\Plugin
 			throw new UserException(ERR::GOOGLE_NODATA, 'Error getting payload');
 		}
 
-		$user = \Users::findFirstByEmail($payload['email']);
+		$user = Users::findFirstByEmail($payload['email']);
 
 		// No user found? Register Google Account
 		if (!$user){
@@ -138,10 +141,10 @@ class AuthGoogle extends \Phalcon\Mvc\User\Plugin
 		// If not, we create one based on the payload.
 		if (!$user->hasAccountType(AccountTypes::GOOGLE)){
 
-			$googleAccount = \GoogleAccounts::findFirstByEmail($payload['email']);
+			$googleAccount = GoogleAccounts::findFirstByEmail($payload['email']);
 
 			if (!$googleAccount){
-				$googleAccount             	= new \GoogleAccounts();
+				$googleAccount             	= new GoogleAccounts();
 				$googleAccount->userId   	= $user->id;
 				$googleAccount->googleId   	= $userinfo['id'];
 				$googleAccount->email      	= $payload['email'];

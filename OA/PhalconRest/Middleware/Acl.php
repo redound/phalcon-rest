@@ -13,6 +13,13 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 
 	protected $_publicEndpoints = [];
 
+	public function __construct()
+	{
+
+		$this->_privateEndpoints = $this->config->phalconRest->privateEndpoints;
+		$this->_publicEndpoints = $this->config->phalconRest->publicEndpoints;
+	}
+
 	protected function _getAcl()
 	{
 		/**

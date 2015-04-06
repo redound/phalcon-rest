@@ -16,12 +16,39 @@ class Micro extends MicroMvc
 
 	public function __construct(PhalconRestDI $di)
 	{
+		$vendorPath = __DIR__ . '/../../../../../../vendor/';
+
+		// Manual autoloader
+		require_once $vendorPath . 'google/apiclient/autoload.php';
+		require_once $vendorPath . 'phpmailer/phpmailer/class.smtp.php';
+		require_once $vendorPath . 'phpmailer/phpmailer/class.phpmailer.php';
+
+		// Load dependencies
+		$loader = new \Phalcon\Loader();
+
+		$loader->registerDirs([
+			$vendorPath . 'phpmailer/phpmailer',
+			$vendorPath . 'firebase/php-jwt/Firebase/PHP-JWT/Authentication',
+			$vendorPath . 'firebase/php-jwt/Firebase/PHP-JWT/Exceptions'
+		]);
+
+		$loader->registerNamespaces([
+			'League\Fractal' => $vendorPath . 'league/fractal/src'
+		]);
+
+		$loader->register();
 
 	    // Inject di
 	    $this->setDI($di);
 
 	    // Set eventsManager
 	    $this->setEventsManager($this->eventsManager);
+
+		// Mount Collections
+		foreach ($this->config->phalconRest->collections as $collection){
+
+			$this->mount(new $collection);
+		}
 
 	    // OPTIONS have no body, send the headers, exit
 	    if($this->request->getMethod() == 'OPTIONS'){

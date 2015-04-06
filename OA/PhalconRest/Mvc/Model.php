@@ -1,5 +1,7 @@
 <?php
 
+namespace OA\PhalconRest\Mvc;
+
 use OA\Phalcon\Validation\Validator,
 	OA\PhalconRest\Structure\Builder as StructureBuilder,
 	OA\PhalconRest\CoreException,

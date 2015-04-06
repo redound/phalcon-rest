@@ -1,5 +1,7 @@
 <?php
 
+namespace OA\PhalconRest\Mvc;
+
 use League\Fractal\Resource\Collection,
 	League\Fractal\Resource\Item;
 

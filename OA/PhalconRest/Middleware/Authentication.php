@@ -12,14 +12,14 @@ class Authentication extends \Phalcon\Mvc\User\Plugin {
 
 		try {
 
-			$decoded_jwt_token = \JWT::decode($jwt_token, JWT_SECRET, false);
+			$decoded_jwt_token = \JWT::decode($jwt_token, $this->config->phalconRest->jwtSecret, ['HS256']);
 		} catch (\UnexpectedValueException $e) {
 
 			// Token not valid
 		}
 
 		// Register user
-		if ($decoded_jwt_token && $decoded_jwt_token->exp > (time() * 1000)) {
+		if ($decoded_jwt_token && $decoded_jwt_token->exp > time()) {
 			$this->authservice->setUser($decoded_jwt_token->sub);
 		}
 	}

@@ -13,7 +13,7 @@ class PhalconRestDI extends \Phalcon\DI\FactoryDefault
 		$di = $this;
 
 		$di->setShared('config', function() use ($config){
-			
+
 			return $config;
 		});
 
@@ -24,15 +24,12 @@ class PhalconRestDI extends \Phalcon\DI\FactoryDefault
 			return $fractal;
 		});
 
-		$di->setShared('phpmailer', function() use ($config){
+		$di->setShared('phpmailer', function() use ($di){
 
-			$phpmailer = $this->config->phalconRest->phpmailer;
-
-			require_once $config->application->phpmailer . 'class.smtp.php';
-			require_once $config->application->phpmailer . 'class.phpmailer.php';
+			$phpmailer = $di->get('config')->phalconRest->phpmailer;
 
 			//Create a new PHPMailer instance
-			$mail = new PHPMailer;
+			$mail = new \PHPMailer;
 
 			//Tell PHPMailer to use SMTP
 			$mail->isSMTP();
@@ -78,12 +75,17 @@ class PhalconRestDI extends \Phalcon\DI\FactoryDefault
 
 		$di->setShared('authservice', function(){
 
-			return new OA\PhalconRest\Services\AuthService;
+			return new \OA\PhalconRest\Services\AuthService;
 		});
 
 		$di->setShared('mailservice', function(){
 
-			return new OA\PhalconRest\Services\MailService;
+			return new \OA\PhalconRest\Services\MailService;
+		});
+
+		$di->setShared('userService', function(){
+
+			return new \OA\PhalconRest\Services\UserService;
 		});
 
 		// Prepare the request object

@@ -4,6 +4,7 @@ namespace OA\PhalconRest\Services;
 
 use OA\PhalconRest\UserException,
 	OA\PhalconRest\Services\ErrorService as ERR,
+	OA\PhalconRest\Constants\AuthTypes,
 	Google_Client;
 
 class AuthService extends \Phalcon\Mvc\User\Plugin {
@@ -13,8 +14,6 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 
 	public function __construct()
 	{
-
-		require_once $this->config->application->googleAutoloaderPath;
 		$googleClient = new Google_Client;
 
 		$this->authGoogle = new AuthGoogle($googleClient);
@@ -46,10 +45,10 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 
 		switch($bearer){
 
-			case AUTHTYPE_GOOGLE:
+			case AuthTypes::GOOGLE:
 				$user = $this->authGoogle->login($username);
 				break;
-			case AUTHTYPE_USERNAME:
+			case AuthTypes::USERNAME:
 				$user = $this->authUsername->login($username, $password);
 				break;
 			default:
@@ -71,7 +70,7 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 	public function createToken()
 	{
 
-		return array(
+		return [
 
 		    /*
 			The iss (issuer) claim identifies the principal
@@ -102,7 +101,7 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 		    be a number containing a NumericDate value.
 		    Use of this claim is OPTIONAL.
 		    ------------------------------------------------*/
-		    "iat" => time() * 1000,
+		    "iat" => time(),
 
 		    /*
 		    The exp (expiration time) claim identifies the
@@ -117,7 +116,7 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 		    Use of this claim is OPTIONAL.
 		    ------------------------------------------------*/
 		    // Now + one week
-		    "exp" => (time() * 1000) + 604800000
-		);
+		    "exp" => time() + 604800
+		];
 	}
 }
