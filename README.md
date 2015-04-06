@@ -1,6 +1,6 @@
 #Phalcon REST#
 Phalcon REST provides a framework to build your own API upon, core functionalities include:
- * Response formatting using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)
+ * Response formatting using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)  
  (*I got this concept from [a book](https://leanpub.com/build-apis-you-wont-hate) written by Phil Sturgeon*)
  * Authentication sessions using [Json Web Token](http://jwt.io/)
  * Access Control List using [ACL class](http://docs.phalconphp.com/en/latest/reference/acl.html) Phalcon provides
@@ -28,7 +28,7 @@ https://github.com/firebase/php-jwt
 
 ### Google API Client ###
 
-For obtaining user data to authenticate Google users
+For obtaining user data to authenticate Google users  
 https://github.com/google/google-api-php-client
 
 ## Install ##
