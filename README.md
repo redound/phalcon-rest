@@ -1,1 +1,1 @@
-#Phalcon REST application
+#Phalcon REST framework#
