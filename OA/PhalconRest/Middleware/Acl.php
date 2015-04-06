@@ -9,27 +9,9 @@ use OA\PhalconRest\Mvc\Micro,
 
 class Acl extends \Phalcon\Mvc\User\Plugin
 {
-	protected $_privateEndpoints = [
-		"/users/search",
-		"/users/me",
-		"/users/logout",
-		"/users/me/participationinvitations",
-		"/users/me/pushtoken",
-		"/projects",
-		"/projects/{project_id}",
-		"/projects/{project_id}/participants",
-		"/projects/{project_id}/participants/{participant_id}",
-		"/projects/{project_id}/participants/join",
-		"/projects/{project_id}/participants/leave",
-		"/projects/{project_id}/resources",
-		"/projects/{project_id}/resources/{resource_id}",
-		"/projects/{project_id}/items",
-		"/projects/{project_id}/items/{item_id}",
-		"/projects/{project_id}/mutationgroups/{mutation_group_id}",
-		"/projects/{project_id}/mutationgroups",
-	];
+	protected $_privateEndpoints = [];
 
-	protected $_publicEndpoints = ["/users/login", "/users/activate", "/users", "/docs", "/docs.json"];
+	protected $_publicEndpoints = [];
 
 	protected function _getAcl()
 	{
