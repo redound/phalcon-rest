@@ -13,14 +13,14 @@ class MailService extends \Phalcon\Mvc\User\Plugin
 	{
 
 		$mail = $this->phpmailer;
-		$mail->Subject = 'Activate your Account';
+		$mail->Subject = $this->config->phalconRest->activationMail->subject;
 		$mail->addAddress($user->email, $user->name);
 
 		// Render mail template
 		$view = $this->view;
 		$view->setVar('user', $user);
 		$view->setVar('account', $account);
-		$renderedView = $view->render('mail/activation');
+		$renderedView = $view->render($this->config->phalconRest->activationMail->template);
 
 		// Add template to mail body
 		$mail->msgHTML($renderedView);
