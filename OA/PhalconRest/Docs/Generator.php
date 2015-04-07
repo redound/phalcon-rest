@@ -53,11 +53,11 @@ class Generator extends \Phalcon\Mvc\User\Plugin {
 			$annotations = $this->getAnnotationsFromCollection($collection);
 			$classAnnotations = $annotations["class"];
 
-			$resource = "Untitled Resource - Specify @DocResource above class";
+			$resource = "Untitled Resource - Specify @resource above class";
 
-			if (is_object($classAnnotations) && $classAnnotations->has("DocResource")){
+			if (is_object($classAnnotations) && $classAnnotations->has("resource")){
 
-				$resource = $classAnnotations->get("DocResource")->getArgument(0);
+				$resource = $classAnnotations->get("resource")->getArgument(0);
 			}
 
 			$data[$handler]["resource"] = $resource;

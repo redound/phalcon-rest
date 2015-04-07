@@ -4,9 +4,9 @@ namespace OA\PhalconRest\Docs;
 
 class DocResource {
 
-	protected $_methods;
-	protected $_collection;
-	public $routes = [];
+	protected 	$_methods;
+	protected 	$_collection;
+	public 		$endpoints = [];
 
 	public function __construct($resource, $collection, $annotations){
 
@@ -36,7 +36,7 @@ class DocResource {
 
 		foreach($methods as $method => $annotations){
 
-			$docRoute = new DocRoute($this->resource);
+			$docRoute = new DocEndpoint($this->resource);
 
 			if ($this->getMethod($method)){
 
@@ -47,39 +47,12 @@ class DocResource {
 
 			foreach($annotations as $description){
 
-				switch($description->getName()){
-
-					case 'DocTitle':
-						$docRoute->title = $description->getArgument(0);
-						break;
-					case 'DocResource':
-						$docRoute->resource = $description->getArgument(0);
-						break;
-					case 'DocDescription':
-						$docRoute->description = $description->getArgument(0);
-						break;
-					case 'DocResponse':
-						$docRoute->response = $description->getArgument(0);
-						break;
-					case 'DocResponseExample':
-						$docRoute->responseExample = $description->getArgument(0);
-						break;
-					case 'DocRequestExample':
-						$docRoute->requestExample = $description->getArgument(0);
-						break;
-					case 'DocIncludeTypes':
-						$docRoute->includeTypes = $description->getArgument(0);
-						break;
-					case 'DocParameters':
-						$docRoute->parameters = $description->getArgument(0);
-						break;
-					case 'DocHeaders':
-						$docRoute->headers = $description->getArgument(0);
-						break;
-				}
+				$field = $description->getName();
+				$value = $description->getArgument(0);
+				$docRoute->$field = $value;
 			}
 
-			$this->routes[] = $docRoute;
+			$this->endpoints[] = $docRoute;
 		}
 	}
 }

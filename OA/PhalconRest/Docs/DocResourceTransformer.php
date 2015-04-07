@@ -32,7 +32,7 @@ class DocResourceTransformer extends Fractal\TransformerAbstract
 	{
 
 		$routes = isset($resource->routes) ? $resource->routes : [];
-		return $this->collection($routes, new DocRouteTransformer, 'parent');
+		return $this->collection($routes, new DocEndpointTransformer, 'parent');
 	}
 
 }
