@@ -40,7 +40,7 @@ $ composer require olivierandriessen/phalcon-rest
 ````
 
 ## Skeleton application ##
-You can use the skeleton as base for your project. But you can use it as an example to set it up yourself too.
+You can use the [skeleton application](https://github.com/olivierandriessen/phalcon-rest-skeleton) as base for your project. But you can use it as an example to set it up yourself too.
 
 ## Documentation ##
 Documentation is on it's way. For now, i recommend you to read the source of the skeleton application.

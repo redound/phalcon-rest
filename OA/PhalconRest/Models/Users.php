@@ -82,12 +82,12 @@ class Users extends \OA\PhalconRest\Mvc\Model
         $fractal = $di->get('fractal');
 
         if ($this->googleAccounts){
-            $account = $fractal->createData(new Item($this->googleAccounts, new GoogleAccountTransformer, 'google'))->toArray();
+            $account = $fractal->createData(new Item($this->googleAccounts, new \OA\PhalconRest\Transformers\GoogleAccountTransformer, 'google'))->toArray();
             $accounts = array_merge($accounts, $account);
         }
 
         if ($this->usernameAccounts){
-            $account = $fractal->createData(new Item($this->usernameAccounts, new UsernameAccountTransformer, 'username'))->toArray();
+            $account = $fractal->createData(new Item($this->usernameAccounts, new \OA\PhalconRest\Transformers\UsernameAccountTransformer, 'username'))->toArray();
             $accounts = array_merge($accounts, $account);
         }
         return $accounts;
