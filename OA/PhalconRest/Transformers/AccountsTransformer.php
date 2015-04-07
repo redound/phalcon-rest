@@ -5,7 +5,7 @@ namespace OA\PhalconRest\Transformers;
 use League\Fractal;
 use OA\PhalconRest\Constants\AccountTypes;
 
-class AccountsTransformer extends TransformerBase
+class AccountsTransformer extends Fractal\TransformerAbstract
 {
 
 	public function transform($accounts)
