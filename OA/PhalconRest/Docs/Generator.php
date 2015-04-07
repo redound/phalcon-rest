@@ -22,13 +22,13 @@ class Generator extends \Phalcon\Mvc\User\Plugin {
 
 		if (empty($this->collectionClasses)) {
 
-			foreach ($this->config->collections as $collection){
+			foreach ($this->config->phalconRest->collections as $collection){
 
-				$this->collectionClasses[] = new $collection;
+				$this->_collectionClasses[] = new $collection;
 			}
 		}
 
-		return $this->collectionClasses;
+		return $this->_collectionClasses;
 	}
 
 	protected function getAnnotationsFromCollection($collection)
