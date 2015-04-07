@@ -12,8 +12,8 @@ class DocResource {
 
 		$this->resource = $resource;
 		$this->_collection = $collection;
-		$this->_parseHandlers($collection->getHandlers());
-		$this->_parseAnnotations($annotations);
+		$this->parseHandlers($collection->getHandlers());
+		$this->parseAnnotations($annotations);
 	}
 
 	protected function getMethod($method){
@@ -36,23 +36,24 @@ class DocResource {
 
 		foreach($methods as $method => $annotations){
 
-			$docRoute = new DocEndpoint($this->resource);
+			$docEndpoint = new DocEndpoint($this->resource);
 
 			if ($this->getMethod($method)){
 
 				$methodData = $this->getMethod($method);
-				$docRoute->method = $methodData[0];
-				$docRoute->route = $this->collection->getPrefix() . $methodData[1];
+				$docEndpoint->method = $methodData[0];
+				$docEndpoint->route = $this->_collection->getPrefix() . $methodData[1];
 			}
 
 			foreach($annotations as $description){
 
 				$field = $description->getName();
 				$value = $description->getArgument(0);
-				$docRoute->$field = $value;
+
+				$docEndpoint->$field = $value;
 			}
 
-			$this->endpoints[] = $docRoute;
+			$this->endpoints[] = $docEndpoint;
 		}
 	}
 }
