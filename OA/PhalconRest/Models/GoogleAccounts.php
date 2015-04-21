@@ -32,7 +32,7 @@ class GoogleAccounts extends \OA\PhalconRest\Mvc\Model
 
         return [
             'email' => 'email', // should be an e-mailaddress
-            'googleId' => 'pattern:\d{21}', // should be exactly 21 digits
+            'googleId' => 'pattern:/\d{21}/', // should be exactly 21 digits
         ];
     }
 

@@ -27,6 +27,7 @@ class Model extends \Phalcon\Mvc\Model
 	{
 		if (!$this->_validator){
 
+
 			$this->_validator = Validator::make($this, $this->validateRules());
 		}
 
@@ -35,7 +36,6 @@ class Model extends \Phalcon\Mvc\Model
 
 	public function validation()
 	{
-
 		if (!method_exists($this, 'validateRules')){
 			return true;
 		}
@@ -47,8 +47,11 @@ class Model extends \Phalcon\Mvc\Model
 
 	public function onValidationFails()
 	{
-
-		throw new UserException(ERR::DATA_INVALID, $this->_validator->getFirstMessage());
+		$message = null;
+		if ($this->_validator){
+			$message = $this->_validator->getFirstMessage();
+		}
+		throw new UserException(ERR::DATA_INVALID, $message);
 	}
 
 	public function prepare($data)
@@ -61,6 +64,20 @@ class Model extends \Phalcon\Mvc\Model
 				$this->$field = $data->$field;
 			}
 		}
+	}
+
+	public static function genColumns($modelName, $prefix = true)
+	{
+		$prefix = ($prefix ? strtolower($modelName) . '_' : '');
+		$cols = [];
+		$model = new $modelName;
+		$columns = $model->columnMap();
+
+		foreach($columns as $column) {
+			$cols[] = $modelName . '.' . $column . ' as ' . $prefix . $column;
+		}
+
+		return $cols;
 	}
 
 	public static function all($options = null, $single = null)
@@ -76,27 +93,13 @@ class Model extends \Phalcon\Mvc\Model
 		$modelRelsByName = [];
 		$wheres = [];
 
-		function genColumns($modelName, $prefix = true)
-		{
-			$prefix = ($prefix ? strtolower($modelName) . '_' : '');
-			$cols = [];
-			$model = new $modelName;
-			$columns = $model->columnMap();
-
-			foreach($columns as $column) {
-				$cols[] = $modelName . '.' . $column . ' as ' . $prefix . $column;
-			}
-
-			return $cols;
-		}
-
-		$columns = genColumns($modelName);
+		$columns = self::genColumns($modelName);
 
 		foreach($modelRelations as $relation) {
 			$relModelName = $relation->getReferencedModel();
 			$models[] = $relModelName;
 			$modelRelsByName[$relModelName] = $relation;
-			$columns = array_merge($columns, genColumns($relModelName));
+			$columns = array_merge($columns, self::genColumns($relModelName));
 		}
 
 		$builder = $modelsManager->createBuilder();

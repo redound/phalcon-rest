@@ -58,12 +58,12 @@ class ErrorService
 			],
 
 			'data-unprocessable' => [
-				'statuscode' => 422,
+				'statuscode' => 404,
 				'message' => 'Failed to process data'
 			],
 
 			'data-invalid' => [
-				'statuscode' => 422,
+				'statuscode' => 404,
 				'message' => 'Data: Invalid'
 			],
 
