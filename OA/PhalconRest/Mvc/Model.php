@@ -51,6 +51,12 @@ class Model extends \Phalcon\Mvc\Model
 		if ($this->_validator){
 			$message = $this->_validator->getFirstMessage();
 		}
+
+		if (is_null($message)){
+
+			$message = 'Could not validate data';
+		}
+
 		throw new UserException(ERR::DATA_INVALID, $message);
 	}
 
