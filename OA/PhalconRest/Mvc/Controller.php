@@ -29,17 +29,19 @@ class Controller extends \Phalcon\Mvc\Controller
 		return $response;
 	}
 
-	public function createItem($item, $callback, $resource_key)
+	public function createItem($item, $callback, $resource_key, $meta = [])
 	{
 
 		$resource = new Item($item, $callback, $resource_key);
-		return $this->fractal->createData($resource)->toArray();
+		$data = $this->fractal->createData($resource)->toArray();
+		return array_merge($data, $meta);
 	}
 
-	public function createCollection($collection, $callback, $resource_key)
+	public function createCollection($collection, $callback, $resource_key, $meta = [])
 	{
 
 		$resource = new Collection($collection, $callback, $resource_key);
-		return $this->fractal->createData($resource)->toArray();
+		$data = $this->fractal->createData($resource)->toArray();
+		return array_merge($data, $meta);
 	}
 }

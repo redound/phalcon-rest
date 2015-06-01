@@ -3,7 +3,6 @@
 namespace OA\PhalconRest\Mvc;
 
 use OA\Phalcon\Validation\Validator,
-	OA\PhalconRest\Structure\Builder as StructureBuilder,
 	OA\PhalconRest\CoreException,
 	OA\PhalconRest\UserException,
 	OA\PhalconRest\Services\ErrorService as ERR;
@@ -48,8 +47,14 @@ class Model extends \Phalcon\Mvc\Model
 	public function onValidationFails()
 	{
 		$message = null;
-		if ($this->_validator){
+		if ($this->_validator)
+		{
 			$message = $this->_validator->getFirstMessage();
+		}
+
+		if ($messages = $this->getMessages())
+		{
+			$message = $messages[0]->getMessage();
 		}
 
 		if (is_null($message)){
@@ -70,101 +75,6 @@ class Model extends \Phalcon\Mvc\Model
 				$this->$field = $data->$field;
 			}
 		}
-	}
-
-	public static function genColumns($modelName, $prefix = true)
-	{
-		$prefix = ($prefix ? strtolower($modelName) . '_' : '');
-		$cols = [];
-		$model = new $modelName;
-		$columns = $model->columnMap();
-
-		foreach($columns as $column) {
-			$cols[] = $modelName . '.' . $column . ' as ' . $prefix . $column;
-		}
-
-		return $cols;
-	}
-
-	public static function all($options = null, $single = null)
-	{
-
-		$modelName = get_called_class();
-		$di = \Phalcon\DI::getDefault();
-		$modelsManager = $di->getModelsManager();
-		$modelRelations = $modelsManager->getHasOneAndHasMany(new $modelName);
-
-		$columns = [];
-		$models = [];
-		$modelRelsByName = [];
-		$wheres = [];
-
-		$columns = self::genColumns($modelName);
-
-		foreach($modelRelations as $relation) {
-			$relModelName = $relation->getReferencedModel();
-			$models[] = $relModelName;
-			$modelRelsByName[$relModelName] = $relation;
-			$columns = array_merge($columns, self::genColumns($relModelName));
-		}
-
-		$builder = $modelsManager->createBuilder();
-		$builder->columns($columns);
-		$builder->from($modelName);
-		foreach($models as $model) {
-
-			$opts = $modelRelsByName[$model]->getOptions();
-
-			if (isset($opts['join'])) {
-				$join = $opts['join'];
-				$builder->$join($model);
-			}
-			else {
-
-				$builder->leftJoin($model);
-			}
-		}
-
-		// Add options
-		if (!is_null($options)){
-			foreach ($options as $key => $option) {
-
-				switch ($key) {
-
-					case 'limit':
-					case 'orderBy':
-						$builder->$key($option);
-						break;
-
-					default:
-						$builder->$key($option[0], $option[1]);
-						break;
-
-				}
-			}
-		}
-
-		if ($single) {
-			$builder->limit(1);
-		}
-
-		$results = $builder->getQuery()->execute();
-
-		$structureBuilder = new StructureBuilder;
-		$structureBuilder->setModel($modelName);
-		$structureBuilder->setRelations($modelRelations);
-		$results = $structureBuilder->build($results);
-
-		if ($single) {
-
-			foreach($results as $result) {
-				return $result;
-			}
-
-			return false;
-		}
-
-		return $results;
 	}
 
 	public static function findFullFirst($options = null)
