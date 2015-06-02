@@ -4,14 +4,9 @@ namespace OA\PhalconRest;
 
 class Exception extends \Exception
 {
-	public function __construct($key, $message = null)
+	public function __construct($code, $message = null)
 	{		
-		$this->key = $key;
+		$this->code = $code;
 		$this->message = $message;
-	}
-
-	public function getKey()
-	{
-		return $this->key;
 	}
 }

@@ -12,7 +12,7 @@ class Response extends \Phalcon\Mvc\User\Plugin {
 	public function sendException($e)
 	{
 
-		$code = $e->getKey();
+		$code = $e->getCode();
 		$message = $e->getMessage();
 
 		// Use key to obtain status code

@@ -5,33 +5,33 @@ namespace OA\PhalconRest\Services;
 class ErrorService
 {
 	// General
-	const GEN_NOTFOUND 			= 'gen-notfound';
+	const GEN_NOTFOUND 			= 1001;
 
 	// Data
-	const DATA_DUPLICATE 		= 'data-duplicate';
-	const DATA_NOTFOUND 		= 'data-notfound';
-	const DATA_UNPROCESSABLE 	= 'data-unprocessable';
-	const DATA_INVALID 			= 'data-invalid';
-	const DATA_FAIL 			= 'data-fail';
+	const DATA_DUPLICATE 		= 2001;
+	const DATA_NOTFOUND 		= 2002;
+	const DATA_UNPROCESSABLE 	= 2003;
+	const DATA_INVALID 			= 2004;
+	const DATA_FAIL 			= 2005;
 
 	// Authentication
-	const AUTH_NOBEARER			= 'auth-nobearer';
-	const AUTH_NOUSERNAME	    = 'auth-nousername';
-	const AUTH_INVALIDTYPE 		= 'auth-invalidtype';
-	const AUTH_BADLOGIN 		= 'auth-badlogin';
-	const AUTH_UNAUTHORIZED 	= 'auth-unauthorized';
-	const AUTH_FORBIDDEN 		= 'auth-forbidden';
+	const AUTH_NOBEARER			= 3006;
+	const AUTH_NOUSERNAME	    = 3007;
+	const AUTH_INVALIDTYPE 		= 3008;
+	const AUTH_BADLOGIN 		= 3009;
+	const AUTH_UNAUTHORIZED 	= 3010;
+	const AUTH_FORBIDDEN 		= 3020;
 
 	// Google
-	const GOOGLE_NODATA			= 'google-nodata';
-	const GOOGLE_BADLOGIN		= 'google-badlogin';
+	const GOOGLE_NODATA			= 4001;
+	const GOOGLE_BADLOGIN		= 4002;
 
 	// User management
-	const USER_NOTACTIVE		= 'user-notactive';
-	const USER_NOTFOUND			= 'user-notfound';
-	const USER_REGISTERFAIL		= 'user-registerfail';
-	const USER_MODFAIL			= 'user-modfail';
-	const USER_CREATEFAIL		= 'user-createfail';
+	const USER_NOTACTIVE		= 4003;
+	const USER_NOTFOUND			= 4004;
+	const USER_REGISTERFAIL		= 4005;
+	const USER_MODFAIL			= 4006;
+	const USER_CREATEFAIL		= 4007;
 
 	// PDO
 	const PDO_DUPLICATE_ENTRY   = 2300;
@@ -41,99 +41,99 @@ class ErrorService
 
 		return [
 			// General
-			'gen-notfound' => [
+			1001 => [
 				'statuscode' => 404,
 				'message' => 'General: Not found'
 			],
 
 			// Data
-			'data-duplicate' => [
+			2001 => [
 				'statuscode' => 404,
 				'message' => 'Data: Duplicate data'
 			],
 
-			'data-notfound' => [
+			2002 => [
 				'statuscode' => 404,
 				'message' => 'Data: Not Found'
 			],
 
-			'data-unprocessable' => [
+			2003 => [
 				'statuscode' => 404,
 				'message' => 'Failed to process data'
 			],
 
-			'data-invalid' => [
+			2004 => [
 				'statuscode' => 404,
 				'message' => 'Data: Invalid'
 			],
 
-			'data-fail' => [
+			2005 => [
 				'statuscode' => 404,
 				'message' => 'Action failed'
 			],
 
 			// Authentication
-			'auth-nobearer' => [
+			3006 => [
 				'statuscode' => 404,
 				'message' => 'Auth: No authentication bearer present'
 			],
 
-			'auth-invalidtype' => [
-				'statuscode' => 404,
-				'message' => 'Auth: Invalid authentication bearer type'
-			],
-
-			'auth-nousername' => [
+			3007 => [
 				'statuscode' => 404,
 				'message' => 'Auth: No username present'
 			],
 
-			'auth-badlogin' => [
+			3008 => [
+				'statuscode' => 404,
+				'message' => 'Auth: Invalid authentication bearer type'
+			],
+
+			3009 => [
 				'statuscode' => 404,
 				'message' => 'Auth: Bad login credentials'
 			],
 
-			'auth-unauthorized' => [
+			3010 => [
 				'statuscode' => 401,
 				'message' => 'Auth: Unauthorized'
 			],
 
-			'auth-forbidden' => [
+			3020 => [
 				'statuscode' => 403,
 				'message' => 'Auth: Forbidden'
 			],
 
-			'google-nodata' => [
+			4001 => [
 				'statuscode' => 404,
 				'message' => 'Google: No data'
 			],
 
-			'google-badlogin' => [
+			4002 => [
 				'statuscode' => 404,
 				'message' => 'Google: Bad login'
 			],
 
-			'user-notactive' => [
+			4003 => [
 				'statuscode' => 404,
 				'message' => 'User: Not active'
 			],
 
-			'user-notfound' => [
+			4004 => [
 				'statuscode' => 404,
 				'message' => 'User: Not found'
 			],
 
-			'user-registerfail' => [
+			4005 => [
 				'statuscode' => 404,
 				'message' => 'User: Registration failed'
 			],
 
-			'user-modfail' => [
+			4006 => [
 				'statuscode' => 404,
 				'message' => 'User: Modification failed'
 			],
 
-			'user-createfail' => [
+			4007 => [
 				'statuscode' => 404,
 				'message' => 'User: Creation failed'
 			],
