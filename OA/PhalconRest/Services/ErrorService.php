@@ -148,7 +148,6 @@ class ErrorService
 
 	public static function getMessage($key)
 	{
-
 		$messages = self::getMessages();
 
 		if (!isset($messages[$key])) {

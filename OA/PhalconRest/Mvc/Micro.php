@@ -6,6 +6,7 @@ use Phalcon\Mvc\Micro as MicroMvc,
 	Phaclon\DI\FactoryDefault,
 	Phalcon\Http\Response,
 	OA\PhalconRest\Exception,
+	OA\PhalconRest\UserException,
 	OA\PhalconRest\DI\PhalconRestDI,
 	OA\PhalconRest\Services\ErrorService as ERR,
 	OA\PhalconRest\Http\Request;
