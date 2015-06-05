@@ -77,11 +77,6 @@ class Model extends \Phalcon\Mvc\Model
 		}
 	}
 
-	public static function findFullFirst($options = null)
-	{
-		return self::all($options, true);
-	}
-
 	public static function createFrom($data)
 	{
 		$modelName = get_called_class();
