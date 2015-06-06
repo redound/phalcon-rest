@@ -1,4 +1,6 @@
 #Phalcon REST Library#
+Status: In Development.
+
 Phalcon REST Library provides a multiple classes to build your RESTful API with, core functionalities include:
  * Response formatting using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)  
  (*I got this concept from [a book](https://leanpub.com/build-apis-you-wont-hate) written by Phil Sturgeon*)
