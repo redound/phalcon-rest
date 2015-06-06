@@ -1,5 +1,5 @@
-#Phalcon REST#
-Phalcon REST provides a framework to build your own API upon, core functionalities include:
+#Phalcon REST Library#
+Phalcon REST Library provides a multiple classes to build your RESTful API with, core functionalities include:
  * Response formatting using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)  
  (*I got this concept from [a book](https://leanpub.com/build-apis-you-wont-hate) written by Phil Sturgeon*)
  * Authentication sessions using [Json Web Token](http://jwt.io/)
@@ -7,6 +7,7 @@ Phalcon REST provides a framework to build your own API upon, core functionaliti
  * Username and password authentication service
  * Google authentication service
  * Documentation generator based on docblock annotations
+ * [Postman REST Client](http://getpostman.com) Collection Export generator - Quickly test your endpoints
 
 ##Core dependencies##
 
@@ -43,4 +44,4 @@ $ composer require olivierandriessen/phalcon-rest
 You can use the [skeleton application](https://github.com/olivierandriessen/phalcon-rest-skeleton) as base for your project. But you can use it as an example to set it up yourself too.
 
 ## Documentation ##
-Documentation is on it's way. For now, i recommend you to read the source of the skeleton application.
+Documentation per class is on it's way. I recommend you to checkout the Skeleton application to see how each class can be integrated.
