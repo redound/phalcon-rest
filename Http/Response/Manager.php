@@ -1,10 +1,16 @@
 <?php
 
-namespace PhalconRest\Http\Response\Manager;
+namespace PhalconRest\Http\Response;
 
 class Manager
 {
 	protected $messages;
+
+	public function __construct(array $messages)
+	{
+		$this->messages = $messages;
+		return $this;
+	}
 
 	public function setMessages($messages)
 	{

@@ -45,6 +45,16 @@ class Request extends \Phalcon\Http\Request
 		return ['username'=>$authEx[0], 'password'=>$authEx[1]];
 	}
 
+	public function getUsername()
+	{
+		return $this->getAuth()['username'];
+	}
+
+	public function getPassword()
+	{
+		return $this->getAuth()['password'];
+	}
+
 	public function getToken()
 	{
 

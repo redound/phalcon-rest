@@ -2,11 +2,16 @@
 
 namespace PhalconRest\Mvc;
 
+use PhalconRest\Constants\Services;
 use League\Fractal\Resource\Collection,
 	League\Fractal\Resource\Item;
 
 class Controller extends \Phalcon\Mvc\Controller
 {
+	public function onConstruct()
+	{
+		$this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
+	}
 
 	public function respondWithArray($array, $key)
 	{

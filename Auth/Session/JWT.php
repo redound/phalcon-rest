@@ -1,73 +1,46 @@
 <?php
 
-namespace PhalconRest\Services;
+namespace PhalconRest\Auth\Session;
 
-use PhalconRest\Exceptions\UserException,
-	Library\PhalconRest\Constants\ErrorCodes as ErrorCodes,
-	PhalconRest\Constants\AuthTypes,
-	Google_Client;
+class JWT implements \PhalconRest\Auth\Session 
+{
 
-class AuthService extends \Phalcon\Mvc\User\Plugin {
+	protected $algo;
+	protected $secret;
 
-	protected $_bearer = null;
-	protected $_user = null;
-
-	public function __construct()
+	public function __construct($class)
 	{
-		$googleClient = new Google_Client;
+		$this->algo = 'HS256';
+		$this->secret = 'this-should-be-changed';
 
-		$this->authGoogle = new AuthGoogle($googleClient);
-		$this->authUsername = new AuthUsername;
+		$this->class = get_class($class);
 	}
 
-	public function setUser($user)
+	public function setAlgo($algo)
 	{
-
-		$this->_user = $user;
+		$this->algo = $algo;
 	}
 
-	public function getUser()
+	public function setSecret($secret)
 	{
-
-		return $this->_user;
+		$this->secret = $secret;
 	}
 
-	public function loggedIn()
+	public function decode($token)
 	{
+		$class = $this->class;
 
-		return !is_null($this->_user);
+		return $class::decode($token, $this->secret, $this->algo);
 	}
 
-	public function login($bearer, $username, $password)
+	public function encode($token)
 	{
+		$class = $this->class;
 
-		$this->_bearer = $bearer;
-
-		switch($bearer){
-
-			case AuthTypes::GOOGLE:
-				$user = $this->authGoogle->login($username);
-				break;
-			case AuthTypes::USERNAME:
-				$user = $this->authUsername->login($username, $password);
-				break;
-			default:
-				throw new UserException(ErrorCodes::AUTH_INVALIDTYPE);
-				break;
-		}
-
-		if (!$user){
-
-			throw new UserException(ErrorCodes::AUTH_BADLOGIN);
-		}
-
-		$this->setUser($user);
-
-		return $user;
-
+		return $class::encode($token, $this->secret);
 	}
 
-	public function createToken()
+	public function create($issuer, $user, $iat, $exp)
 	{
 
 		return [
@@ -79,7 +52,7 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 			The iss value is a case-sensitive string containing
 			a StringOrURI value. Use of this claim is OPTIONAL.
 		    ------------------------------------------------*/
-		    "iss" => $this->_bearer,
+		    "iss" => $issuer,
 
 		    /*
 			The sub (subject) claim identifies the principal
@@ -92,7 +65,7 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 			is a case-sensitive string containing a
 			StringOrURI value. Use of this claim is OPTIONAL.
 		    ------------------------------------------------*/
-		    "sub" => $this->_user,
+		    "sub" => $user,
 
 		    /*
 		    The iat (issued at) claim identifies the time at
@@ -101,7 +74,7 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 		    be a number containing a NumericDate value.
 		    Use of this claim is OPTIONAL.
 		    ------------------------------------------------*/
-		    "iat" => time(),
+		    "iat" => $iat,
 
 		    /*
 		    The exp (expiration time) claim identifies the
@@ -115,8 +88,9 @@ class AuthService extends \Phalcon\Mvc\User\Plugin {
 		    number containing a NumericDate value.
 		    Use of this claim is OPTIONAL.
 		    ------------------------------------------------*/
-		    // Now + one week
-		    "exp" => time() + 604800
+		    "exp" => $iat + $exp
 		];
+
+		return $this;
 	}
 }

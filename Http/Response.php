@@ -2,24 +2,27 @@
 
 namespace PhalconRest\Http;
 
-use Library\PhalconRest\Constants\ErrorCodes;
-
 class Response extends \Phalcon\Mvc\User\Plugin {
 
 	protected $statusCode = 200;
 	protected $envelope = true;
 
+	public function setManager(\PhalconRest\Http\Response\Manager $manager)
+	{
+		$this->manager = $manager;
+		return $this;
+	}
+
 	public function sendException($e)
 	{
-
 		$code = $e->getCode();
 		$message = $e->getMessage();
 
 		// Use key to obtain status code
-		$this->statusCode = ErrorService::getStatusCode($code);
+		$this->statusCode = $this->manager->getStatusCode($code);
 
 		// Use key to obtain response message
-		$message = ErrorService::getMessage($code);
+		$message = $this->manager->getMessage($code);
 
 		$this->send([
 			'error' => [

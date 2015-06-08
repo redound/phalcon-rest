@@ -2,9 +2,10 @@
 
 namespace PhalconRest\Middleware;
 
-use PhalconRest\Mvc\Micro,
+use Phalcon\Mvc\Micro,
 	PhalconRest\Exception,
-	Library\PhalconRest\Constants\ErrorCodes as ErrorCodes,
+	PhalconRest\Constants\Services,
+	PhalconRest\Constants\ErrorCodes as ErrorCodes,
 	Phalcon\Events\Event;
 
 class Acl extends \Phalcon\Mvc\User\Plugin
@@ -13,11 +14,12 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 
 	protected $_publicEndpoints = [];
 
-	public function __construct()
+	public function __construct($privateEndpoints, $publicEndpoints)
 	{
 
-		$this->_privateEndpoints = $this->config->phalconRest->privateEndpoints;
-		$this->_publicEndpoints = $this->config->phalconRest->publicEndpoints;
+		$this->_privateEndpoints 	= $privateEndpoints;
+		$this->_publicEndpoints	 	= $publicEndpoints;
+		$this->authManager 			= $this->di->get(Services::AUTH_MANAGER);
 	}
 
 	protected function _getAcl()
@@ -54,8 +56,7 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 
 	public function beforeExecuteRoute(Event $event, Micro $app)
 	{
-
-		$role = $this->authservice->loggedIn() ? 'Private' : 'Public';
+		$role = $this->authManager->loggedIn() ? 'Private' : 'Public';
 
 		// Get the current resource/endpoint from the micro app
 		$resource = 'api';
@@ -69,7 +70,7 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 
 		if ($allowed != \Phalcon\Acl::ALLOW)
 		{
-            if ($this->authservice->loggedIn()) {
+            if ($this->authManager->loggedIn()) {
 
             	throw new Exception(ErrorCodes::AUTH_FORBIDDEN);
 

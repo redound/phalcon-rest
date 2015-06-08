@@ -1,6 +1,6 @@
 <?php
 
-namespace PhalconRest;
+namespace PhalconRest\Exceptions;
 
 class CoreException extends Exception
 {

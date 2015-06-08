@@ -1,30 +1,13 @@
 <?php
 
-namespace PhalconRest\Services;
+namespace PhalconRest\Mailer;
 
-use PhalconRest\Exceptions\CoreException,
-	PhalconRest\Exceptions\UserException,
-	Library\PhalconRest\Constants\ErrorCodes as ErrorCodes;
-
-class MailService extends \Phalcon\Mvc\User\Plugin
+interface Mailer
 {
 
-	public function sendActivationMail($user, $account)
-	{
-
-		$mail = $this->phpmailer;
-		$mail->Subject = $this->config->phalconRest->activationMail->subject;
-		$mail->addAddress($user->email, $user->name);
-
-		// Render mail template
-		$view = $this->view;
-		$view->setVar('user', $user);
-		$view->setVar('account', $account);
-		$renderedView = $view->render($this->config->phalconRest->activationMail->template);
-
-		// Add template to mail body
-		$mail->msgHTML($renderedView);
-
-		return $mail->send();
-	}
+	public function __construct($mailer);
+	public function setSubject($subject);
+	public function addAddress($name, $email);
+	public function setHtmlBody($body);
+	public function send();
 }

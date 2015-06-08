@@ -1,6 +1,6 @@
 <?php
 
-namespace PhalconRest;
+namespace PhalconRest\Exceptions;
 
 class Exception extends \Exception
 {
