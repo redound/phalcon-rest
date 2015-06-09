@@ -14,7 +14,7 @@ Phalcon REST Library provides multiple classes to build your RESTful API with, f
 
 ##Composer Dependencies##
 This library provides classes based on the following dependencies.
-Not all dependencies are 
+Not all dependencies are required.
 
 ### Phalcon Framework ###
 https://github.com/phalcon/cphalcon
