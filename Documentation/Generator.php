@@ -112,7 +112,7 @@ class Generator extends \Phalcon\Mvc\User\Plugin {
 				$request->description = $endpoint->description;
 				$request->url = $hostName . $endpoint->route;
 				$request->method = $endpoint->method;
-				$request->headers = "Authorization: Basic you-should-provide-the-token-you-got-after-authentication-here";
+				$request->headers = "Authorization: Basic {{authToken}}";
 				$request->data = $data;
 				$request->dataMode = "raw";
 				$requests[] = $request;
