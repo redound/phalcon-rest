@@ -42,8 +42,8 @@ Install Phalcon REST via Composer
 $ composer require olivierandriessen/phalcon-rest
 ````
 
-## Skeleton application ##
-You can use the [skeleton application](https://github.com/olivierandriessen/phalcon-rest-skeleton) as base for your project. But you can use it as an example to set it up yourself too.
+## Boilerplate application ##
+You can use the [Boilerplate application](https://github.com/olivierandriessen/phalcon-rest-boilerplate) as base for your project. But you can use it as an example to set it up yourself too.
 
 ## Documentation ##
-Documentation per class is on it's way. I recommend you to checkout the Skeleton application to see how each class can be integrated.
+Documentation per class is on it's way. I recommend you to checkout the Boilerplate application to see how each class can be integrated.
