@@ -4,38 +4,43 @@
 
 Status: In Development.
 
-Phalcon REST Library provides a multiple classes to build your RESTful API with, core functionalities include:
- * Response formatting using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)  
- (*I got this concept from [a book](https://leanpub.com/build-apis-you-wont-hate) written by Phil Sturgeon*)
- * Authentication sessions using [Json Web Token](http://jwt.io/)
- * Access Control List using [ACL class](http://docs.phalconphp.com/en/latest/reference/acl.html) Phalcon provides
- * Username and password authentication service
- * Google authentication service
- * Documentation generator based on docblock annotations
- * [Postman REST Client](http://getpostman.com) Collection Export generator - Quickly test your endpoints
+Phalcon REST Library provides multiple classes to build your RESTful API with, functionalities include:
+ * Complex/flexible Json formatting
+ * Authenicate users with [Json Web Token](http://jwt.io/)
+ * Access Control List ([Phalcon ACL](http://docs.phalconphp.com/en/latest/reference/acl.html))
+ * Google and Username Authentication (both optional)
+ * Documentation generator ([Phalcon Annotation Reader](https://docs.phalconphp.com/en/latest/reference/annotations.html))
+ * [Postman REST Client](http://getpostman.com) Collection Export generator
 
-##Core dependencies##
+##Composer Dependencies##
+This library provides classes based on the following dependencies.
+Not all dependencies are 
 
 ### Phalcon Framework ###
 https://github.com/phalcon/cphalcon
 
+This library is written solely for Phalcon.
+
 ### Fractal ###
-For transforming complex data responses  
 https://github.com/thephpleague/fractal
 
+For transforming complex data responses using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)  
+(*I got this concept from [a book](https://leanpub.com/build-apis-you-wont-hate) written by Phil Sturgeon*)
+
 ### PHPMailer ###
-For sending account activation mail  
 https://github.com/PHPMailer/PHPMailer
 
-### Firebase JWT ###
+Send mails (user activation mail)
 
-For encoding/decoding Json Web Tokens  
+### Firebase JWT ###
 https://github.com/firebase/php-jwt
 
-### Google API Client ###
+For encoding/decoding Json Web Tokens  
 
-For obtaining user data to authenticate Google users  
+### Google API Client ###
 https://github.com/google/google-api-php-client
+
+For obtaining user data to authenticate/register Google users  
 
 ## Install ##
 NOTE: You have to install Phalcon first.
