@@ -1,10 +1,10 @@
 <?php
 
-namespace PhalconRest\Docs;
+namespace PhalconRest\Documentation;
 
 use League\Fractal;
 
-class DocEndpointTransformer extends Fractal\TransformerAbstract
+class EndpointTransformer extends Fractal\TransformerAbstract
 {
 	/**
 	 * Turn this resource object into a generic array

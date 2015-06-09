@@ -1,17 +1,17 @@
 <?php
 
-namespace PhalconRest\Docs;
+namespace PhalconRest\Documentation;
 
-class DocResource {
+class Resource {
 
-	protected 	$_methods;
-	protected 	$_collection;
+	protected 	$methods;
+	protected 	$collection;
 	public 		$endpoints = [];
 
 	public function __construct($resource, $collection, $annotations){
 
 		$this->resource = $resource;
-		$this->_collection = $collection;
+		$this->collection = $collection;
 		$this->parseHandlers($collection->getHandlers());
 		$this->parseAnnotations($annotations);
 	}
@@ -36,13 +36,13 @@ class DocResource {
 
 		foreach($methods as $method => $annotations){
 
-			$docEndpoint = new DocEndpoint($this->resource);
+			$docEndpoint = new Endpoint($this->resource);
 
 			if ($this->getMethod($method)){
 
 				$methodData = $this->getMethod($method);
 				$docEndpoint->method = $methodData[0];
-				$docEndpoint->route = $this->_collection->getPrefix() . $methodData[1];
+				$docEndpoint->route = $this->collection->getPrefix() . $methodData[1];
 			}
 
 			foreach($annotations as $description){

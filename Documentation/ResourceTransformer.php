@@ -1,10 +1,10 @@
 <?php
 
-namespace PhalconRest\Docs;
+namespace PhalconRest\Documentation;
 
 use League\Fractal;
 
-class DocResourceTransformer extends Fractal\TransformerAbstract
+class ResourceTransformer extends Fractal\TransformerAbstract
 {
 	/**
      * List of resources possible to include
@@ -32,7 +32,7 @@ class DocResourceTransformer extends Fractal\TransformerAbstract
 	{
 
 		$endpoints = isset($resource->endpoints) ? $resource->endpoints : [];
-		return $this->collection($endpoints, new DocEndpointTransformer, 'parent');
+		return $this->collection($endpoints, new EndpointTransformer, 'parent');
 	}
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace PhalconRest\Docs;
+namespace PhalconRest\Documentation;
 
-class DocEndpoint {
+class Endpoint {
 
 	public function __construct($resource){
 
