@@ -16,7 +16,7 @@ class Authentication extends \Phalcon\Mvc\User\Plugin {
 
 		if ($token) {
 
-			$this->authManager->authenticateSession($token);
+			$this->authManager->authenticateToken($token);
 		}
 	}
 }

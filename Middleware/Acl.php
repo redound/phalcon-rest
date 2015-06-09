@@ -3,23 +3,22 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Mvc\Micro,
-	PhalconRest\Exception,
+	PhalconRest\Exceptions\UserException,
 	PhalconRest\Constants\Services,
 	PhalconRest\Constants\ErrorCodes as ErrorCodes,
 	Phalcon\Events\Event;
 
 class Acl extends \Phalcon\Mvc\User\Plugin
 {
-	protected $_privateEndpoints = [];
+	protected $authManager;
+	protected $privateEndpoints;
+	protected $publicEndpoints;
 
-	protected $_publicEndpoints = [];
-
-	public function __construct($privateEndpoints, $publicEndpoints)
+	public function __construct($privateEndpoints = [], $publicEndpoints = [])
 	{
-
-		$this->_privateEndpoints 	= $privateEndpoints;
-		$this->_publicEndpoints	 	= $publicEndpoints;
-		$this->authManager 			= $this->di->get(Services::AUTH_MANAGER);
+		$this->authManager 			= null;
+		$this->privateEndpoints 	= $privateEndpoints;
+		$this->publicEndpoints	 	= $publicEndpoints;
 	}
 
 	protected function _getAcl()
@@ -36,13 +35,13 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 			$acl->addRole(new \Phalcon\Acl\Role('Private'));
 
 			// Allow All Roles to access the Public resources
-			foreach($this->_publicEndpoints as $endpoint) {
+			foreach($this->publicEndpoints as $endpoint) {
 				$acl->addResource(new \Phalcon\Acl\Resource('api'), $endpoint);
 				$acl->allow('Public', 'api', $endpoint);
 				$acl->allow('Private', 'api', $endpoint);
 			}
 
-			foreach($this->_privateEndpoints as $endpoint) {
+			foreach($this->privateEndpoints as $endpoint) {
 				$acl->addResource(new \Phalcon\Acl\Resource('api'), $endpoint);
 				$acl->allow('Private', 'api', $endpoint);
 			}
@@ -56,6 +55,7 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 
 	public function beforeExecuteRoute(Event $event, Micro $app)
 	{
+		$this->authManager = $this->di->get(Services::AUTH_MANAGER);
 		$role = $this->authManager->loggedIn() ? 'Private' : 'Public';
 
 		// Get the current resource/endpoint from the micro app
@@ -72,11 +72,11 @@ class Acl extends \Phalcon\Mvc\User\Plugin
 		{
             if ($this->authManager->loggedIn()) {
 
-            	throw new Exception(ErrorCodes::AUTH_FORBIDDEN);
+            	throw new UserException(ErrorCodes::AUTH_FORBIDDEN);
 
             } else {
 
-            	throw new Exception(ErrorCodes::AUTH_UNAUTHORIZED);
+            	throw new UserException(ErrorCodes::AUTH_UNAUTHORIZED);
 
             }
 

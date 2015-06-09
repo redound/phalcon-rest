@@ -13,11 +13,12 @@ class Manager extends \Phalcon\Mvc\User\Plugin
 	protected $issuer;
 	protected $expireTime;
 	protected $accounts;
-	protected $session;
+	protected $token;
 	protected $genSalt;
 
 	public function __construct(\PhalconRest\Auth\Session $sessionManager)
 	{
+		$this->issuer = 'Application';
 		$this->expireTime = 86400 * 7; // Default one week
 		$this->accounts = [];
 		$this->sessionManager = $sessionManager;
@@ -87,13 +88,12 @@ class Manager extends \Phalcon\Mvc\User\Plugin
 
 	public function getUser()
 	{
-
 		return $this->user;
 	}
 
 	public function loggedIn()
 	{
-		return $this->hasSession();
+		return !!$this->user;
 	}
 
 	public function getAccount($name)
@@ -125,31 +125,31 @@ class Manager extends \Phalcon\Mvc\User\Plugin
 		return $this;
 	}
 
-	public function getSession($key = null)
+	public function getToken($key = null)
 	{
-	    if (!$this->session) {
+	    if (!$this->token) {
 
-	        $this->session = $this->sessionManager->create($this->getIssuer(), $this->getUser(), time(), $this->getExpireTime());
+	        $this->token = $this->sessionManager->create($this->getIssuer(), $this->getUser(), time(), $this->getExpireTime());
 	    }
 	
 	    if ($key) {
 
-	    	return $this->session[$key];
+	    	return $this->token[$key];
 	    }
 
-	    return $this->session;
+	    return $this->token;
 	}
 
-	public function hasSession()
+	public function hasToken()
 	{
-	    return !!$this->session;
+	    return !!$this->token;
 	}
 
-	public function authenticateSession($session)
+	public function authenticateToken($token)
 	{
 		try {
 			
-			$decoded = $this->sessionManager->decode($session);
+			$decoded = $this->sessionManager->decode($token);
 		} catch (\UnexpectedValueException $e) {
 			
 			return false;
@@ -158,17 +158,17 @@ class Manager extends \Phalcon\Mvc\User\Plugin
 		// Set session
 		if ($decoded && $decoded->exp > time()) {
 
-			$this->authservice->setUser($decoded->sub);
+			$this->setUser($decoded->sub);
 		}
 
 		return true;
 	}
 
-	public function getSessionResponse()
+	public function getTokenResponse()
 	{
 	    return [
-	        'Session' => $this->sessionManager->encode($this->getSession()),
-	        'Expires' => $this->getSession('exp')
+	        'AuthToken' => $this->sessionManager->encode($this->getToken()),
+	        'Expires' => $this->getToken('exp')
 	    ];
 	}
 

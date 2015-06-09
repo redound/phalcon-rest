@@ -5,62 +5,56 @@ namespace PhalconRest\Http;
 class Request extends \Phalcon\Http\Request
 {
 
-	protected function extractToken($string)
+	protected function removeBearer($string)
 	{
-
-		return trim(str_replace('Bearer', '', $string));
+		return preg_replace('/.*\s/', '', $string);
 	}
 
-	public function getBearer()
+	public function getAuth($index)
 	{
 
 		$authHeader = $this->getHeader('AUTHORIZATION');
-		$authHeaderEx = explode(' ', $authHeader);
+		$authString = $this->removeBearer($authHeader);
 
-		if (isset($authHeaderEx[0])) {
+		$auth 		= base64_decode($authString);
+		$authEx 	= explode(':', $auth);
 
-			return $authHeaderEx[0];
-		}
-	}
-
-	public function getAuth()
-	{
-
-		$authHeader = $this->getHeader('AUTHORIZATION');
-		$authHeaderEx = explode(' ', $authHeader);
-
-		if (!isset($authHeaderEx[1])) {
+		if (count($authEx) != 2) {
 
 			return;
 		}
 
-		$auth = base64_decode($authHeaderEx[1]);
-		$authEx = explode(':', $auth);
+		switch ($index) {
 
-		if (!isset($authEx[0]) && !isset($authEx[1])) {
+			case 'username':
+				return $authEx[0];
 
-			return;
+			case 'password':
+				return $authEx[1];
+
+			default:
+				return [
+					'username' => $authEx[0],
+					'password' => $authEx[1]
+				];
 		}
-
-		return ['username'=>$authEx[0], 'password'=>$authEx[1]];
 	}
 
 	public function getUsername()
 	{
-		return $this->getAuth()['username'];
+		return $this->getAuth('username');
 	}
 
 	public function getPassword()
 	{
-		return $this->getAuth()['password'];
+		return $this->getAuth('password');
 	}
 
 	public function getToken()
 	{
-
 		$authHeader 		= $this->getHeader('AUTHORIZATION');
 		$authQuery  		= $this->getQuery('token');
 
-		return ($authQuery ? $authQuery : $this->extractToken($authHeader));
+		return ($authQuery ? $authQuery : $this->removeBearer($authHeader));
 	}
 }

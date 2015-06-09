@@ -30,7 +30,7 @@ class JWT implements \PhalconRest\Auth\Session
 	{
 		$class = $this->class;
 
-		return $class::decode($token, $this->secret, $this->algo);
+		return $class::decode($token, $this->secret, [$this->algo]);
 	}
 
 	public function encode($token)
