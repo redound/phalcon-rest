@@ -1,4 +1,7 @@
 #Phalcon REST Library#
+![Phalcon REST Library](http://phalconist.com/olivierandriessen/phalcon-rest/default.svg)
+
+
 Status: In Development.
 
 Phalcon REST Library provides a multiple classes to build your RESTful API with, core functionalities include:
