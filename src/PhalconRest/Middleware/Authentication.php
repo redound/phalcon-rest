@@ -3,20 +3,20 @@
 namespace PhalconRest\Middleware;
 
 use PhalconRest\Constants\Services;
-use PhalconRest\Exceptions\UserException;
 
-class Authentication extends \Phalcon\Mvc\User\Plugin {
+class Authentication extends \Phalcon\Mvc\User\Plugin
+{
 
-	public function beforeExecuteRoute()
-	{		
-		$this->request        = $this->di->get(Services::REQUEST);
-		$this->authManager    = $this->di->get(Services::AUTH_MANAGER);
+    public function beforeExecuteRoute()
+    {
+        $this->request = $this->di->get(Services::REQUEST);
+        $this->authManager = $this->di->get(Services::AUTH_MANAGER);
 
-		$token = $this->request->getToken();
+        $token = $this->request->getToken();
 
-		if ($token) {
+        if ($token) {
 
-			$this->authManager->authenticateToken($token);
-		}
-	}
+            $this->authManager->authenticateToken($token);
+        }
+    }
 }

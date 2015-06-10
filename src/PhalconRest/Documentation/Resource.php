@@ -2,58 +2,65 @@
 
 namespace PhalconRest\Documentation;
 
-class Resource {
+class Resource
+{
 
-	protected 	$methods;
-	protected 	$collection;
-	public 		$endpoints = [];
+    protected $methods;
+    protected $collection;
+    public $endpoints = [];
 
-	public function __construct($resource, $collection, $annotations){
+    public function __construct($resource, $collection, $annotations)
+    {
 
-		$this->resource = $resource;
-		$this->collection = $collection;
-		$this->parseHandlers($collection->getHandlers());
-		$this->parseAnnotations($annotations);
-	}
+        $this->resource = $resource;
+        $this->collection = $collection;
+        $this->parseHandlers($collection->getHandlers());
+        $this->parseAnnotations($annotations);
+    }
 
-	protected function getMethod($method){
+    protected function getMethod($method)
+    {
 
-		return isset($this->methods[$method]) ? $this->methods[$method] : false;
-	}
+        return isset($this->methods[$method]) ? $this->methods[$method] : false;
+    }
 
-	protected function parseHandlers($handlers){
+    protected function parseHandlers($handlers)
+    {
 
-		foreach($handlers as $handler){
+        foreach ($handlers as $handler) {
 
-			$method = $handler[2];
-			$this->methods[$method] = $handler;
-		}
-	}
+            $method = $handler[2];
+            $this->methods[$method] = $handler;
+        }
+    }
 
-	protected function parseAnnotations($methods){
+    protected function parseAnnotations($methods)
+    {
 
-		if (empty($methods)) return;
+        if (empty($methods)) {
+            return;
+        }
 
-		foreach($methods as $method => $annotations){
+        foreach ($methods as $method => $annotations) {
 
-			$docEndpoint = new Endpoint($this->resource);
+            $docEndpoint = new Endpoint($this->resource);
 
-			if ($this->getMethod($method)){
+            if ($this->getMethod($method)) {
 
-				$methodData = $this->getMethod($method);
-				$docEndpoint->method = $methodData[0];
-				$docEndpoint->route = $this->collection->getPrefix() . $methodData[1];
-			}
+                $methodData = $this->getMethod($method);
+                $docEndpoint->method = $methodData[0];
+                $docEndpoint->route = $this->collection->getPrefix() . $methodData[1];
+            }
 
-			foreach($annotations as $description){
+            foreach ($annotations as $description) {
 
-				$field = $description->getName();
-				$value = $description->getArgument(0);
+                $field = $description->getName();
+                $value = $description->getArgument(0);
 
-				$docEndpoint->$field = $value;
-			}
+                $docEndpoint->$field = $value;
+            }
 
-			$this->endpoints[] = $docEndpoint;
-		}
-	}
+            $this->endpoints[] = $docEndpoint;
+        }
+    }
 }

@@ -6,33 +6,33 @@ use League\Fractal;
 
 class ResourceTransformer extends Fractal\TransformerAbstract
 {
-	/**
+    /**
      * List of resources possible to include
      *
      * @var array
      */
-	protected $defaultIncludes = [
-		'routes'
-	];
+    protected $defaultIncludes = [
+        'routes',
+    ];
 
-	/**
-	 * Turn this resource object into a generic array
-	 *
-	 * @return array
-	 */
-	public function transform($resource)
-	{
+    /**
+     * Turn this resource object into a generic array
+     *
+     * @return array
+     */
+    public function transform($resource)
+    {
 
-		return [
-			'title' => $resource->resource
-		];
-	}
+        return [
+            'title' => $resource->resource,
+        ];
+    }
 
-	public function includeRoutes($resource)
-	{
+    public function includeRoutes($resource)
+    {
 
-		$endpoints = isset($resource->endpoints) ? $resource->endpoints : [];
-		return $this->collection($endpoints, new EndpointTransformer, 'parent');
-	}
+        $endpoints = isset($resource->endpoints) ? $resource->endpoints : [];
+        return $this->collection($endpoints, new EndpointTransformer, 'parent');
+    }
 
 }

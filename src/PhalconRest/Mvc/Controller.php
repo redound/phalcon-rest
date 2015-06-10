@@ -2,51 +2,51 @@
 
 namespace PhalconRest\Mvc;
 
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use PhalconRest\Constants\Services;
-use League\Fractal\Resource\Collection,
-	League\Fractal\Resource\Item;
 
 class Controller extends \Phalcon\Mvc\Controller
 {
-	public function onConstruct()
-	{
-		$this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
-	}
+    public function onConstruct()
+    {
+        $this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
+    }
 
-	public function respondWithArray($array, $key)
-	{
+    public function respondWithArray($array, $key)
+    {
 
-		return [$key=>$array];
-	}
+        return [$key => $array];
+    }
 
-	public function respondWithOK()
-	{
+    public function respondWithOK()
+    {
 
-		return ['result'=>'OK'];
-	}
+        return ['result' => 'OK'];
+    }
 
-	public function createItemWithOK($item, $callback, $resource_key)
-	{
+    public function createItemWithOK($item, $callback, $resource_key)
+    {
 
-		$response = $this->createItem($item, $callback, $resource_key);
-		$response['result'] = 'OK';
+        $response = $this->createItem($item, $callback, $resource_key);
+        $response['result'] = 'OK';
 
-		return $response;
-	}
+        return $response;
+    }
 
-	public function createItem($item, $callback, $resource_key, $meta = [])
-	{
+    public function createItem($item, $callback, $resource_key, $meta = [])
+    {
 
-		$resource = new Item($item, $callback, $resource_key);
-		$data = $this->fractal->createData($resource)->toArray();
-		return array_merge($data, $meta);
-	}
+        $resource = new Item($item, $callback, $resource_key);
+        $data = $this->fractal->createData($resource)->toArray();
+        return array_merge($data, $meta);
+    }
 
-	public function createCollection($collection, $callback, $resource_key, $meta = [])
-	{
+    public function createCollection($collection, $callback, $resource_key, $meta = [])
+    {
 
-		$resource = new Collection($collection, $callback, $resource_key);
-		$data = $this->fractal->createData($resource)->toArray();
-		return array_merge($data, $meta);
-	}
+        $resource = new Collection($collection, $callback, $resource_key);
+        $data = $this->fractal->createData($resource)->toArray();
+        return array_merge($data, $meta);
+    }
 }

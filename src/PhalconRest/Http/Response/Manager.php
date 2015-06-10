@@ -4,46 +4,46 @@ namespace PhalconRest\Http\Response;
 
 class Manager
 {
-	protected $messages;
+    protected $messages;
 
-	public function __construct(array $messages)
-	{
-		$this->messages = $messages;
-		return $this;
-	}
+    public function __construct(array $messages)
+    {
+        $this->messages = $messages;
+        return $this;
+    }
 
-	public function setMessages($messages)
-	{
-		$this->messages = $messages;
-	}
+    public function setMessages($messages)
+    {
+        $this->messages = $messages;
+    }
 
-	public function getMessages()
-	{
-		return $this->messages;
-	}
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 
-	public function getMessage($key)
-	{
-		$messages = $this->getMessages();
+    public function getMessage($key)
+    {
+        $messages = $this->getMessages();
 
-		if (!isset($messages[$key])) {
+        if (!isset($messages[$key])) {
 
-			return 'No error message specified';
-		}
+            return 'No error message specified';
+        }
 
-		return $messages[$key]['message'];
-	}
+        return $messages[$key]['message'];
+    }
 
-	public function getStatusCode($key)
-	{
+    public function getStatusCode($key)
+    {
 
-		$messages = $this->getMessages();
+        $messages = $this->getMessages();
 
-		if (!isset($messages[$key])) {
+        if (!isset($messages[$key])) {
 
-			return 404;
-		}
+            return 404;
+        }
 
-		return $messages[$key]['statuscode'];
-	}
+        return $messages[$key]['statuscode'];
+    }
 }

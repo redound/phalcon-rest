@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Auth;
 
-interface Session 
+interface Session
 {
-	public function encode($token);
-	public function decode($token);
-	public function create($issuer, $user, $iat, $exp);
+    public function encode($token);
+    public function decode($token);
+    public function create($issuer, $user, $iat, $exp);
 }

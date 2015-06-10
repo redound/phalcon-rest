@@ -2,20 +2,22 @@
 
 namespace PhalconRest\Documentation;
 
-class Endpoint {
+class Endpoint
+{
 
-	public function __construct($resource){
+    public function __construct($resource)
+    {
 
-		$this->resource = $resource;
-		$this->title = null;
-		$this->method = null;
-		$this->route = null;
-		$this->parameters = null;
-		$this->description = null;
-		$this->includeTypes = null;
-		$this->headers = null;
-		$this->response = null;
-		$this->responseExample = null;
-		$this->requestExample = null;
-	}
+        $this->resource = $resource;
+        $this->title = null;
+        $this->method = null;
+        $this->route = null;
+        $this->parameters = null;
+        $this->description = null;
+        $this->includeTypes = null;
+        $this->headers = null;
+        $this->response = null;
+        $this->responseExample = null;
+        $this->requestExample = null;
+    }
 }

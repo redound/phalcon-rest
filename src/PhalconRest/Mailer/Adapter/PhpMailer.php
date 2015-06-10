@@ -2,46 +2,42 @@
 
 namespace PhalconRest\Mailer\Adapter;
 
-use PhalconRest\Exceptions\CoreException,
-	PhalconRest\Exceptions\UserException,
-	PhalconRest\Constants\ErrorCodes as ErrorCodes;
-
 class PhpMailer extends \Phalcon\Mvc\User\Plugin implements \PhalconRest\Mailer\Mailer
 {
-	protected $mailer;
+    protected $mailer;
 
-	public function __construct($mailer)
-	{
-		$this->mailer = $mailer;
+    public function __construct($mailer)
+    {
+        $this->mailer = $mailer;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function setSubject($subject)
-	{
-		$this->mailer->Subject = $subject;
+    public function setSubject($subject)
+    {
+        $this->mailer->Subject = $subject;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function addAddress($name, $email)
-	{
-		$this->mailer->addAddress($name, $email);
+    public function addAddress($name, $email)
+    {
+        $this->mailer->addAddress($name, $email);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function setHtmlBody($body)
-	{
-		$this->mailer->msgHtml($body);
+    public function setHtmlBody($body)
+    {
+        $this->mailer->msgHtml($body);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function send()
-	{
-		$this->mailer->Send();
+    public function send()
+    {
+        $this->mailer->Send();
 
-		return $this;
-	}
+        return $this;
+    }
 }
