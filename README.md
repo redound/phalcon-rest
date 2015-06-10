@@ -1,9 +1,6 @@
 #Phalcon REST Library#
 ![Phalcon REST Library](http://phalconist.com/olivierandriessen/phalcon-rest/default.svg)
 
-
-Status: In Development.
-
 Phalcon REST Library provides multiple classes to build your RESTful API with, functionalities include:
  * Complex/flexible Json formatting
  * Authenicate users with [Json Web Token](http://jwt.io/)
@@ -55,3 +52,9 @@ You can use the [Boilerplate application](https://github.com/olivierandriessen/p
 
 ## Documentation ##
 Documentation per class is on it's way. I recommend you to checkout the Boilerplate application to see how each class can be integrated.
+
+## Status ##
+This project is in development.
+
+## Todo ##
+PSR-2 coding standard
