@@ -4,13 +4,13 @@ namespace PhalconRest\Audit;
 
 class Delegate
 {
-    public function verify($name, $method, $data)
+    public function verify($eventname, $data)
     {
         $event = new Event;
 
         if (method_exists($this, $event)) {
 
-            call_user_method_array($method, $this, [$event, $data]);
+            call_user_method_array($eventname, $this, [$event, $data]);
         }
 
         return $event;
