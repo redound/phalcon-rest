@@ -8,7 +8,7 @@ class Delegate
     {
         $event = new Event;
 
-        if (method_exists($this, $event)) {
+        if (method_exists($this, $eventname)) {
 
             call_user_method_array($eventname, $this, [$event, $data]);
         }
