@@ -1,6 +1,6 @@
 <?php
 
-namespace Library\Audit;
+namespace PhalconRest\Audit;
 
 class Delegate
 {
