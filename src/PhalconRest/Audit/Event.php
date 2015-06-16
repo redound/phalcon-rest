@@ -13,10 +13,11 @@ class Event
     protected $resolve;
     protected $then;
 
-    public function __construct($status = null, $resolve = null)
+    public function __construct($status = null)
     {
         $this->status = $status;
-        $this->resolve = $resolve;
+        $this->resolve = [];
+        $this->args = [];
         $this->then = false;
         $this->callbacks = [];
     }
@@ -37,44 +38,50 @@ class Event
 
     public function on($status, $callback)
     {
+        $resolve = $this->resolve;
+        array_unshift($resolve, $this->status);
+
         if ($status === $this->status && $callback) {
-            call_user_func_array($callback, [$this->resolve]);
+            call_user_func_array($callback, $resolve);
         }
 
         return $this;
     }
 
-    protected function resolve($status, $data)
+    protected function resolve($status, $args)
     {
         return $this
             ->setStatus($status)
-            ->setResolve($data);
+            ->setResolve($args);
     }
 
-    public function accept($resolve = null)
+    public function accept()
     {
-        return $this->resolve(self::STATUS_ACCEPT, $resolve);
+        return $this->resolve(self::STATUS_ACCEPT, func_get_args());
     }
 
-    public function reject($resolve = null)
+    public function reject()
     {
-        return $this->resolve(self::STATUS_REJECT, $resolve);
+        return $this->resolve(self::STATUS_REJECT, func_get_args());
     }
 
-    public function fix($resolve = null)
+    public function fix()
     {
-        return $this->resolve(self::STATUS_FIX, $resolve);
+        return $this->resolve(self::STATUS_FIX, func_get_args());
     }
 
-    public function ignore($resolve = null)
+    public function ignore()
     {
-        return $this->resolve(self::STATUS_IGNORE, $resolve);
+        return $this->resolve(self::STATUS_IGNORE, func_get_args());
     }
 
     public function then($callback = null)
     {
+        $resolve = $this->resolve;
+        array_unshift($resolve, $this->status);
+
         if ($callback) {
-            call_user_func_array($callback, [$this->status, $this->resolve]);
+            call_user_func_array($callback, $resolve);
         }
 
         return $this;
