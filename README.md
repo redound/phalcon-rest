@@ -54,7 +54,7 @@ You can use the [Boilerplate application](https://github.com/olivierandriessen/p
 Documentation per class is on it's way. I recommend you to checkout the Boilerplate application to see how each class can be integrated.
 
 ## Status ##
-This project is in development.
+In development, near the first release. So there might change a few things. Still, the development branch is always a working one.
 
 ## Todo ##
 PSR-2 coding standard
