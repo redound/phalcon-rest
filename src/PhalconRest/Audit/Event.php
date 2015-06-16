@@ -11,11 +11,13 @@ class Event
 
     protected $status;
     protected $resolve;
+    protected $then;
 
     public function __construct($status = null, $resolve = null)
     {
         $this->status = $status;
         $this->resolve = $resolve;
+        $this->then = false;
         $this->callbacks = [];
     }
 
@@ -35,11 +37,9 @@ class Event
 
     public function on($status, $callback)
     {
-        if ($status !== $this->status || !$callback) {
-            return $this;
+        if ($status === $this->status && $callback) {
+            call_user_func_array($callback, [$this->resolve]);
         }
-
-        call_user_func_array($callback, [$this->resolve]);
 
         return $this;
     }
@@ -69,5 +69,14 @@ class Event
     public function ignore($resolve = null)
     {
         return $this->resolve(self::STATUS_IGNORE, $resolve);
+    }
+
+    public function then($callback = null)
+    {
+        if ($callback) {
+            call_user_func_array($callback, [$this->status, $this->resolve]);
+        }
+
+        return $this;
     }
 }
