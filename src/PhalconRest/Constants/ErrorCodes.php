@@ -10,7 +10,6 @@ class ErrorCodes
     // Data
     const DATA_DUPLICATE = 2001;
     const DATA_NOTFOUND = 2002;
-    const DATA_UNPROCESSABLE = 2003;
     const DATA_INVALID = 2004;
     const DATA_FAIL = 2005;
 
@@ -20,7 +19,6 @@ class ErrorCodes
     const DATA_DELETE_FAIL = 2040;
 
     // Authentication
-    const AUTH_NOBEARER = 3006;
     const AUTH_NOUSERNAME = 3007;
     const AUTH_INVALIDTYPE = 3008;
     const AUTH_BADLOGIN = 3009;
