@@ -2,11 +2,20 @@
 
 namespace PhalconRest\Http;
 
+use PhalconRest\Exceptions\CoreException;
+use PhalconRest\Exceptions\UserException;
+
 class Response extends \Phalcon\Mvc\User\Plugin
 {
 
-    protected $statusCode = 200;
-    protected $envelope = true;
+    protected $debugMode;
+    protected $statusCode;
+
+    public function __construct()
+    {
+        $this->debugMode = 1;
+        $this->statusCode = 200;
+    }
 
     public function setManager(\PhalconRest\Http\Response\Manager $manager)
     {
@@ -14,7 +23,12 @@ class Response extends \Phalcon\Mvc\User\Plugin
         return $this;
     }
 
-    public function sendException($e)
+    public function setDebugMode($debugMode)
+    {
+        $this->debugMode = $debugMode;
+    }
+
+    public function sendErrorMessage($e)
     {
         $code = $e->getCode();
         $message = $e->getMessage();
@@ -25,14 +39,35 @@ class Response extends \Phalcon\Mvc\User\Plugin
         // Use key to obtain response message
         $message = $this->manager->getMessage($code);
 
+        $error = [
+            'code' => $code,
+            'status' => $this->statusCode,
+            'message' => $message,
+        ];
+
+        if ($this->debugMode === 1) {
+            $error['developer'] = $e->getMessage();
+        }
+
         $this->send([
-            'error' => [
-                'code' => $code,
-                'status' => $this->statusCode,
-                'developer' => $e->getMessage(),
-                'message' => $message,
-            ],
+            'error' => $error,
         ]);
+    }
+
+    public function sendException(\Exception $e)
+    {
+        switch (true) {
+
+            case ($e instanceof UserException):
+            case ($e instanceof CoreException):
+            case ($this->debugMode === 0):
+                $this->sendErrorMessage($e);
+                break;
+
+            default:
+                throw $e;     // Rethrow the exception
+                break;
+        }
     }
 
     public function send($data)

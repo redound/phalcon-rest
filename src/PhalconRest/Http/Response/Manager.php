@@ -28,7 +28,7 @@ class Manager
 
         if (!isset($messages[$key])) {
 
-            return 'No error message specified';
+            return 'Internal server error, no message specified.';
         }
 
         return $messages[$key]['message'];
@@ -41,7 +41,7 @@ class Manager
 
         if (!isset($messages[$key])) {
 
-            return 404;
+            return 500;
         }
 
         return $messages[$key]['statuscode'];
