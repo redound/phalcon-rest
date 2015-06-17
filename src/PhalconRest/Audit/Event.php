@@ -36,16 +36,13 @@ class Event
         return $this;
     }
 
-    public function on($status, $callback)
+    public function on($status, $callback, $method = null)
     {
-        $resolve = $this->resolve;
-        array_unshift($resolve, $this->status);
-
-        if ($status === $this->status && $callback) {
-            call_user_func_array($callback, $resolve);
+        if ($status !== $this->status && $callback) {
+            return $this;
         }
 
-        return $this;
+        return $this->then($callback, $method);
     }
 
     protected function resolve($status, $args)
@@ -75,12 +72,14 @@ class Event
         return $this->resolve(self::STATUS_IGNORE, func_get_args());
     }
 
-    public function then($callback = null)
+    public function then($callback = null, $method = null)
     {
         $resolve = $this->resolve;
         array_unshift($resolve, $this->status);
 
-        if ($callback) {
+        if ($callback && $method) {
+            call_user_method_array($method, $callback, $resolve);
+        } else if ($callback) {
             call_user_func_array($callback, $resolve);
         }
 
