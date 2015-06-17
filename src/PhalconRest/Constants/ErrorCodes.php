@@ -18,6 +18,7 @@ class ErrorCodes
     const DATA_UPDATE_FAIL = 2030;
     const DATA_DELETE_FAIL = 2040;
     const DATA_REJECTED = 2060;
+    const DATA_NOTALLOWED = 2070;
 
     // Authentication
     const AUTH_NOUSERNAME = 3007;
