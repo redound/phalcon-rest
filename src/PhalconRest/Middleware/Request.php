@@ -16,7 +16,7 @@ class Request extends \Phalcon\Mvc\User\Plugin
         $this->response = $this->di->get($responseservice);
     }
 
-    public function beforeExecuteRoute(Event $event, Micro $app)
+    public function beforeHandleRoute(Event $event, Micro $app)
     {
         // OPTIONS have no body, send the headers, exit
         if ($this->request->getMethod() == 'OPTIONS') {
