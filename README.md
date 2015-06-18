@@ -1,60 +1,44 @@
-#Phalcon REST Library#
-![Phalcon REST Library](http://phalconist.com/olivierandriessen/phalcon-rest/default.svg)
+#Phalcon REST#
+**Note: This project is under development. Develop branch stable for use.**
 
-Phalcon REST Library provides multiple classes to build your RESTful API with, functionalities include:
- * Complex/flexible Json formatting
- * Authenicate users with [Json Web Token](http://jwt.io/)
- * Access Control List ([Phalcon ACL](http://docs.phalconphp.com/en/latest/reference/acl.html))
- * Google and Username Authentication (both optional)
+<a href="http://phalconist.com/olivierandriessen/phalcon-rest" target="_blank">
+![Phalcon REST Library](http://phalconist.com/olivierandriessen/phalcon-rest/default.svg)
+</a>
+
+*A flexible library, consisting of interchangeable classes made for the modern REST API.*
+
+ * Complex/flexible JSON formatting ([Fractal](https://github.com/thephpleague/fractal))
+ * Google authentication (optional)
+ * Username authentication (optional)
+ * Authentication sessions ([JWT](http://jwt.io/))
+ * Access control on endpoints ([Phalcon ACL](http://docs.phalconphp.com/en/latest/reference/acl.html))
  * Documentation generator ([Phalcon Annotation Reader](https://docs.phalconphp.com/en/latest/reference/annotations.html))
  * [Postman REST Client](http://getpostman.com) Collection Export generator
 
-##Composer Dependencies##
-This library provides classes based on the following dependencies.
-Not all dependencies are required.
-
-### Phalcon Framework ###
-https://github.com/phalcon/cphalcon
-
-This library is written solely for Phalcon.
-
-### Fractal ###
-https://github.com/thephpleague/fractal
-
-For transforming complex data responses using [Fractal's Transformer concept](http://fractal.thephpleague.com/transformers/)  
-(*I got this concept from [a book](https://leanpub.com/build-apis-you-wont-hate) written by Phil Sturgeon*)
-
-### PHPMailer ###
-https://github.com/PHPMailer/PHPMailer
-
-Send mails (user activation mail)
-
-### Firebase JWT ###
-https://github.com/firebase/php-jwt
-
-For encoding/decoding Json Web Tokens  
-
-### Google API Client ###
-https://github.com/google/google-api-php-client
-
-For obtaining user data to authenticate/register Google users  
-
-## Install ##
-NOTE: You have to install Phalcon first.
-
-Install Phalcon REST via Composer
-````bash
-$ composer require olivierandriessen/phalcon-rest
+## Installing ##
+Install using Composer. Not all dependencies are required.
+````
+{
+    "require": {
+        "olivierandriessen/phalcon-rest": "dev-develop",
+        "league/fractal": "0.12.0",
+        "firebase/php-jwt": "2.0.0",
+        "phpmailer/phpmailer": "5.2.9",
+        "google/apiclient": "1.1.2",
+    }
+}
 ````
 
-## Boilerplate application ##
-You can use the [Boilerplate application](https://github.com/olivierandriessen/phalcon-rest-boilerplate) as base for your project. But you can use it as an example to set it up yourself too.
+## Boilerplate ##
+For a full implementation of the library, check out the [Boilerplate application](https://github.com/olivierandriessen/phalcon-rest-boilerplate).
 
 ## Documentation ##
-Documentation per class is on it's way. I recommend you to checkout the Boilerplate application to see how each class can be integrated.
+[Go to the documentation](https://github.com/olivierandriessen/phalcon-rest/wiki/Documentation) for detailed instructions on how to configure each class.
 
-## Status ##
-In development, near the first release. So there might change a few things. Still, the development branch is always a working one.
+## Contributing ##
+Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
 
-## Todo ##
-PSR-2 coding standard
+###Todo###
+* ~~Convert indentation to spaces~~
+* DocBlocks
+* PSR-2 coding standard
