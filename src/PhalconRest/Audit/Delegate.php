@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Audit;
 
-class Delegate
+trait Delegate
 {
     public function verify($eventname, $data)
     {
