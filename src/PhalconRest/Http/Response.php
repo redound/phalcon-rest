@@ -2,6 +2,7 @@
 
 namespace PhalconRest\Http;
 
+use PhalconRest\Constants\Services as PhalconRestServices;
 use PhalconRest\Exceptions\CoreException;
 use PhalconRest\Exceptions\UserException;
 
@@ -28,6 +29,26 @@ class Response extends \Phalcon\Mvc\User\Plugin
         $this->debugMode = $debugMode;
     }
 
+    protected function parseTrace($traces)
+    {
+        $parsed = [];
+
+        foreach ($traces as $key => $trace) {
+
+            $parsed[$key] = $trace;
+
+            if (is_object($trace)) {
+                $parsed[$key] = 'closure...';
+            }
+
+            if (is_array($trace)) {
+                $parsed[$key] = $this->parseTrace($trace);
+            }
+        }
+
+        return $parsed;
+    }
+
     public function sendErrorMessage($e)
     {
         $code = $e->getCode();
@@ -46,7 +67,16 @@ class Response extends \Phalcon\Mvc\User\Plugin
         ];
 
         if ($this->debugMode === 1) {
-            $error['developer'] = $e->getMessage();
+
+            $error['developer'] = [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'message' => $e->getMessage(),
+            ];
+
+            if ($this->di->get(PhalconRestServices::REQUEST)->hasQuery('trace')) {
+                $error['developer']['trace'] = $this->parseTrace($e->getTrace());
+            }
         }
 
         $this->send([
