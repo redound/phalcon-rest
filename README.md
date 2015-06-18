@@ -7,7 +7,7 @@
 
 *A flexible library, consisting of interchangeable classes made for the modern REST API.*
 
- * Complex/flexible JSON formatting ([Fractal](https://github.com/thephpleague/fractal), [Book](https://leanpub.com/build-apis-you-wont-hate))
+ * Complex/flexible JSON formatting ([Fractal](https://github.com/thephpleague/fractal), [Build API's You Won't Hate](https://leanpub.com/build-apis-you-wont-hate))
  * Google authentication (optional)
  * Username authentication (optional)
  * Authentication sessions ([JWT](http://jwt.io/))
