@@ -38,6 +38,12 @@ For a full implementation of the library, check out the [Boilerplate application
 ## Contributing ##
 Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
 
+## Changelog ##
+
+*0.0.3* Added Auth/Account/Email, changed user registration flow  
+*0.0.2* Major changes  
+*0.0.1* Major changes  
+
 ###Todo###
 * ~~Convert indentation to spaces~~
 * DocBlocks

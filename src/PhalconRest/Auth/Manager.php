@@ -17,7 +17,7 @@ class Manager extends \Phalcon\Mvc\User\Plugin
 
     public function __construct(\PhalconRest\Auth\Session $sessionManager)
     {
-        $this->issuer = 'Application';
+        $this->issuer = null;
         $this->expireTime = 86400 * 7; // Default one week
         $this->accounts = [];
         $this->sessionManager = $sessionManager;
@@ -105,8 +105,70 @@ class Manager extends \Phalcon\Mvc\User\Plugin
         return false;
     }
 
+    public function register($bearer, $data)
+    {
+        
+        // Check if account type exists
+        if (!$account = $this->getAccount($bearer)) {
+
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        // Check if account has method
+        if (!method_exists($account, 'register')) {
+
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        $user = $account->register($data);
+
+        return $user;
+    }
+    
+    public function update($bearer, $data)
+    {
+
+        // Check if account type exists
+        if (!$account = $this->getAccount($bearer)) {
+
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        // Check if account has method
+        if (!method_exists($account, 'update')) {
+
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        $user = $account->update($data);
+
+        return $user;
+    }
+
+    public function changepassword($bearer, $data)
+    {
+
+        // Check if account type exists
+        if (!$account = $this->getAccount($bearer)) {
+
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        // Check if account has method
+        if (!method_exists($account, 'changepassword')) {
+
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        $user = $account->changepassword($data);
+
+        return $user;
+    }
+
     public function login($bearer, $username, $password)
     {
+        $this->setIssuer($bearer);
+
         if (!$account = $this->getAccount($bearer)) {
 
             throw new UserException(ErrorCodes::AUTH_INVALIDTYPE);
@@ -168,6 +230,7 @@ class Manager extends \Phalcon\Mvc\User\Plugin
         return [
             'AuthToken' => $this->sessionManager->encode($this->getToken()),
             'Expires' => $this->getToken('exp'),
+            'AccountType' => $this->getIssuer()
         ];
     }
 

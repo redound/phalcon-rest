@@ -11,11 +11,19 @@ class Google extends \Phalcon\Mvc\User\Plugin implements \PhalconRest\Auth\Accou
     protected $userModel;
     protected $googleClient;
 
-    public function __construct($name, $userModel, \PhalconRest\Facades\GoogleClient $googleClient = null)
+    public function __construct($name)
     {
         $this->name = $name;
-        $this->userModel = get_class($userModel);
+    }
+
+    public function setGoogleClient(\PhalconRest\Facades\GoogleClient $googleClient = null)
+    {
         $this->googleClient = $googleClient;
+    }
+
+    public function setUserModel(\Phalcon\Mvc\Model $userModel)
+    {
+        $this->userModel = get_class($userModel);
     }
 
     public function login($username = null, $password = null)
