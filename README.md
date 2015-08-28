@@ -33,7 +33,10 @@ Install using Composer. Not all dependencies are required.
 For a full implementation of the library, check out the [Boilerplate application](https://github.com/olivierandriessen/phalcon-rest-boilerplate).
 
 ## Documentation ##
-[Go to the documentation](https://github.com/olivierandriessen/phalcon-rest/wiki/Documentation) for detailed instructions on how to configure each class.
+Documentation is coming soon.
+
+## External links ##
+Blog on [Gettings Started with Phalcon REST](http://olivierandriessen.com/getting-started-with-phalcon-rest/)
 
 ## Contributing ##
 Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
