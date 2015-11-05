@@ -4,7 +4,6 @@ namespace PhalconRest\Http;
 
 class Request extends \Phalcon\Http\Request
 {
-
     protected function removeBearer($string)
     {
         return preg_replace('/.*\s/', '', $string);
@@ -20,8 +19,7 @@ class Request extends \Phalcon\Http\Request
         $authEx = explode(':', $auth);
 
         if (count($authEx) != 2) {
-
-            return;
+            return null;
         }
 
         switch ($index) {

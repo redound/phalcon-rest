@@ -41,5 +41,4 @@ class ErrorCodes
 
     // PDO
     const PDO_DUPLICATE_ENTRY = 2300;
-
 }

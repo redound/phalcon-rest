@@ -5,17 +5,8 @@ namespace PhalconRest\Middleware;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Micro;
 
-class Request extends \Phalcon\Mvc\User\Plugin
+class OptionsResponse extends \PhalconRest\Mvc\Plugin
 {
-    protected $request;
-    protected $response;
-
-    public function __construct($requestservice, $responseservice)
-    {
-        $this->request = $this->di->get($requestservice);
-        $this->response = $this->di->get($responseservice);
-    }
-
     public function beforeHandleRoute(Event $event, Micro $app)
     {
         // OPTIONS have no body, send the headers, exit
