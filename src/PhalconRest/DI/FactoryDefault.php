@@ -8,6 +8,8 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 {
     public function __construct()
     {
+        parent::__construct();
+
         $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request());
         $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response());
 
