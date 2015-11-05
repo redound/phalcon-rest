@@ -16,9 +16,6 @@ class FractalController extends \Phalcon\Mvc\Controller
     public function onConstruct()
     {
         $this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
-        if(!$this->fractal){
-            throw new Exception('Fractal manager not found in DI');
-        }
     }
 
     public function respondArray($array, $key)

@@ -20,9 +20,6 @@ class Fractal extends \PhalconRest\Mvc\Plugin
     {
         /** @var \League\Fractal\Manager $fractal */
         $fractal = $this->di->get(Services::FRACTAL_MANAGER);
-        if(!$fractal){
-            throw new Exception('Fractal manager not found in DI');
-        }
 
         if($this->parseIncludes){
 
