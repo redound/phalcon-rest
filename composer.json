@@ -11,10 +11,5 @@
             "name": "Olivier Andriessen",
             "email": "olivierandriessen@gmail.com"
         }
-    ],
-    "autoload": {
-        "psr-4": {
-            "PhalconRest\\": "src"
-        }
-    }
+    ]
 }
