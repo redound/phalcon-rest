@@ -47,6 +47,7 @@ class Response extends \Phalcon\Http\Response
         }
 
         $this->setJsonContent(['error' => $error]);
+        $this->setStatusCode($statusCode);
     }
 
     public function setJsonContent($content, $jsonOptions = 0, $depth = 512)
