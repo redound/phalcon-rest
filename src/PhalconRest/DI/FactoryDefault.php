@@ -2,6 +2,7 @@
 
 namespace PhalconRest\DI;
 
+use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\Services;
 
 class FactoryDefault extends \Phalcon\Di\FactoryDefault
@@ -20,7 +21,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             $className = '\League\Fractal\Manager';
 
             if(!class_exists($className)){
-                throw new \Exception('\League\Fractal\Manager was requested, but class could not be found');
+                throw new \Exception(ErrorCodes::GEN_SYSTEM, '\League\Fractal\Manager was requested, but class could not be found');
             }
 
             return new $className();

@@ -5,6 +5,7 @@ namespace PhalconRest\Constants;
 class ErrorCodes
 {
     // General
+    const GEN_SYSTEM = 0;
     const GEN_NOTFOUND = 1001;
 
     // Data
