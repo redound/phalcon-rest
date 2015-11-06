@@ -155,7 +155,15 @@ class Manager extends \PhalconRest\Mvc\Plugin
      */
     public function authenticateToken($token)
     {
-        $session = $this->tokenParser->getSession($token);
+        try {
+
+            $session = $this->tokenParser->getSession($token);
+        }
+        catch(\Exception $e){
+
+            throw new UserException(ErrorCodes::AUTH_BADTOKEN);
+        }
+
         if(!$session){
             return false;
         }

@@ -22,16 +22,13 @@ class ErrorCodes
     const DATA_NOTALLOWED = 2070;
 
     // Authentication
+    const AUTH_BADTOKEN = 3006;
     const AUTH_NOUSERNAME = 3007;
     const AUTH_INVALIDTYPE = 3008;
     const AUTH_BADLOGIN = 3009;
     const AUTH_UNAUTHORIZED = 3010;
     const AUTH_FORBIDDEN = 3020;
     const AUTH_EXPIRED = 3030;
-
-    // Google
-    const GOOGLE_NODATA = 4001;
-    const GOOGLE_BADLOGIN = 4002;
 
     // User management
     const USER_NOTACTIVE = 4003;
