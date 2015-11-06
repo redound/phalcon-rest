@@ -9,5 +9,5 @@ class Services
 
     const AUTH_MANAGER = 'phalcon_rest_auth_manager';
     const FRACTAL_MANAGER = 'phalcon_rest_fractal_manager';
-    const GOOGLE_CLIENT = 'phalcon_rest_google_client';
+    const TOKEN_PARSER = 'phalcon_rest_token_parser';
 }

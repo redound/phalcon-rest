@@ -1,24 +1,33 @@
 <?php
 
-namespace PhalconRest\Auth\Session;
+namespace PhalconRest\Auth\TokenParser;
 
-class JWT implements \PhalconRest\Auth\Session
+use PhalconRest\Auth\Session;
+use PhalconRest\Exceptions\Exception;
+
+class JWT implements \PhalconRest\Auth\TokenParser
 {
+    const ALGORITHM_HS256 = 'HS256';
+    const ALGORITHM_HS512 = 'HS512';
+    const ALGORITHM_HS384 = 'HS384';
+    const ALGORITHM_RS256 = 'RS256';
 
-    protected $algo;
+    protected $algorithm;
     protected $secret;
 
-    public function __construct($class)
-    {
-        $this->algo = 'HS256';
-        $this->secret = 'this-should-be-changed';
 
-        $this->class = get_class($class);
+    public function __construct($secret, $algorithm = self::ALGORITHM_HS256)
+    {
+        if(!class_exists('\\JWT'))
+            throw new Exception('JWT class is needed for the JWT token parser');
+
+        $this->algorithm = $algorithm;
+        $this->secret = $secret;
     }
 
-    public function setAlgo($algo)
+    public function setAlgorithm($algorithm)
     {
-        $this->algo = $algo;
+        $this->algorithm = $algorithm;
     }
 
     public function setSecret($secret)
@@ -26,21 +35,38 @@ class JWT implements \PhalconRest\Auth\Session
         $this->secret = $secret;
     }
 
+
+    public function getToken(Session $session, $expirationTime=null)
+    {
+        $identity = $session->getIdentity();
+        $userData = is_array($identity) ? $identity : serialize($identity);
+
+        $tokenData = $this->create($session->getAccountTypeName(), $userData, time(), $expirationTime);
+
+        return $this->encode($tokenData);
+    }
+
+    public function getSession($token)
+    {
+        $tokenData = $this->decode($token);
+
+        $subject = $tokenData['sub'];
+        $userData = is_array($subject) ? $subject : unserialize($subject);
+
+        return new Session($tokenData['iss'], $userData, $tokenData['exp'] - $tokenData['iat'], $token);
+    }
+
     public function decode($token)
     {
-        $class = $this->class;
-
-        return $class::decode($token, $this->secret, [$this->algo]);
+        return \JWT::decode($token, $this->secret, [$this->algorithm]);
     }
 
     public function encode($token)
     {
-        $class = $this->class;
-
-        return $class::encode($token, $this->secret);
+        return \JWT::encode($token, $this->secret, $this->algorithm);
     }
 
-    public function create($issuer, $user, $iat, $exp)
+    protected function create($issuer, $user, $iat, $exp)
     {
 
         return [
@@ -90,7 +116,5 @@ class JWT implements \PhalconRest\Auth\Session
             ------------------------------------------------*/
             "exp" => $iat + $exp,
         ];
-
-        return $this;
     }
 }

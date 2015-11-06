@@ -13,6 +13,8 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
         $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request());
         $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response());
 
+        $this->setShared(Services::AUTH_MANAGER, new \PhalconRest\Auth\Manager());
+
         $this->setShared(Services::FRACTAL_MANAGER, function () {
 
             $className = '\League\Fractal\Manager';
@@ -22,6 +24,11 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             }
 
             return new $className();
+        });
+
+        $this->setShared(Services::TOKEN_PARSER, function () {
+
+            return new \PhalconRest\Auth\TokenParser\JWT('this_should_be_changed');
         });
     }
 }
