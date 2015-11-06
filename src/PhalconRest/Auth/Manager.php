@@ -20,6 +20,9 @@ class Manager extends \PhalconRest\Mvc\Plugin
      */
     protected $session;
 
+    /**
+     * @var int Expiration time of created sessions
+     */
     protected $sessionExpirationTime;
 
 
@@ -125,6 +128,16 @@ class Manager extends \PhalconRest\Mvc\Plugin
         return $this->session;
     }
 
+    /**
+     * @param string $accountTypeName
+     * @param string $username
+     * @param string $password
+     *
+     * @return Session Created session
+     * @throws UserException
+     *
+     * Helper to login with username & password
+     */
     public function loginWithUsernamePassword($accountTypeName, $username, $password)
     {
         return $this->login($accountTypeName, [

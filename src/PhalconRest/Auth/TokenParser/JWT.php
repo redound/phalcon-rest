@@ -38,10 +38,7 @@ class JWT implements \PhalconRest\Auth\TokenParser
 
     public function getToken(Session $session, $expirationTime=null)
     {
-        $identity = $session->getIdentity();
-        $userData = is_array($identity) ? $identity : serialize($identity);
-
-        $tokenData = $this->create($session->getAccountTypeName(), $userData, time(), $expirationTime);
+        $tokenData = $this->create($session->getAccountTypeName(), $session->getIdentity(), time(), $expirationTime);
 
         return $this->encode($tokenData);
     }
@@ -50,10 +47,7 @@ class JWT implements \PhalconRest\Auth\TokenParser
     {
         $tokenData = $this->decode($token);
 
-        $subject = $tokenData['sub'];
-        $userData = is_array($subject) ? $subject : unserialize($subject);
-
-        return new Session($tokenData['iss'], $userData, $tokenData['exp'] - $tokenData['iat'], $token);
+        return new Session($tokenData['iss'], $tokenData['sub'], $tokenData['exp'] - $tokenData['iat'], $token);
     }
 
     public function decode($token)

@@ -7,12 +7,12 @@ interface AccountType
     /**
      * @param array $data Login data
      *
-     * @return mixed Identity model
+     * @return string Identity
      */
     public function login($data);
 
     /**
-     * @param mixed $identity Identity model
+     * @param string $identity Identity
      *
      * @return bool Authentication successful
      */

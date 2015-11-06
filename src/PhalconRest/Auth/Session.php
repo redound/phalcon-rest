@@ -5,7 +5,7 @@ namespace PhalconRest\Auth;
 class Session
 {
     /**
-     * @var mixed Identity of the session
+     * @var string Identity of the session
      */
     protected $identity;
 
@@ -35,8 +35,6 @@ class Session
     public function setIdentity($identity)
     {
         $this->identity = $identity;
-
-        return $this;
     }
 
     public function getIdentity()
