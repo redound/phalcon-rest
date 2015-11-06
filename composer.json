@@ -6,6 +6,10 @@
         "php": ">=5.4",
         "ext-phalcon": ">=1.3.2"
     },
+    "suggest": {
+        "league/fractal": "^0.13.0",
+        "firebase/php-jwt": "^3.0"
+    },
     "authors": [
         {
             "name": "Olivier Andriessen",
