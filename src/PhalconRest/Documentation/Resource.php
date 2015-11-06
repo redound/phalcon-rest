@@ -4,7 +4,6 @@ namespace PhalconRest\Documentation;
 
 class Resource
 {
-
     protected $methods;
     protected $collection;
     public $endpoints = [];

@@ -4,7 +4,6 @@ namespace PhalconRest\Documentation;
 
 class Generator extends \Phalcon\Mvc\User\Plugin
 {
-
     protected $reader;
     protected $collections;
     protected $collectionClasses = [];
@@ -18,7 +17,6 @@ class Generator extends \Phalcon\Mvc\User\Plugin
 
     protected function getCollectionClasses()
     {
-
         if (empty($this->collectionClasses)) {
 
             foreach ($this->collections as $collection) {
@@ -42,7 +40,6 @@ class Generator extends \Phalcon\Mvc\User\Plugin
 
     protected function getAnnotationsFromCollections()
     {
-
         $data = [];
 
         foreach ($this->getCollectionClasses() as $collection) {
@@ -68,8 +65,8 @@ class Generator extends \Phalcon\Mvc\User\Plugin
 
     protected function getDocumentedRoutesFromCollections()
     {
-
         $collections = $this->getAnnotationsFromCollections();
+        $data = [];
 
         foreach ($collections as $collection) {
 

@@ -4,10 +4,8 @@ namespace PhalconRest\Documentation;
 
 class Endpoint
 {
-
     public function __construct($resource)
     {
-
         $this->resource = $resource;
         $this->title = null;
         $this->method = null;

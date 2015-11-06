@@ -12,10 +12,11 @@ class OptionsResponse extends \PhalconRest\Mvc\Plugin
         // OPTIONS have no body, send the headers, exit
         if ($this->request->getMethod() == 'OPTIONS') {
 
-            $this->response->send([
+            $this->response->setJsonContent([
                 'result' => 'OK',
             ]);
-            exit;
+
+            return false;
         }
     }
 }
