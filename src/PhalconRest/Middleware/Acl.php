@@ -14,6 +14,7 @@ class Acl extends \PhalconRest\Mvc\Plugin
 
     const RESOURCE_API = 'api';
 
+    protected $acl;
 
     protected $privateEndpoints;
     protected $publicEndpoints;
@@ -21,13 +22,14 @@ class Acl extends \PhalconRest\Mvc\Plugin
 
     public function __construct($privateEndpoints = [], $publicEndpoints = [])
     {
+        $this->acl = null;
         $this->privateEndpoints = $privateEndpoints;
         $this->publicEndpoints = $publicEndpoints;
     }
 
     protected function _getAcl()
     {
-        if ($this->persistent->has('acl')) {
+        if(!$this->acl) {
 
             $acl = new \Phalcon\Acl\Adapter\Memory();
             $acl->setDefaultAction(\Phalcon\Acl::DENY);
@@ -49,10 +51,10 @@ class Acl extends \PhalconRest\Mvc\Plugin
                 $acl->allow(self::ROLE_PRIVATE, self::RESOURCE_API, $endpoint);
             }
 
-            $this->persistent->set('acl', $acl);
+            $this->acl = $acl;
         }
 
-        return $this->persistent->get('acl');
+        return $this->acl;
     }
 
     public function beforeExecuteRoute(Event $event, Micro $app)
