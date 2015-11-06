@@ -48,7 +48,7 @@ class JWT implements \PhalconRest\Auth\TokenParser
     {
         $tokenData = $this->decode($token);
 
-        return new Session($tokenData['iss'], $tokenData['sub'], $tokenData['iat'], $tokenData['exp'], $token);
+        return new Session($tokenData->iss, $tokenData->sub, $tokenData->iat, $tokenData->exp, $token);
     }
 
     public function decode($token)
