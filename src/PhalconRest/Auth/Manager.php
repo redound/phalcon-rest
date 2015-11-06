@@ -23,12 +23,12 @@ class Manager extends \PhalconRest\Mvc\Plugin
     /**
      * @var int Expiration time of created sessions
      */
-    protected $sessionExpirationTime;
+    protected $sessionDuration;
 
 
-    public function __construct($sessionExpirationTime = 24 * 3600)
+    public function __construct($sessionDuration = 24 * 3600)
     {
-        $this->sessionExpirationTime = $sessionExpirationTime;
+        $this->sessionDuration = $sessionDuration;
 
         $this->accountTypes = [];
         $this->session = null;
@@ -48,14 +48,14 @@ class Manager extends \PhalconRest\Mvc\Plugin
     }
 
 
-    public function getSessionExpirationTime()
+    public function getSessionDuration()
     {
-        return $this->sessionExpirationTime;
+        return $this->sessionDuration;
     }
 
-    public function setSessionExpirationTime($time)
+    public function setSessionDuration($time)
     {
-        $this->sessionExpirationTime = $time;
+        $this->sessionDuration = $time;
     }
 
 
@@ -119,7 +119,9 @@ class Manager extends \PhalconRest\Mvc\Plugin
             throw new UserException(ErrorCodes::AUTH_BADLOGIN);
         }
 
-        $session = new Session($accountTypeName, $identity, $this->sessionExpirationTime);
+        $startTime = time();
+
+        $session = new Session($accountTypeName, $identity, $startTime, $startTime + $this->sessionDuration);
         $token = $this->tokenParser->getToken($session);
         $session->setToken($token);
 
@@ -166,6 +168,11 @@ class Manager extends \PhalconRest\Mvc\Plugin
 
         if(!$session){
             return false;
+        }
+
+        if($session->getExpirationTime() < time()){
+
+            throw new UserException(ErrorCodes::AUTH_EXPIRED);
         }
 
         $session->setToken($token);

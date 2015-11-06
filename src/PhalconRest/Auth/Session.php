@@ -19,15 +19,17 @@ class Session
      */
     protected $token;
 
+    protected $startTime;
     protected $expirationTime;
 
     protected $isValid;
 
 
-    public function __construct($accountTypeName, $identity, $expirationTime, $token=null)
+    public function __construct($accountTypeName, $identity, $startTime, $expirationTime, $token=null)
     {
         $this->accountTypeName = $accountTypeName;
         $this->identity = $identity;
+        $this->startTime = $startTime;
         $this->expirationTime = $expirationTime;
         $this->token = $token;
     }
@@ -60,6 +62,16 @@ class Session
     public function getExpirationTime()
     {
         return $this->expirationTime;
+    }
+
+    public function setStartTime($time)
+    {
+        $this->startTime = $time;
+    }
+
+    public function getStartTime()
+    {
+        return $this->startTime;
     }
 
     public function setAccountTypeName($accountTypeName)
