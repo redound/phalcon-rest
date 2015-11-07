@@ -1,7 +1,7 @@
 {
     "name": "olivierandriessen/phalcon-rest",
     "description": "Phalcon REST Library",
-    "version": "0.0.3",
+    "version": "1.0.1",
     "require": {
         "php": ">=5.4",
         "ext-phalcon": ">=1.3.2"
@@ -14,6 +14,10 @@
         {
             "name": "Olivier Andriessen",
             "email": "olivierandriessen@gmail.com"
+        },
+        {
+            "name": "Bart Blok",
+            "email": "bart@wittig.nl"
         }
     ],
     "autoload": {

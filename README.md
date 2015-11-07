@@ -29,6 +29,7 @@ Please file issues under GitHub, or submit a pull request if you'd like to direc
 
 ## Changelog ##
 
+*1.0.1* Update README
 *1.0.0* Stable release with several improvements
 *0.0.4* Release unfinished but stable version  
 *0.0.3* Added Auth/Account/Email, changed user registration flow  
