@@ -1,4 +1,5 @@
 #Phalcon REST#
+[![Latest Stable Version](https://github.com/olivierandriessen/phalcon-rest)](https://packagist.org/packages/olivierandriessen/phalcon-rest) 
 <a href="http://phalconist.com/olivierandriessen/phalcon-rest" target="_blank">
 ![Phalcon REST Library](http://phalconist.com/olivierandriessen/phalcon-rest/default.svg)
 </a>
