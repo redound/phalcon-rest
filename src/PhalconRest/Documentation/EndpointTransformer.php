@@ -13,7 +13,6 @@ class EndpointTransformer extends Fractal\TransformerAbstract
      */
     public function transform($endpoint)
     {
-
         return [
             'resource' => $endpoint->resource,
             'method' => $endpoint->method,

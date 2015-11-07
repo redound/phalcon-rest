@@ -4,24 +4,30 @@ namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Micro;
+use PhalconRest\Constants\Services;
+use PhalconRest\Exceptions\Exception;
 
-class Fractal extends \Phalcon\Mvc\User\Plugin
+class Fractal extends \PhalconRest\Mvc\Plugin
 {
-    protected $fractal;
-    protected $request;
+    public $parseIncludes;
 
-    public function __construct($fractalservice, $requestservice)
+    public function __construct($parseIncludes=true)
     {
-        $this->fractal = $this->di->get($fractalservice);
-        $this->request = $this->di->get($requestservice);
+        $this->parseIncludes = $parseIncludes;
     }
 
     public function beforeExecuteRoute(Event $event, Micro $app)
     {
-        $include = $this->request->getQuery('include');
+        /** @var \League\Fractal\Manager $fractal */
+        $fractal = $this->di->get(Services::FRACTAL_MANAGER);
 
-        if (!is_null($include)) {
-            $this->fractal->parseIncludes($include);
+        if($this->parseIncludes){
+
+            $include = $this->request->getQuery('include');
+
+            if(!is_null($include)){
+                $fractal->parseIncludes($include);
+            }
         }
     }
 }

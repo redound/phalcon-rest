@@ -22,7 +22,6 @@ class ResourceTransformer extends Fractal\TransformerAbstract
      */
     public function transform($resource)
     {
-
         return [
             'title' => $resource->resource,
         ];
@@ -30,7 +29,6 @@ class ResourceTransformer extends Fractal\TransformerAbstract
 
     public function includeRoutes($resource)
     {
-
         $endpoints = isset($resource->endpoints) ? $resource->endpoints : [];
         return $this->collection($endpoints, new EndpointTransformer, 'parent');
     }

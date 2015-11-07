@@ -2,174 +2,203 @@
 
 namespace PhalconRest\Http;
 
-use PhalconRest\Constants\Services as PhalconRestServices;
-use PhalconRest\Exceptions\CoreException;
-use PhalconRest\Exceptions\UserException;
 
-class Response extends \Phalcon\Mvc\User\Plugin
+class Response extends \Phalcon\Http\Response
 {
+    protected $defaultErrorMessages = [
 
-    protected $debugMode;
-    protected $statusCode;
+        // General
+        1001 => [
+           'statuscode' => 404,
+           'message' => 'General: Not found',
+        ],
 
-    public function __construct()
+        // Data
+        2001 => [
+           'statuscode' => 404,
+           'message' => 'Data: Duplicate data',
+        ],
+
+        2002 => [
+           'statuscode' => 404,
+           'message' => 'Data: Not Found',
+        ],
+
+        2003 => [
+           'statuscode' => 404,
+           'message' => 'Failed to process data',
+        ],
+
+        2004 => [
+           'statuscode' => 404,
+           'message' => 'Data: Invalid',
+        ],
+
+        2005 => [
+           'statuscode' => 404,
+           'message' => 'Action failed',
+        ],
+
+        2010 => [
+           'statuscode' => 404,
+           'message' => 'Data: Not Found',
+        ],
+
+        2020 => [
+           'statuscode' => 500,
+           'message' => 'Data: Failed to create',
+        ],
+
+        2030 => [
+           'statuscode' => 500,
+           'message' => 'Data: Failed to update',
+        ],
+
+        2040 => [
+           'statuscode' => 500,
+           'message' => 'Data: Failed to delete',
+        ],
+
+        2060 => [
+           'statuscode' => 404,
+           'message' => 'Data: Rejected',
+        ],
+
+        2070 => [
+           'statuscode' => 403,
+           'message' => 'Data: Action not allowed',
+        ],
+
+        // Authentication
+        3006 => [
+           'statuscode' => 400,
+           'message' => 'Auth: Provided token invalid',
+        ],
+
+        3007 => [
+           'statuscode' => 404,
+           'message' => 'Auth: No username present',
+        ],
+
+        3008 => [
+           'statuscode' => 404,
+           'message' => 'Auth: Invalid authentication bearer type',
+        ],
+
+        3009 => [
+           'statuscode' => 404,
+           'message' => 'Auth: Bad login credentials',
+        ],
+
+        3010 => [
+           'statuscode' => 401,
+           'message' => 'Auth: Unauthorized',
+        ],
+
+        3020 => [
+           'statuscode' => 403,
+           'message' => 'Auth: Forbidden',
+        ],
+
+        3030 => [
+           'statuscode' => 401,
+           'message' => 'Auth: Session expired',
+        ],
+
+        4001 => [
+           'statuscode' => 404,
+           'message' => 'Google: No data',
+        ],
+
+        4002 => [
+           'statuscode' => 404,
+           'message' => 'Google: Bad login',
+        ],
+
+        4003 => [
+           'statuscode' => 404,
+           'message' => 'User: Not active',
+        ],
+
+        4004 => [
+           'statuscode' => 404,
+           'message' => 'User: Not found',
+        ],
+
+        4005 => [
+           'statuscode' => 404,
+           'message' => 'User: Registration failed',
+        ],
+
+        4006 => [
+           'statuscode' => 404,
+           'message' => 'User: Modification failed',
+        ],
+
+        4007 => [
+           'statuscode' => 404,
+           'message' => 'User: Creation failed',
+        ],
+
+        // PDO
+        23000 => [
+           'statuscode' => 404,
+           'message' => 'Duplicate entry',
+        ]
+    ];
+
+
+    public function getDefaultErrorMessages()
     {
-        $this->debugMode = 1;
-        $this->statusCode = 200;
+        return $this->defaultErrorMessages;
     }
 
-    public function setManager(\PhalconRest\Http\Response\Manager $manager)
+    public function setDefaultErrorMessages($messages)
     {
-        $this->manager = $manager;
-        return $this;
+        $this->defaultErrorMessages = $messages;
     }
 
-    public function setDebugMode($debugMode)
+    public function setErrorContent(\Exception $e, $developerInfo=false)
     {
-        $this->debugMode = $debugMode;
-    }
+        $errorCode = $e->getCode();
+        $statusCode = 500;
+        $message = 'Unspecified error';
 
-    protected function parseTrace($traces)
-    {
-        $parsed = [];
+        if(array_key_exists($errorCode, $this->defaultErrorMessages)){
 
-        foreach ($traces as $key => $trace) {
+            $defaultMessage = $this->defaultErrorMessages[$errorCode];
 
-            $parsed[$key] = $trace;
-
-            if (is_object($trace)) {
-                $parsed[$key] = 'closure...';
-            }
-
-            if (is_array($trace)) {
-                $parsed[$key] = $this->parseTrace($trace);
-            }
+            $statusCode = $defaultMessage['statuscode'];
+            $message = $defaultMessage['message'];
         }
 
-        return $parsed;
-    }
-
-    public function sendErrorMessage($e)
-    {
-        $code = $e->getCode();
-        $message = $e->getMessage();
-
-        // Use key to obtain status code
-        $this->statusCode = $this->manager->getStatusCode($code);
-
-        // Use key to obtain response message
-        $message = $this->manager->getMessage($code);
-
         $error = [
-            'code' => $code,
-            'status' => $this->statusCode,
+            'code' => $errorCode,
+            'status' => $statusCode,
             'message' => $message,
         ];
 
-        if ($this->debugMode === 1) {
+        if ($developerInfo === true) {
 
             $error['developer'] = [
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
                 'message' => $e->getMessage(),
             ];
-
-            if ($this->di->get(PhalconRestServices::REQUEST)->hasQuery('trace')) {
-                $error['developer']['trace'] = $this->parseTrace($e->getTrace());
-            }
         }
 
-        $this->send([
-            'error' => $error,
-        ]);
+        $this->setJsonContent(['error' => $error]);
+        $this->setStatusCode($statusCode);
     }
 
-    public function sendException(\Exception $e)
+    public function setJsonContent($content, $jsonOptions = 0, $depth = 512)
     {
-        switch (true) {
+        parent::setJsonContent($content, $jsonOptions, $depth);
 
-            case ($e instanceof UserException):
-            case ($e instanceof CoreException):
-            case ($this->debugMode === 0):
-                $this->sendErrorMessage($e);
-                break;
-
-            default:
-                throw $e;     // Rethrow the exception
-                break;
-        }
-    }
-
-    public function send($data)
-    {
-
-        $res = new \Phalcon\Http\Response;
-
-        $res->setHeader('Content-Type', 'application/json');
-        $res->setHeader('Access-Control-Allow-Origin', '*');
-        $res->setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-        $res->setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
-        $res->setHeader('E-Tag', md5(serialize($data)));
-        $res->setStatusCode($this->statusCode, $this->getMessage($this->statusCode));
-        $res->setContentType('application/json');
-        $res->setJsonContent($data);
-        $res->send();
-        exit;
-    }
-
-    protected function getMessage($code)
-    {
-
-        $codes = [
-            // Informational 1xx
-            100 => 'Continue',
-            101 => 'Switching Protocols',
-            // Success 2xx
-            200 => 'OK',
-            201 => 'Created',
-            202 => 'Accepted',
-            203 => 'Non-Authoritative Information',
-            204 => 'No Content',
-            205 => 'Reset Content',
-            206 => 'Partial Content',
-            // Redirection 3xx
-            300 => 'Multiple Choices',
-            301 => 'Moved Permanently',
-            302 => 'Found', // 1.1
-            303 => 'See Other',
-            304 => 'Not Modified',
-            305 => 'Use Proxy',
-            // 306 is deprecated but reserved
-            307 => 'Temporary Redirect',
-            // Client Error 4xx
-            400 => 'Bad Request',
-            401 => 'Unauthorized',
-            402 => 'Payment Required',
-            403 => 'Forbidden',
-            404 => 'Not Found',
-            405 => 'Method Not Allowed',
-            406 => 'Not Acceptable',
-            407 => 'Proxy Authentication Required',
-            408 => 'Request Timeout',
-            409 => 'Conflict',
-            410 => 'Gone',
-            411 => 'Length Required',
-            412 => 'Precondition Failed',
-            413 => 'Request Entity Too Large',
-            414 => 'Request-URI Too Long',
-            415 => 'Unsupported Media Type',
-            416 => 'Requested Range Not Satisfiable',
-            417 => 'Expectation Failed',
-            // Server Error 5xx
-            500 => 'Internal Server Error',
-            501 => 'Not Implemented',
-            502 => 'Bad Gateway',
-            503 => 'Service Unavailable',
-            504 => 'Gateway Timeout',
-            505 => 'HTTP Version Not Supported',
-            509 => 'Bandwidth Limit Exceeded',
-        ];
-
-        return (isset($codes[$code])) ? $codes[$code] : 'Unknown Status Code';
+        $this->setHeader('Access-Control-Allow-Origin', '*');
+        $this->setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+        $this->setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+        $this->setHeader('E-Tag', md5($this->getContent()));
+        $this->setContentType('application/json');
     }
 }
