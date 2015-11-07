@@ -22,8 +22,6 @@ class Session
     protected $startTime;
     protected $expirationTime;
 
-    protected $isValid;
-
 
     public function __construct($accountTypeName, $identity, $startTime, $expirationTime, $token=null)
     {
