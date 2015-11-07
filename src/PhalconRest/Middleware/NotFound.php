@@ -7,9 +7,8 @@ use PhalconRest\Exceptions\UserException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Micro;
 
-class NotFound extends \Phalcon\Mvc\User\Plugin
+class NotFound extends \PhalconRest\Mvc\Plugin
 {
-
     public function beforeNotFound(Event $event, Micro $app)
     {
         throw new UserException(ErrorCodes::GEN_NOTFOUND);

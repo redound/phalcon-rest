@@ -5,237 +5,189 @@ namespace PhalconRest\Auth;
 use PhalconRest\Constants\ErrorCodes as ErrorCodes;
 use PhalconRest\Exceptions\UserException;
 
-class Manager extends \Phalcon\Mvc\User\Plugin
+class Manager extends \PhalconRest\Mvc\Plugin
 {
+    const LOGIN_DATA_USERNAME = "username";
+    const LOGIN_DATA_PASSWORD = "password";
 
-    protected $user;
-    protected $issuer;
-    protected $expireTime;
-    protected $accounts;
-    protected $token;
-    protected $genSalt;
+    /**
+     * @var AccountType[] Account types
+     */
+    protected $accountTypes;
 
-    public function __construct(\PhalconRest\Auth\Session $sessionManager)
+    /**
+     * @var Session Currenty active session
+     */
+    protected $session;
+
+    /**
+     * @var int Expiration time of created sessions
+     */
+    protected $sessionDuration;
+
+
+    public function __construct($sessionDuration = 24 * 3600)
     {
-        $this->issuer = null;
-        $this->expireTime = 86400 * 7; // Default one week
-        $this->accounts = [];
-        $this->sessionManager = $sessionManager;
+        $this->sessionDuration = $sessionDuration;
+
+        $this->accountTypes = [];
+        $this->session = null;
+    }
+
+
+    public function registerAccountType($name, AccountType $account)
+    {
+        $this->accountTypes[$name] = $account;
 
         return $this;
     }
 
-    public function setGenSalt($salt)
+    public function getAccountTypes()
     {
-        $this->genSalt = $salt;
+        return $this->accountTypes;
     }
 
-    public function addAccount($name, \PhalconRest\Auth\Account $account)
-    {
-        $this->accounts[$name] = $account;
 
-        return $this;
+    public function getSessionDuration()
+    {
+        return $this->sessionDuration;
     }
 
-    public function getAccounts()
+    public function setSessionDuration($time)
     {
-        return $this->accounts;
+        $this->sessionDuration = $time;
     }
 
-    public function setExpireTime($time)
-    {
-        $this->expireTime = $time;
 
-        return $this;
+    public function getSession()
+    {
+        return $this->session;
     }
 
-    public function getExpireTime()
+    public function setSession(Session $session)
     {
-        return $this->expireTime;
+        $this->session = $session;
     }
 
-    public function setIssuer($issuer)
-    {
-        $this->issuer = $issuer;
 
-        return $issuer;
-    }
-
-    public function getIssuer()
-    {
-        return $this->issuer;
-    }
-
-    public function setSessionManager($session)
-    {
-        $this->sessionManager = $session;
-
-        return $this;
-    }
-
-    public function getSessionManager()
-    {
-        return $this->sessionManager;
-    }
-
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getUser()
-    {
-        return $this->user;
-    }
-
+    /**
+     * @return bool
+     *
+     * Check if a user is currently logged in
+     */
     public function loggedIn()
     {
-        return !!$this->user;
+        return !!$this->session;
     }
 
-    public function getAccount($name)
+    /**
+     * @param $name
+     *
+     * @return \PhalconRest\Auth\AccountType Account-type
+     */
+    public function getAccountType($name)
     {
-        if (array_key_exists($name, $this->accounts)) {
+        if (array_key_exists($name, $this->accountTypes)) {
 
-            return $this->accounts[$name];
+            return $this->accountTypes[$name];
         }
 
         return false;
     }
 
-    public function register($bearer, $data)
+
+    /**
+     * @param string $accountTypeName
+     * @param array $data
+     *
+     * @return Session Created session
+     * @throws UserException
+     *
+     * Login a user with the specified account-type
+     */
+    public function login($accountTypeName, array $data)
     {
-        
-        // Check if account type exists
-        if (!$account = $this->getAccount($bearer)) {
-
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
-        }
-
-        // Check if account has method
-        if (!method_exists($account, 'register')) {
-
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
-        }
-
-        $user = $account->register($data);
-
-        return $user;
-    }
-    
-    public function update($bearer, $data)
-    {
-
-        // Check if account type exists
-        if (!$account = $this->getAccount($bearer)) {
-
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
-        }
-
-        // Check if account has method
-        if (!method_exists($account, 'update')) {
-
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
-        }
-
-        $user = $account->update($data);
-
-        return $user;
-    }
-
-    public function changepassword($bearer, $data)
-    {
-
-        // Check if account type exists
-        if (!$account = $this->getAccount($bearer)) {
-
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
-        }
-
-        // Check if account has method
-        if (!method_exists($account, 'changepassword')) {
-
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
-        }
-
-        $user = $account->changepassword($data);
-
-        return $user;
-    }
-
-    public function login($bearer, $username, $password)
-    {
-        $this->setIssuer($bearer);
-
-        if (!$account = $this->getAccount($bearer)) {
+        if (!$account = $this->getAccountType($accountTypeName)) {
 
             throw new UserException(ErrorCodes::AUTH_INVALIDTYPE);
         }
 
-        $user = $account->login($username, $password);
+        $identity = $account->login($data);
 
-        if (!$user) {
+        if (!$identity) {
 
             throw new UserException(ErrorCodes::AUTH_BADLOGIN);
         }
 
-        $this->setUser($user);
+        $startTime = time();
 
-        return $this;
+        $session = new Session($accountTypeName, $identity, $startTime, $startTime + $this->sessionDuration);
+        $token = $this->tokenParser->getToken($session);
+        $session->setToken($token);
+
+        $this->session = $session;
+
+        return $this->session;
     }
 
-    public function getToken($key = null)
+    /**
+     * @param string $accountTypeName
+     * @param string $username
+     * @param string $password
+     *
+     * @return Session Created session
+     * @throws UserException
+     *
+     * Helper to login with username & password
+     */
+    public function loginWithUsernamePassword($accountTypeName, $username, $password)
     {
-        if (!$this->token) {
+        return $this->login($accountTypeName, [
 
-            $this->token = $this->sessionManager->create($this->getIssuer(), $this->getUser(), time(), $this->getExpireTime());
-        }
-
-        if ($key) {
-
-            return $this->token[$key];
-        }
-
-        return $this->token;
+            self::LOGIN_DATA_USERNAME => $username,
+            self::LOGIN_DATA_PASSWORD => $password
+        ]);
     }
 
-    public function hasToken()
-    {
-        return !!$this->token;
-    }
-
+    /**
+     * @param string $token Token to authenticate with
+     *
+     * @return bool
+     * @throws UserException
+     */
     public function authenticateToken($token)
     {
         try {
 
-            $decoded = $this->sessionManager->decode($token);
-        } catch (\UnexpectedValueException $e) {
+            $session = $this->tokenParser->getSession($token);
+        }
+        catch(\Exception $e){
 
+            throw new UserException(ErrorCodes::AUTH_BADTOKEN);
+        }
+
+        if(!$session){
             return false;
         }
 
-        // Set session
-        if ($decoded && $decoded->exp > time()) {
+        if($session->getExpirationTime() < time()){
 
-            $this->setUser($decoded->sub);
+            throw new UserException(ErrorCodes::AUTH_EXPIRED);
         }
 
-        return true;
-    }
+        $session->setToken($token);
 
-    public function getTokenResponse()
-    {
-        return [
-            'AuthToken' => $this->sessionManager->encode($this->getToken()),
-            'Expires' => $this->getToken('exp'),
-            'AccountType' => $this->getIssuer()
-        ];
-    }
+        // Authenticate identity
+        if (!$account = $this->getAccountType($session->getAccountTypeName())) {
 
-    public function createMailToken()
-    {
-        return password_hash($this->genSalt . rand(0, 10), PASSWORD_DEFAULT);
+            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+        }
+
+        if($account->authenticate($session->getIdentity())){
+
+            $this->session = $session;
+        }
+
+        return !!$this->session;
     }
 }
