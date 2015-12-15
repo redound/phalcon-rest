@@ -26,7 +26,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
     protected $sessionDuration;
 
 
-    public function __construct($sessionDuration = 24 * 3600)
+    public function __construct($sessionDuration = 86400)
     {
         $this->sessionDuration = $sessionDuration;
 
