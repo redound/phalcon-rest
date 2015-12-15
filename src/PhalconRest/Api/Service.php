@@ -5,7 +5,7 @@ namespace PhalconRest\Api;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Exceptions\UserException;
 
-class ApiService extends \PhalconRest\Mvc\Plugin
+class Service extends \PhalconRest\Mvc\Plugin
 {
     public $resources;
 
