@@ -1,7 +1,7 @@
 #Phalcon REST#
-[![Latest Stable Version](https://poser.pugx.org/olivierandriessen/phalcon-rest/v/stable)](https://packagist.org/packages/olivierandriessen/phalcon-rest) 
-<a href="http://phalconist.com/olivierandriessen/phalcon-rest" target="_blank">
-![Phalcon REST Library](http://phalconist.com/olivierandriessen/phalcon-rest/default.svg)
+[![Latest Stable Version](https://poser.pugx.org/redound/phalcon-rest/v/stable)](https://packagist.org/packages/redound/phalcon-rest) 
+<a href="http://phalconist.com/redound/phalcon-rest" target="_blank">
+![Phalcon REST Library](http://phalconist.com/redound/phalcon-rest/default.svg)
 </a>
 
 *A flexible library, consisting of interchangeable classes made for the modern REST API.*
@@ -16,11 +16,11 @@
 ## Installing ##
 Install using Composer. Not all dependencies are required.
 ````
-composer install olivierandriessen/phalcon-rest
+composer install redound/phalcon-rest
 ````
 
 ## Boilerplate ##
-For a full implementation of the library, check out the [Boilerplate application](https://github.com/olivierandriessen/phalcon-rest-boilerplate).
+For a full implementation of the library, check out the [Boilerplate application](https://github.com/redound/phalcon-rest-boilerplate).
 
 ## Table of Contents
 
