@@ -12,7 +12,7 @@
  * Access control on endpoints ([Phalcon ACL](http://docs.phalconphp.com/en/latest/reference/acl.html))
  * Documentation generator ([Phalcon Annotation Reader](https://docs.phalconphp.com/en/latest/reference/annotations.html))
  * [Postman REST Client](http://getpostman.com) Collection Export generator
- * Automatic CRUD, Query, Validation functionalities by defining Resources
+ * Configurable Resources that automate CRUD, Query, Validation functionalities
  * URL Query Commands which can be translated to different query languages
 
 ## Installing ##
