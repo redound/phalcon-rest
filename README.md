@@ -12,9 +12,11 @@
  * Access control on endpoints ([Phalcon ACL](http://docs.phalconphp.com/en/latest/reference/acl.html))
  * Documentation generator ([Phalcon Annotation Reader](https://docs.phalconphp.com/en/latest/reference/annotations.html))
  * [Postman REST Client](http://getpostman.com) Collection Export generator
+ * Automatic CRUD, Query, Validation functionalities by defining Resources
+ * URL Query Commands which can be translated to different query languages
 
 ## Installing ##
-Install using Composer. Not all dependencies are required.
+Install using Composer.
 ````
 composer install redound/phalcon-rest
 ````
@@ -162,15 +164,12 @@ Please file issues under GitHub, or submit a pull request if you'd like to direc
 
 ## Changelog ##
 
-*1.1.1* Add Resources, QueryParsers
-*1.0.1* Update README
-*1.0.0* Stable release with several improvements
-*0.0.4* Release unfinished but stable version  
-*0.0.3* Added Auth/Account/Email, changed user registration flow  
-*0.0.2* Major changes  
-*0.0.1* Major changes  
+*1.1.0* Added Resources, QueryParsers
 
 ###Todo###
-* ~~Convert indentation to spaces~~
+* Make Resources exportable
+* Add Resource validation information endpoint
+* Add Resource field information endpoint
+* Add disabling/enabling specific queries on Resources
 * DocBlocks
 * PSR-2 coding standard
