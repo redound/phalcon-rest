@@ -33,4 +33,8 @@ class Services
     const AUTH_MANAGER = 'authManager';
     const FRACTAL_MANAGER = 'fractalManager';
     const TOKEN_PARSER = 'tokenParser';
+    const API_SERVICE = 'apiService';
+    const QUERY = 'query';
+    const PHQL_QUERY_PARSER = 'phqlQueryParser';
+    const URL_QUERY_PARSER = 'urlQueryParser';
 }
