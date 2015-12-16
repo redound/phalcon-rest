@@ -42,13 +42,11 @@ class ResourceController extends FractalController
     public function create($resourceKey)
     {
         $data = (array)$this->request->getJsonRawBody();
-
     }
 
     public function update($resourceKey, $id)
     {
         $data = (array)$this->request->getJsonRawBody();
-
     }
 
     public function remove($resourceKey, $id)
