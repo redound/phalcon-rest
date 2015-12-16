@@ -19,9 +19,16 @@ class Phql extends \Phalcon\Mvc\User\Plugin
 
     const DEFAULT_KEY = 'value';
 
+    /**
+     * @param Query $query
+     *
+     * @return \Phalcon\Mvc\Model\Query\Builder
+     */
     public function fromQuery(Query $query)
     {
         $modelsManager = $this->di->getShared('modelsManager');
+
+        /** @var \Phalcon\Mvc\Model\Query\Builder $builder */
         $builder = $modelsManager->createBuilder();
 
         if ($query->hasModel()) {

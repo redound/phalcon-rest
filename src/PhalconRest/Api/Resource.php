@@ -7,6 +7,7 @@ class Resource
     protected $key;
     protected $model;
     protected $transformer;
+    protected $primaryKey = 'id';
 
     public function setKey($key)
     {
@@ -40,5 +41,16 @@ class Resource
     public function getTransformer()
     {
         return $this->transformer;
+    }
+
+
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    public function setPrimaryKey($primaryKey)
+    {
+        $this->primaryKey = $primaryKey;
     }
 }

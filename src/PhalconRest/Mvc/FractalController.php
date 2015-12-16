@@ -8,7 +8,7 @@ use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\Services;
 use PhalconRest\Exceptions\Exception;
 
-class FractalController extends \Phalcon\Mvc\Controller
+class FractalController extends Controller
 {
     /** @var \League\Fractal\Manager */
     protected $fractal;
