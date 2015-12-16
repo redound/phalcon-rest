@@ -13,7 +13,8 @@
  * Documentation generator ([Phalcon Annotation Reader](https://docs.phalconphp.com/en/latest/reference/annotations.html))
  * [Postman REST Client](http://getpostman.com) Collection Export generator
  * Configurable Resources that automate CRUD, Query, Validation functionalities
- * URL Query Commands which can be translated to different query languages
+ * [URL Query Commands](#url-query-commands) are added to a global data [Query](https://github.com/redound/phalcon-rest/blob/master/src/PhalconRest/Data/Query/Query.php)
+ * [phqlQueryParser](#using-phqlqueryparser) for translating data [queries](https://github.com/redound/phalcon-rest/blob/master/src/PhalconRest/Data/Query/Query.php) to phqlQueries
 
 ## Installing ##
 Install using Composer.
