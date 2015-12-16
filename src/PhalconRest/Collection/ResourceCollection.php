@@ -1,5 +1,7 @@
 <?php
 
+namespace PhalconRest\Collection;
+
 class ResourceCollection extends \Phalcon\Mvc\Micro\Collection
 {
     public function __construct()
