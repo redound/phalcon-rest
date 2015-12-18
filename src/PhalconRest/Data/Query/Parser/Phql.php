@@ -31,12 +31,6 @@ class Phql extends \Phalcon\Mvc\User\Plugin
         /** @var \Phalcon\Mvc\Model\Query\Builder $builder */
         $builder = $modelsManager->createBuilder();
 
-        if ($query->hasModel()) {
-
-            $model = ltrim($query->getModel(), '\\');
-            $builder->from($model);
-        }
-
         if ($query->hasOffset()) {
 
             $builder->offset($query->getOffset());

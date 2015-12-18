@@ -32,11 +32,6 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             return new \PhalconRest\Auth\TokenParser\JWT('this_should_be_changed');
         });
 
-        $this->setShared(Services::API_SERVICE, function(){
-
-            return new \PhalconRest\Api\Service();
-        });
-
         $this->setShared(Services::QUERY, function(){
 
             return new \PhalconRest\Data\Query();

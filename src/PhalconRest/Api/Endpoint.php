@@ -8,11 +8,13 @@ class Endpoint
     protected $path;
     protected $handlerMethod;
 
-    public function __construct($path, $httpMethod, $handlerMethod)
+    public function __construct($path=null, $httpMethod=null, $handlerMethod=null)
     {
-        $this->path = $path;
-        $this->httpMethod = $httpMethod;
-        $this->handlerMethod = $handlerMethod;
+        $this->path($path);
+        $this->httpMethod($httpMethod);
+        $this->handlerMethod($handlerMethod);
+
+        return $this;
     }
 
     public function getHttpMethod()
@@ -20,7 +22,7 @@ class Endpoint
         return $this->httpMethod;
     }
 
-    public function setHttpMethod($httpMethod)
+    public function httpMethod($httpMethod)
     {
         $this->httpMethod = $httpMethod;
         return $this;
@@ -31,7 +33,7 @@ class Endpoint
         return $this->path;
     }
 
-    public function setPath($path)
+    public function path($path)
     {
         $this->path = $path;
         return $this;
@@ -42,7 +44,7 @@ class Endpoint
         return $this->handlerMethod;
     }
 
-    public function setHandlerMethod($handlerMethod)
+    public function handlerMethod($handlerMethod)
     {
         $this->handlerMethod = $handlerMethod;
         return $this;

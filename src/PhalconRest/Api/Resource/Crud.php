@@ -21,29 +21,29 @@ class Crud extends Resource
     {
         parent::__construct($path, $model, $singleKey, $multipleKey, $transformer, $controller);
 
-        $this->addCrudEndpoints($crudEndpoints);
+        $this->crudEndpoints($crudEndpoints);
     }
 
-    public function addCrudEndpoints($endpoints)
+    public function crudEndpoints($endpoints)
     {
         if(in_array(self::ALL, $endpoints)){
-            $this->addAllEndpoint();
+            $this->allEndpoint();
         }
 
         if(in_array(self::FIND, $endpoints)){
-            $this->addFindEndpoint();
+            $this->findEndpoint();
         }
 
         if(in_array(self::CREATE, $endpoints)){
-            $this->addCreateEndpoint();
+            $this->createEndpoint();
         }
 
         if(in_array(self::UPDATE, $endpoints)){
-            $this->addUpdateEndpoint();
+            $this->updateEndpoint();
         }
 
         if(in_array(self::DELETE, $endpoints)){
-            $this->addDeleteEndpoint();
+            $this->deleteEndpoint();
         }
 
         return $this;
@@ -55,14 +55,9 @@ class Crud extends Resource
         return $this->getEndpoint(self::ALL);
     }
 
-    public function setAllEndpoint(Endpoint $endpoint)
+    public function allEndpoint(Endpoint $endpoint=null)
     {
-        $this->setEndpoint(self::ALL, $endpoint);
-    }
-
-    public function addAllEndpoint()
-    {
-        $this->setEndpoint(self::ALL, new \PhalconRest\Api\Endpoint\All());
+        $this->endpoint(self::ALL, $endpoint ?: new \PhalconRest\Api\Endpoint\All());
     }
 
 
@@ -71,14 +66,9 @@ class Crud extends Resource
         return $this->getEndpoint(self::FIND);
     }
 
-    public function setFindEndpoint(Endpoint $endpoint)
+    public function findEndpoint(Endpoint $endpoint=null)
     {
-        $this->setEndpoint(self::FIND, $endpoint);
-    }
-
-    public function addFindEndpoint()
-    {
-        $this->setEndpoint(self::FIND, new \PhalconRest\Api\Endpoint\Find());
+        $this->endpoint(self::FIND, $endpoint ?: new \PhalconRest\Api\Endpoint\Find());
     }
 
 
@@ -87,14 +77,9 @@ class Crud extends Resource
         return $this->getEndpoint(self::CREATE);
     }
 
-    public function setCreateEndpoint(Endpoint $endpoint)
+    public function createEndpoint(Endpoint $endpoint=null)
     {
-        $this->setEndpoint(self::CREATE, $endpoint);
-    }
-
-    public function addCreateEndpoint()
-    {
-        $this->setEndpoint(self::CREATE, new \PhalconRest\Api\Endpoint\Create());
+        $this->endpoint(self::CREATE, $endpoint ?: new \PhalconRest\Api\Endpoint\Create());
     }
 
 
@@ -103,14 +88,9 @@ class Crud extends Resource
         return $this->getEndpoint(self::UPDATE);
     }
 
-    public function setUpdateEndpoint(Endpoint $endpoint)
+    public function updateEndpoint(Endpoint $endpoint=null)
     {
-        $this->setEndpoint(self::UPDATE, $endpoint);
-    }
-
-    public function addUpdateEndpoint()
-    {
-        $this->setEndpoint(self::UPDATE, new \PhalconRest\Api\Endpoint\Update());
+        $this->endpoint(self::UPDATE, $endpoint ?: new \PhalconRest\Api\Endpoint\Update());
     }
 
 
@@ -119,13 +99,14 @@ class Crud extends Resource
         return $this->getEndpoint(self::DELETE);
     }
 
-    public function setDeleteEndpoint(Endpoint $endpoint)
+    public function deleteEndpoint(Endpoint $endpoint=null)
     {
-        $this->setEndpoint(self::DELETE, $endpoint);
+        $this->endpoint(self::DELETE, $endpoint ?: new \PhalconRest\Api\Endpoint\Delete());
     }
 
-    public function addDeleteEndpoint()
+
+    public static function create($path=null, $model=null, $singleKey='item', $multipleKey='items', $crudEndpoints=self::NO_ENDPOINTS, $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\ResourceCrud')
     {
-        $this->setEndpoint(self::DELETE, new \PhalconRest\Api\Endpoint\Delete());
+        return new Crud($path, $model, $singleKey, $multipleKey, $crudEndpoints, $transformer, $controller);
     }
 }

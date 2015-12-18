@@ -16,7 +16,6 @@ class Query
     const OPERATOR_IS_LIKE = 6;
     const OPERATOR_IS_NOT_EQUAL = 7;
 
-    protected $model = null;
     protected $offset = null;
     protected $limit = null;
     protected $options = [];
@@ -29,21 +28,6 @@ class Query
 
     }
 
-    public function setModel($model)
-    {
-        $this->model = $model;
-        return $this;
-    }
-
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    public function hasModel()
-    {
-        return !is_null($this->model);
-    }
 
     public function addField($field)
     {
@@ -145,10 +129,6 @@ class Query
 
     public function merge(Query $query)
     {
-        if ($query->hasModel()) {
-            $this->setModel($query->getModel());
-        }
-
         if ($query->hasFields()) {
             $this->addManyFields($query->getFields());
         }

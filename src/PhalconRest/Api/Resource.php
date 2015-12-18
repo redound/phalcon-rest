@@ -22,20 +22,29 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
     public function __construct($prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
     {
-        $this->setPrefix($prefix);
+        if($prefix){
+            $this->setPrefix($prefix);
+        }
 
-        $this->setModel($model);
-        $this->setSingleKey($singleKey);
-        $this->setMultipleKey($multipleKey);
+        $this->model($model);
+        $this->singleKey($singleKey);
+        $this->multipleKey($multipleKey);
 
-        $this->setTransformer($transformer);
-        $this->setController($controller);
+        $this->transformer($transformer);
+        $this->controller($controller);
 
         $this->endpoints = [];
+
+        return $this;
     }
 
+    public function prefix($prefix)
+    {
+        $this->setPrefix($prefix);
+        return $this;
+    }
 
-    public function setModel($model)
+    public function model($model)
     {
         $this->model = $model;
         return $this;
@@ -62,7 +71,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
 
-    public function setTransformer($transformer)
+    public function transformer($transformer)
     {
         $this->transformer = $transformer;
         return $this;
@@ -79,17 +88,20 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->controller;
     }
 
-    public function setController($controller)
+    public function controller($controller)
     {
         $this->controller = $controller;
 
-        $controller = new $controller();
+        if($controller){
 
-        if($controller instanceof \PhalconRest\Mvc\Controller\Resource){
-            $controller->setResource($this);
+            $controller = new $controller();
+
+            if($controller instanceof \PhalconRest\Mvc\Controller\Resource){
+                $controller->setResource($this);
+            }
+
+            $this->setHandler($controller);
         }
-
-        $this->setHandler($controller);
 
         return $this;
     }
@@ -105,7 +117,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return array_key_exists($name, $this->endpoints) ? $this->endpoints[$name] : null;
     }
 
-    public function setEndpoint($name, Endpoint $endpoint)
+    public function endpoint($name, Endpoint $endpoint)
     {
         $this->endpoints[$name] = $endpoint;
 
@@ -141,7 +153,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->singleKey;
     }
 
-    public function setSingleKey($singleKey)
+    public function singleKey($singleKey)
     {
         $this->singleKey = $singleKey;
         return $this;
@@ -153,9 +165,16 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->multipleKey;
     }
 
-    public function setMultipleKey($multipleKey)
+    public function multipleKey($multipleKey)
     {
         $this->multipleKey = $multipleKey;
         return $this;
     }
+
+
+    public static function create($prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
+    {
+        return new Resource($prefix, $model, $singleKey, $multipleKey, $transformer, $controller);
+    }
+
 }

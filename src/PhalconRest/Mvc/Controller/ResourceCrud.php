@@ -28,6 +28,8 @@ class ResourceCrud extends \PhalconRest\Mvc\Controller\Resource
     protected function getAllData()
     {
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
+        $phqlBuilder->from($this->resource->getModel());
+
         return $phqlBuilder->getQuery()->execute();
     }
 
@@ -66,6 +68,7 @@ class ResourceCrud extends \PhalconRest\Mvc\Controller\Resource
 
         $modelPrimaryKey = $this->resource->getModelPrimaryKey();
         $phqlBuilder
+            ->from($this->resource->getModel())
             ->andWhere($modelPrimaryKey . ' = :id:', ['id' => $id])
             ->limit(1);
 

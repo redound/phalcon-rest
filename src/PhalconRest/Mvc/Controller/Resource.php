@@ -10,8 +10,6 @@ class Resource extends \PhalconRest\Mvc\Controller\Fractal
     public function setResource(\PhalconRest\Api\Resource $resource)
     {
         $this->resource = $resource;
-        $this->query->setModel($resource->getModel());
-
         return $this;
     }
 
