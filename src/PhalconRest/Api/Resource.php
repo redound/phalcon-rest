@@ -40,10 +40,16 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
-
+    /**
+     * @param string $name  Name for the resource
+     *
+     * @return static
+     */
     public function name($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getName()
@@ -51,13 +57,22 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->name;
     }
 
-
+    /**
+     * @param string $prefix  Route prefix
+     *
+     * @return static
+     */
     public function prefix($prefix)
     {
         $this->setPrefix($prefix);
         return $this;
     }
 
+    /**
+     * @param string $model  Classname of the model
+     *
+     * @return static
+     */
     public function model($model)
     {
         $this->model = $model;
@@ -84,7 +99,11 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->_modelPrimaryKey;
     }
 
-
+    /**
+     * @param string $transformer  Classname of the transformer
+     *
+     * @return static
+     */
     public function transformer($transformer)
     {
         $this->transformer = $transformer;
@@ -96,12 +115,11 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->transformer;
     }
 
-
-    public function getController()
-    {
-        return $this->controller;
-    }
-
+    /**
+     * @param string $controller  Classname of the controller
+     *
+     * @return static
+     */
     public function controller($controller)
     {
         $this->controller = $controller;
@@ -120,17 +138,17 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
-
-    public function getEndpoints()
+    public function getController()
     {
-        return $this->endpoints;
+        return $this->controller;
     }
 
-    public function getEndpoint($name)
-    {
-        return array_key_exists($name, $this->endpoints) ? $this->endpoints[$name] : null;
-    }
-
+    /**
+     * @param string $name  Name for the endpoint
+     * @param Endpoint $endpoint
+     *
+     * @return static
+     */
     public function endpoint($name, Endpoint $endpoint)
     {
         $this->endpoints[$name] = $endpoint;
@@ -161,31 +179,58 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
-
-    public function getSingleKey()
+    public function getEndpoints()
     {
-        return $this->singleKey;
+        return $this->endpoints;
     }
 
+    public function getEndpoint($name)
+    {
+        return array_key_exists($name, $this->endpoints) ? $this->endpoints[$name] : null;
+    }
+
+    /**
+     * @param string $singleKey  Response key for single item
+     *
+     * @return static
+     */
     public function singleKey($singleKey)
     {
         $this->singleKey = $singleKey;
         return $this;
     }
 
-
-    public function getMultipleKey()
+    public function getSingleKey()
     {
-        return $this->multipleKey;
+        return $this->singleKey;
     }
 
+    /**
+     * @param string $multipleKey  Response key for multiple items
+     *
+     * @return static
+     */
     public function multipleKey($multipleKey)
     {
         $this->multipleKey = $multipleKey;
         return $this;
     }
 
+    public function getMultipleKey()
+    {
+        return $this->multipleKey;
+    }
 
+    /**
+     * @param string $prefix
+     * @param string $model
+     * @param string $singleKey
+     * @param string $multipleKey
+     * @param string $transformer
+     * @param string $controller
+     *
+     * @return static
+     */
     public static function create($prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
     {
         return new Resource($prefix, $model, $singleKey, $multipleKey, $transformer, $controller);
