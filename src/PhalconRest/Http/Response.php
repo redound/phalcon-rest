@@ -195,10 +195,7 @@ class Response extends \Phalcon\Http\Response
     {
         parent::setJsonContent($content, $jsonOptions, $depth);
 
-        $this->setHeader('Access-Control-Allow-Origin', '*');
-        $this->setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-        $this->setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
-        $this->setHeader('E-Tag', md5($this->getContent()));
         $this->setContentType('application/json');
+        $this->setHeader('E-Tag', md5($this->getContent()));
     }
 }
