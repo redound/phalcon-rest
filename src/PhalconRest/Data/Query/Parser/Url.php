@@ -4,7 +4,7 @@ namespace PhalconRest\Data\Query\Parser;
 
 use \PhalconRest\Data\Query\Condition;
 use \PhalconRest\Data\Query\Sorter;
-use \PhalconRest\Data\Query\Query;
+use \PhalconRest\Data\Query;
 
 class Url
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhalconRest\Data\Query;
+namespace PhalconRest\Data;
 
 use \PhalconRest\Data\Query\Condition;
 use \PhalconRest\Data\Query\Sorter;

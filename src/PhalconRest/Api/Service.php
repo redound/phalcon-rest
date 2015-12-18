@@ -14,17 +14,38 @@ class Service extends \PhalconRest\Mvc\Plugin
         $this->resources = [];
     }
 
-    public function addResource(Resource $resource)
+    /**
+     * @return Resource[]
+     */
+    public function getResources()
     {
-        $this->resources[$resource->getKey()] = $resource;
+        return $this->resources;
     }
 
+    /**
+     * @param $name
+     *
+     * @return Resource
+     */
     public function getResource($name)
     {
-        if (!array_key_exists($name, $this->resources)) {
-            throw new UserException(ErrorCodes::DATA_NOTFOUND, 'Resource has not been found');
-        }
+        return array_key_exists($name, $this->resources) ? $this->resources[$name] : null;
+    }
 
-        return $this->resources[$name];
+    public function setResource($name, Resource $resource)
+    {
+        $this->resources[$name] = $resource;
+        return $this;
+    }
+
+    public function removeResource($name)
+    {
+        unset($this->resources[$name]);
+    }
+
+    public function setResources($resources)
+    {
+        $this->resources = $resources;
+        return $this;
     }
 }

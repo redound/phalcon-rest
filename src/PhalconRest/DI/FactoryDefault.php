@@ -39,7 +39,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 
         $this->setShared(Services::QUERY, function(){
 
-            return new \PhalconRest\Data\Query\Query();
+            return new \PhalconRest\Data\Query();
         });
 
         $this->setShared(Services::PHQL_QUERY_PARSER, function(){

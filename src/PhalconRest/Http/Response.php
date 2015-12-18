@@ -195,7 +195,7 @@ class Response extends \Phalcon\Http\Response
     {
         parent::setJsonContent($content, $jsonOptions, $depth);
 
-        $this->setContentType('application/json');
+        $this->setContentType('application/json', 'UTF-8');
         $this->setHeader('E-Tag', md5($this->getContent()));
     }
 }
