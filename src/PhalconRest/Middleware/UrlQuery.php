@@ -6,7 +6,7 @@ use \PhalconRest\Constants\Services as AppServices;
 
 class UrlQuery extends \PhalconRest\Mvc\Plugin
 {
-    public function beforeExecuteRoute(\Phalcon\Events\Event $event, \Phalcon\Mvc\Micro $app)
+    public function beforeExecuteRoute(\Phalcon\Events\Event $event, \PhalconRest\Api $api)
     {
         $params = $this->getDI()->get(AppServices::REQUEST)->getQuery();
         $query = $this->getDI()->get(AppServices::URL_QUERY_PARSER)->createQuery($params);

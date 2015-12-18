@@ -8,6 +8,8 @@ use PhalconRest\Constants\Services;
 
 class Resource extends \Phalcon\Mvc\Micro\Collection
 {
+    protected $name;
+
     protected $model;
     protected $transformer;
     protected $controller;
@@ -37,6 +39,18 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
         return $this;
     }
+
+
+    public function name($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
 
     public function prefix($prefix)
     {

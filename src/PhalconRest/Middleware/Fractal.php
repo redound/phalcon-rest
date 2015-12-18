@@ -3,9 +3,7 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
-use Phalcon\Mvc\Micro;
 use PhalconRest\Constants\Services;
-use PhalconRest\Exceptions\Exception;
 
 class Fractal extends \PhalconRest\Mvc\Plugin
 {
@@ -16,7 +14,7 @@ class Fractal extends \PhalconRest\Mvc\Plugin
         $this->parseIncludes = $parseIncludes;
     }
 
-    public function beforeExecuteRoute(Event $event, Micro $app)
+    public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
     {
         /** @var \League\Fractal\Manager $fractal */
         $fractal = $this->di->get(Services::FRACTAL_MANAGER);

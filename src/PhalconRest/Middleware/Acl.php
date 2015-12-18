@@ -57,12 +57,12 @@ class Acl extends \PhalconRest\Mvc\Plugin
         return $this->acl;
     }
 
-    public function beforeExecuteRoute(Event $event, Micro $app)
+    public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
     {
         $role = $this->authManager->loggedIn() ? self::ROLE_PRIVATE : self::ROLE_PUBLIC;
 
         // Get the current resource/endpoint from the micro app
-        $endpoint = $app->getRouter()->getMatchedRoute()->getPattern();
+        $endpoint = $api->getRouter()->getMatchedRoute()->getPattern();
 
         // Get the access control list
         $acl = $this->_getAcl();

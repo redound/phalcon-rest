@@ -3,7 +3,6 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
-use Phalcon\Mvc\Micro;
 use PhalconRest\Constants\Http;
 
 class Cors extends \PhalconRest\Mvc\Plugin
@@ -102,7 +101,7 @@ class Cors extends \PhalconRest\Mvc\Plugin
     }
 
 
-    public function beforeExecuteRoute(Event $event, Micro $app)
+    public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
     {
         if(count($this->_allowedOrigins) == 0){
             return;
@@ -151,18 +150,18 @@ class Cors extends \PhalconRest\Mvc\Plugin
 
         if($originValue != null){
 
-            $app->response->setHeader('Access-Control-Allow-Origin', $originValue);
+            $this->response->setHeader('Access-Control-Allow-Origin', $originValue);
 
             // Allowed methods
             if(count($this->_allowedMethods) > 0){
 
-                $app->response->setHeader('Access-Control-Allow-Methods', implode(',', $this->_allowedMethods));
+                $this->response->setHeader('Access-Control-Allow-Methods', implode(',', $this->_allowedMethods));
             }
 
             // Allowed headers
             if(count($this->_allowedHeaders) > 0){
 
-                $app->response->setHeader('Access-Control-Allow-Headers', implode(',', $this->_allowedHeaders));
+                $this->response->setHeader('Access-Control-Allow-Headers', implode(',', $this->_allowedHeaders));
             }
         }
     }

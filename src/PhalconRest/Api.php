@@ -3,6 +3,8 @@
 namespace PhalconRest;
 
 use PhalconRest\Api\Resource;
+use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Exceptions\Exception;
 
 class Api extends \Phalcon\Mvc\Micro
 {
@@ -28,9 +30,24 @@ class Api extends \Phalcon\Mvc\Micro
 
     public function resource($name, Resource $resource)
     {
-        $this->resources[$name] = $resource;
+        $resource->name($name);
         $this->mount($resource);
 
         return $this;
+    }
+
+    public function mount(\Phalcon\Mvc\Micro\CollectionInterface $collection)
+    {
+        if($collection instanceof Resource){
+
+            $resourceName = $collection->getName();
+            if(!$resourceName){
+                throw new Exception(ErrorCodes::GEN_SYSTEM, 'No name provided for resource');
+            }
+
+            $this->resources[$resourceName] = $collection;
+        }
+
+        return parent::mount($collection);
     }
 }

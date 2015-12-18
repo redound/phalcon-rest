@@ -3,11 +3,10 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
-use Phalcon\Mvc\Micro;
 
 class OptionsResponse extends \PhalconRest\Mvc\Plugin
 {
-    public function beforeHandleRoute(Event $event, Micro $app)
+    public function beforeHandleRoute(Event $event, \PhalconRest\Api $api)
     {
         // OPTIONS have no body, send the headers, exit
         if ($this->request->getMethod() == 'OPTIONS') {
