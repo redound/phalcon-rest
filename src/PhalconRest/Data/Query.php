@@ -18,7 +18,6 @@ class Query
 
     protected $offset = null;
     protected $limit = null;
-    protected $options = [];
     protected $fields = [];
     protected $conditions = [];
     protected $sorters = [];
@@ -148,5 +147,7 @@ class Query
         if ($query->hasSorters()) {
             $this->addManySorters($query->getSorters());
         }
+
+        return $this;
     }
 }
