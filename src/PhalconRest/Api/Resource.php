@@ -131,6 +131,8 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
                 $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod());
                 break;
         }
+
+        return $this;
     }
 
 

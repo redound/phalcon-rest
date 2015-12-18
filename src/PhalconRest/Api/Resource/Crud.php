@@ -13,33 +13,42 @@ class Crud extends Resource
     const UPDATE = 'update';
     CONST DELETE = 'delete';
 
+    const NO_ENDPOINTS = [];
     const ALL_ENDPOINTS = [self::ALL, self::FIND, self::CREATE, self::UPDATE, self::DELETE];
 
 
-    public function __construct($path=null, $model=null, $singleKey='item', $multipleKey='items', $crudEndpoints=self::ALL_ENDPOINTS, $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\ResourceCrud')
+    public function __construct($path=null, $model=null, $singleKey='item', $multipleKey='items', $crudEndpoints=self::NO_ENDPOINTS, $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\ResourceCrud')
     {
         parent::__construct($path, $model, $singleKey, $multipleKey, $transformer, $controller);
 
-        if(in_array(self::ALL, $crudEndpoints)){
-            $this->setEndpoint(self::ALL, new \PhalconRest\Api\Endpoint\All());
-        }
-
-        if(in_array(self::FIND, $crudEndpoints)){
-            $this->setEndpoint(self::FIND, new \PhalconRest\Api\Endpoint\Find());
-        }
-
-        if(in_array(self::CREATE, $crudEndpoints)){
-            $this->setEndpoint(self::CREATE, new \PhalconRest\Api\Endpoint\Create());
-        }
-
-        if(in_array(self::UPDATE, $crudEndpoints)){
-            $this->setEndpoint(self::UPDATE, new \PhalconRest\Api\Endpoint\Update());
-        }
-
-        if(in_array(self::DELETE, $crudEndpoints)){
-            $this->setEndpoint(self::DELETE, new \PhalconRest\Api\Endpoint\Delete());
-        }
+        $this->addCrudEndpoints($crudEndpoints);
     }
+
+    public function addCrudEndpoints($endpoints)
+    {
+        if(in_array(self::ALL, $endpoints)){
+            $this->addAllEndpoint();
+        }
+
+        if(in_array(self::FIND, $endpoints)){
+            $this->addFindEndpoint();
+        }
+
+        if(in_array(self::CREATE, $endpoints)){
+            $this->addCreateEndpoint();
+        }
+
+        if(in_array(self::UPDATE, $endpoints)){
+            $this->addUpdateEndpoint();
+        }
+
+        if(in_array(self::DELETE, $endpoints)){
+            $this->addDeleteEndpoint();
+        }
+
+        return $this;
+    }
+
 
     public function getAllEndpoint()
     {
@@ -49,6 +58,11 @@ class Crud extends Resource
     public function setAllEndpoint(Endpoint $endpoint)
     {
         $this->setEndpoint(self::ALL, $endpoint);
+    }
+
+    public function addAllEndpoint()
+    {
+        $this->setEndpoint(self::ALL, new \PhalconRest\Api\Endpoint\All());
     }
 
 
@@ -62,6 +76,11 @@ class Crud extends Resource
         $this->setEndpoint(self::FIND, $endpoint);
     }
 
+    public function addFindEndpoint()
+    {
+        $this->setEndpoint(self::FIND, new \PhalconRest\Api\Endpoint\Find());
+    }
+
 
     public function getCreateEndpoint()
     {
@@ -71,6 +90,11 @@ class Crud extends Resource
     public function setCreateEndpoint(Endpoint $endpoint)
     {
         $this->setEndpoint(self::CREATE, $endpoint);
+    }
+
+    public function addCreateEndpoint()
+    {
+        $this->setEndpoint(self::CREATE, new \PhalconRest\Api\Endpoint\Create());
     }
 
 
@@ -84,6 +108,11 @@ class Crud extends Resource
         $this->setEndpoint(self::UPDATE, $endpoint);
     }
 
+    public function addUpdateEndpoint()
+    {
+        $this->setEndpoint(self::UPDATE, new \PhalconRest\Api\Endpoint\Update());
+    }
+
 
     public function getDeleteEndpoint()
     {
@@ -93,5 +122,10 @@ class Crud extends Resource
     public function setDeleteEndpoint(Endpoint $endpoint)
     {
         $this->setEndpoint(self::DELETE, $endpoint);
+    }
+
+    public function addDeleteEndpoint()
+    {
+        $this->setEndpoint(self::DELETE, new \PhalconRest\Api\Endpoint\Delete());
     }
 }
