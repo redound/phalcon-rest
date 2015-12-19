@@ -4,6 +4,8 @@ namespace PhalconRest\Api;
 
 class Endpoint
 {
+    protected $name;
+
     protected $httpMethod;
     protected $path;
     protected $handlerMethod;
@@ -17,14 +19,46 @@ class Endpoint
         return $this;
     }
 
+    /**
+     * @param string $name  Name for the endpoint
+     *
+     * @return static
+     */
+    public function name($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $httpMethod  HTTP method for the endpoint
+     *
+     * @return static
+     */
+    public function httpMethod($httpMethod)
+    {
+        $this->httpMethod = $httpMethod;
+        return $this;
+    }
+
     public function getHttpMethod()
     {
         return $this->httpMethod;
     }
 
-    public function httpMethod($httpMethod)
+    /**
+     * @param string $path  Path for the endpoint
+     *
+     * @return static
+     */
+    public function path($path)
     {
-        $this->httpMethod = $httpMethod;
+        $this->path = $path;
         return $this;
     }
 
@@ -33,9 +67,14 @@ class Endpoint
         return $this->path;
     }
 
-    public function path($path)
+    /**
+     * @param string $handlerMethod  Method in the controller to be called
+     *
+     * @return static
+     */
+    public function handlerMethod($handlerMethod)
     {
-        $this->path = $path;
+        $this->handlerMethod = $handlerMethod;
         return $this;
     }
 
@@ -44,9 +83,22 @@ class Endpoint
         return $this->handlerMethod;
     }
 
-    public function handlerMethod($handlerMethod)
+    /**
+     * @param string $name
+     * @param string $path
+     * @param string $httpMethod
+     * @param string $handlerMethod
+     *
+     * @return static
+     */
+    public static function create($name=null, $path=null, $httpMethod=null, $handlerMethod=null)
     {
-        $this->handlerMethod = $handlerMethod;
-        return $this;
+        $endpoint = new Endpoint($path, $httpMethod, $handlerMethod);
+
+        if($name){
+            $endpoint->name($name);
+        }
+
+        return $endpoint;
     }
 }

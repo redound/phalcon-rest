@@ -8,7 +8,7 @@ use PhalconRest\Exceptions\Exception;
 
 class Api extends \Phalcon\Mvc\Micro
 {
-    public $resources = [];
+    protected $resources = [];
 
     /**
      * @return Resource[]
@@ -28,6 +28,13 @@ class Api extends \Phalcon\Mvc\Micro
         return array_key_exists($name, $this->resources) ? $this->resources[$name] : null;
     }
 
+    /**
+     * @param string $name
+     * @param Resource $resource
+     *
+     * @return static
+     * @throws Exception
+     */
     public function resource($name, Resource $resource)
     {
         $resource->name($name);

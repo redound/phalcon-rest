@@ -3,8 +3,10 @@
 namespace PhalconRest\Api;
 
 use Phalcon\Di;
+use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\Http;
 use PhalconRest\Constants\Services;
+use PhalconRest\Exceptions\Exception;
 
 class Resource extends \Phalcon\Mvc\Micro\Collection
 {
@@ -151,6 +153,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      */
     public function endpoint($name, Endpoint $endpoint)
     {
+        $endpoint->name($name);
         $this->endpoints[$name] = $endpoint;
 
         switch($endpoint->getHttpMethod()){
@@ -176,6 +179,22 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
                 break;
         }
 
+        return $this;
+    }
+
+    /**
+     * @param Endpoint $endpoint  Endpoint to mound (shortcut for endpoint function)
+     *
+     * @return static
+     * @throws Exception
+     */
+    public function mount(Endpoint $endpoint)
+    {
+        if(!$endpoint->getName()){
+            throw new Exception(ErrorCodes::GEN_SYSTEM, 'No name provided for endpoint');
+        }
+
+        $this->endpoint($endpoint->getName(), $endpoint);
         return $this;
     }
 
@@ -222,6 +241,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
+     * @param string $name
      * @param string $prefix
      * @param string $model
      * @param string $singleKey
@@ -231,9 +251,15 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      *
      * @return static
      */
-    public static function create($prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
+    public static function create($name=null, $prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
     {
-        return new Resource($prefix, $model, $singleKey, $multipleKey, $transformer, $controller);
+        $resource = new Resource($prefix, $model, $singleKey, $multipleKey, $transformer, $controller);
+
+        if($name){
+            $resource->name($name);
+        }
+
+        return $resource;
     }
 
 }

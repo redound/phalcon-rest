@@ -46,7 +46,7 @@ class Model extends \League\Fractal\TransformerAbstract
     /**
      * @return array Properties to be included in the response
      */
-    protected function getIncludedProperties()
+    protected function includedProperties()
     {
         /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
         $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
@@ -59,17 +59,12 @@ class Model extends \League\Fractal\TransformerAbstract
     /**
      * @return array Properties to be excluded in the response
      */
-    protected function getExcludedProperties()
+    protected function excludedProperties()
     {
         return [];
     }
 
-    protected function getManualPropertyTypes()
-    {
-        return [];
-    }
-
-    protected function getAdditionalFields($item)
+    protected function additionalFields($item)
     {
         return [];
     }
@@ -78,12 +73,18 @@ class Model extends \League\Fractal\TransformerAbstract
      * Returns keyMap to be used.
      * Keys are the model properties, values are the response keys
      *
-     * @return array Fieldmap
+     * @return array
      */
-    protected function getKeyMap()
+    protected function keyMap()
     {
         return [];
     }
+
+    protected function typeMap()
+    {
+        return [];
+    }
+
 
     protected function getFieldValue($item, $propertyName, $fieldName)
     {
@@ -158,7 +159,7 @@ class Model extends \League\Fractal\TransformerAbstract
     protected function _transform($item, $properties=null)
     {
         $result = [];
-        $keyMap = $this->getKeyMap();
+        $keyMap = $this->keyMap();
 
         foreach($properties as $property){
 
@@ -166,14 +167,14 @@ class Model extends \League\Fractal\TransformerAbstract
             $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
         }
 
-        $combinedResult = array_merge($result, $this->getAdditionalFields($item));
+        $combinedResult = array_merge($result, $this->additionalFields($item));
 
         return $combinedResult;
     }
 
     protected function getResponseProperties()
     {
-        return array_diff($this->getIncludedProperties(), $this->getExcludedProperties());
+        return array_diff($this->includedProperties(), $this->excludedProperties());
     }
 
     protected function _getModelDataTypes()
@@ -185,7 +186,7 @@ class Model extends \League\Fractal\TransformerAbstract
 
             $modelClass = $this->getModelClass();
 
-            $this->_modelDataTypes = array_merge($modelsMetaData->getDataTypes(new $modelClass), $this->getManualPropertyTypes());
+            $this->_modelDataTypes = array_merge($modelsMetaData->getDataTypes(new $modelClass), $this->typeMap());
         }
 
         return $this->_modelDataTypes;
