@@ -4,6 +4,7 @@ namespace PhalconRest;
 
 use PhalconRest\Api\Resource;
 use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Constants\Services;
 use PhalconRest\Exceptions\Exception;
 
 class Api extends \Phalcon\Mvc\Micro
@@ -56,5 +57,22 @@ class Api extends \Phalcon\Mvc\Micro
         }
 
         return parent::mount($collection);
+    }
+
+    /**
+     * Attaches middleware to the API
+     *
+     * @param $middleware
+     * @return static
+     */
+    public function attach($middleware)
+    {
+        if(!$this->getEventsManager()){
+            $this->setEventsManager($this->getDI()->get(Services::EVENTS_MANAGER));
+        }
+
+        $this->getEventsManager()->attach('micro', $middleware);
+
+        return $this;
     }
 }
