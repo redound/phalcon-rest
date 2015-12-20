@@ -4,7 +4,7 @@
 ![Phalcon REST Library](http://phalconist.com/redound/phalcon-rest/default.svg)
 </a>
 
-*a library focused on simplyfing the creation of RESTful API's*
+*a library focused on simplifying the creation of RESTful API's*
 
 ## Installing ##
 Install using Composer.
@@ -17,7 +17,7 @@ For a full implementation of the library, check out the [Boilerplate application
 
 ## Learn More
 - [Website](http://www.phalcon-rest.org)
-- [Documentation](http://www.phalcon-rest.org/docs/start/installation.html)
+- [Documentation](http://www.phalcon-rest.org/docs/)
 
 ## Contributing ##
 Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
