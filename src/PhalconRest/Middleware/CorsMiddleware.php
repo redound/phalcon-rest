@@ -3,9 +3,9 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
-use PhalconRest\Constants\Http;
+use PhalconRest\Constant\Http;
 
-class Cors extends \PhalconRest\Mvc\Plugin
+class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 {
     const ALL_ORIGINS = ['*'];
     const DEFAULT_HEADERS = ['Content-Type', 'X-Requested-With', 'Authorization'];

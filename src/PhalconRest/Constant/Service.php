@@ -1,8 +1,8 @@
 <?php
 
-namespace PhalconRest\Constants;
+namespace PhalconRest\Constant;
 
-class Services
+class Service
 {
     // Phalcon
     const DISPATCHER = "dispatcher";
@@ -31,6 +31,7 @@ class Services
 
     // PhalconRest
     const AUTH_MANAGER = 'authManager';
+    const ACL_SERVICE = 'aclService';
     const FRACTAL_MANAGER = 'fractalManager';
     const TOKEN_PARSER = 'tokenParser';
     const QUERY = 'query';

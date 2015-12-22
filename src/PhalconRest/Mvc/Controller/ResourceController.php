@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Mvc\Controller;
 
-class Resource extends \PhalconRest\Mvc\Controller\Fractal
+class ResourceController extends \PhalconRest\Mvc\Controller\FractalController
 {
     /** @var \PhalconRest\Api\Resource */
     protected $resource;
@@ -12,7 +12,6 @@ class Resource extends \PhalconRest\Mvc\Controller\Fractal
         $this->resource = $resource;
         return $this;
     }
-
 
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
@@ -34,7 +33,7 @@ class Resource extends \PhalconRest\Mvc\Controller\Fractal
         $transformerClass = $this->resource->getTransformer();
         $transformer = new $transformerClass();
 
-        if($transformer instanceof \PhalconRest\Transformer\Model){
+        if($transformer instanceof \PhalconRest\Transformer\ModelTransformer){
             $transformer->setModelClass($this->resource->getModel());
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhalconRest\Constants;
+namespace PhalconRest\Constant;
 
 class Http
 {

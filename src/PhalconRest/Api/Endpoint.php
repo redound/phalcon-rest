@@ -2,6 +2,8 @@
 
 namespace PhalconRest\Api;
 
+use PhalconRest\Constant\Http;
+
 class Endpoint
 {
     protected $name;
@@ -10,7 +12,7 @@ class Endpoint
     protected $path;
     protected $handlerMethod;
 
-    public function __construct($path=null, $httpMethod=null, $handlerMethod=null)
+    public function __construct($path = null, $httpMethod = null, $handlerMethod = null)
     {
         $this->path($path);
         $this->httpMethod($httpMethod);
@@ -84,21 +86,39 @@ class Endpoint
     }
 
     /**
-     * @param string $name
      * @param string $path
      * @param string $httpMethod
      * @param string $handlerMethod
      *
      * @return static
      */
-    public static function create($name=null, $path=null, $httpMethod=null, $handlerMethod=null)
+    public static function factory($path = null, $httpMethod = null, $handlerMethod = null)
     {
-        $endpoint = new Endpoint($path, $httpMethod, $handlerMethod);
+        return new Endpoint($path, $httpMethod, $handlerMethod);
+    }
 
-        if($name){
-            $endpoint->name($name);
-        }
+    public static function all()
+    {
+        return new Endpoint('/', Http::GET, 'all');
+    }
 
-        return $endpoint;
+    public static function create()
+    {
+        return new Endpoint('/', Http::POST, 'create');
+    }
+
+    public static function update()
+    {
+        return new Endpoint('/{id}', Http::PUT, 'update');
+    }
+
+    public static function delete()
+    {
+        return new Endpoint('/{id}', Http::DELETE, 'delete');
+    }
+
+    public static function find()
+    {
+        return new Endpoint('/{id}', Http::GET, 'find');
     }
 }

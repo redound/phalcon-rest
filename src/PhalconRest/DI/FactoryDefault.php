@@ -2,8 +2,8 @@
 
 namespace PhalconRest\DI;
 
-use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Constants\Services;
+use PhalconRest\Constant\ErrorCode;
+use PhalconRest\Constant\Service;
 
 class FactoryDefault extends \Phalcon\Di\FactoryDefault
 {
@@ -11,38 +11,39 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
     {
         parent::__construct();
 
-        $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request());
-        $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response());
+        $this->setShared(Service::REQUEST, new \PhalconRest\Http\Request());
+        $this->setShared(Service::RESPONSE, new \PhalconRest\Http\Response());
 
-        $this->setShared(Services::AUTH_MANAGER, new \PhalconRest\Auth\Manager());
+        $this->setShared(Service::AUTH_MANAGER, new \PhalconRest\Auth\Manager());
+        $this->setShared(Service::ACL_SERVICE, new \PhalconRest\Acl\Service());
 
-        $this->setShared(Services::FRACTAL_MANAGER, function () {
+        $this->setShared(Service::FRACTAL_MANAGER, function () {
 
             $className = '\League\Fractal\Manager';
 
             if(!class_exists($className)){
-                throw new \Exception(ErrorCodes::GEN_SYSTEM, '\League\Fractal\Manager was requested, but class could not be found');
+                throw new \Exception(ErrorCode::GEN_SYSTEM, '\League\Fractal\Manager was requested, but class could not be found');
             }
 
             return new $className();
         });
 
-        $this->setShared(Services::TOKEN_PARSER, function () {
+        $this->setShared(Service::TOKEN_PARSER, function () {
 
             return new \PhalconRest\Auth\TokenParser\JWT('this_should_be_changed');
         });
 
-        $this->setShared(Services::QUERY, function(){
+        $this->setShared(Service::QUERY, function(){
 
             return new \PhalconRest\Data\Query();
         });
 
-        $this->setShared(Services::PHQL_QUERY_PARSER, function(){
+        $this->setShared(Service::PHQL_QUERY_PARSER, function(){
 
             return new \PhalconRest\Data\Query\Parser\Phql();
         });
 
-        $this->setShared(Services::URL_QUERY_PARSER, function(){
+        $this->setShared(Service::URL_QUERY_PARSER, function(){
 
             return new \PhalconRest\Data\Query\Parser\Url();
         });

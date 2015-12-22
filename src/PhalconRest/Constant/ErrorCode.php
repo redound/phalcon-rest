@@ -1,12 +1,15 @@
 <?php
 
-namespace PhalconRest\Constants;
+namespace PhalconRest\Constant;
 
-class ErrorCodes
+class ErrorCode
 {
     // General
     const GEN_SYSTEM = 0;
     const GEN_NOTFOUND = 1001;
+
+    // Revisioned
+    const ACL_FORBIDDEN = 5001;
 
     // Data
     const DATA_DUPLICATE = 2001;

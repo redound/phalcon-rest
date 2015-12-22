@@ -4,9 +4,9 @@ namespace PhalconRest\Transformer;
 
 use Phalcon\Db\Column;
 use Phalcon\Di;
-use PhalconRest\Constants\Services;
+use PhalconRest\Constant\Service;
 
-class Model extends \League\Fractal\TransformerAbstract
+class ModelTransformer extends \League\Fractal\TransformerAbstract
 {
     const TYPE_INTEGER = Column::TYPE_INTEGER;
     const TYPE_DATE = Column::TYPE_DATE;
@@ -49,7 +49,7 @@ class Model extends \League\Fractal\TransformerAbstract
     protected function includedProperties()
     {
         /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-        $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
+        $modelsMetaData = Di::getDefault()->get(Service::MODELS_METADATA);
 
         $modelClass = $this->getModelClass();
 
@@ -182,7 +182,7 @@ class Model extends \League\Fractal\TransformerAbstract
         if(!$this->_modelDataTypes){
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
+            $modelsMetaData = Di::getDefault()->get(Service::MODELS_METADATA);
 
             $modelClass = $this->getModelClass();
 

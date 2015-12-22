@@ -3,13 +3,23 @@
 namespace PhalconRest;
 
 use PhalconRest\Api\Resource;
-use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Constants\Services;
-use PhalconRest\Exceptions\Exception;
+use PhalconRest\Constant\ErrorCode;
+use PhalconRest\Constant\Service;
+use PhalconRest\Exception;
 
 class Api extends \Phalcon\Mvc\Micro
 {
     protected $resources = [];
+
+    public function getCurrentResource()
+    {
+        return null;
+    }
+
+    public function getCurrentEndpoint()
+    {
+        return null;
+    }
 
     /**
      * @return Resource[]
@@ -50,7 +60,7 @@ class Api extends \Phalcon\Mvc\Micro
 
             $resourceName = $collection->getName();
             if(!$resourceName){
-                throw new Exception(ErrorCodes::GEN_SYSTEM, 'No name provided for resource');
+                throw new Exception(ErrorCode::GEN_SYSTEM, 'No name provided for resource');
             }
 
             $this->resources[$resourceName] = $collection;
@@ -68,7 +78,7 @@ class Api extends \Phalcon\Mvc\Micro
     public function attach($middleware)
     {
         if(!$this->getEventsManager()){
-            $this->setEventsManager($this->getDI()->get(Services::EVENTS_MANAGER));
+            $this->setEventsManager($this->getDI()->get(Service::EVENTS_MANAGER));
         }
 
         $this->getEventsManager()->attach('micro', $middleware);

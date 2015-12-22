@@ -3,10 +3,10 @@
 namespace PhalconRest\Api;
 
 use Phalcon\Di;
-use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Constants\Http;
-use PhalconRest\Constants\Services;
-use PhalconRest\Exceptions\Exception;
+use PhalconRest\Constant\ErrorCode;
+use PhalconRest\Constant\Http;
+use PhalconRest\Constant\Service;
+use PhalconRest\Exception;
 
 class Resource extends \Phalcon\Mvc\Micro\Collection
 {
@@ -19,25 +19,25 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     protected $singleKey = 'item';
     protected $multipleKey = 'items';
 
-    protected $endpoints;
+    protected $endpoints = [];
 
     protected $_modelPrimaryKey;
 
 
-    public function __construct($prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
-    {
-        if($prefix){
-            $this->setPrefix($prefix);
-        }
-
+    public function __construct(
+        $prefix = null,
+        $model = null,
+        $singleKey = 'item',
+        $multipleKey = 'items',
+        $transformer = '\PhalconRest\Transformer\Model',
+        $controller = '\PhalconRest\Mvc\Controller\Resource'
+    ) {
+        $this->prefix($prefix);
         $this->model($model);
         $this->singleKey($singleKey);
         $this->multipleKey($multipleKey);
-
         $this->transformer($transformer);
         $this->controller($controller);
-
-        $this->endpoints = [];
 
         return $this;
     }
@@ -91,7 +91,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         if(!$this->_modelPrimaryKey){
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
+            $modelsMetaData = Di::getDefault()->get(Service::MODELS_METADATA);
 
             $modelClass = $this->getModel();
 
@@ -130,7 +130,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
             $controller = new $controller();
 
-            if($controller instanceof \PhalconRest\Mvc\Controller\Resource){
+            if($controller instanceof \PhalconRest\Mvc\Controller\ResourceController){
                 $controller->setResource($this);
             }
 
@@ -151,31 +151,30 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      *
      * @return static
      */
-    public function endpoint($name, Endpoint $endpoint)
+    public function endpoint(Endpoint $endpoint)
     {
-        $endpoint->name($name);
-        $this->endpoints[$name] = $endpoint;
+        $this->endpoints[] = $endpoint;
 
         switch($endpoint->getHttpMethod()){
 
             case Http::GET:
 
-                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
 
             case Http::POST:
 
-                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
 
             case Http::PUT:
 
-                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
 
             case Http::DELETE:
 
-                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
         }
 
@@ -191,7 +190,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     public function mount(Endpoint $endpoint)
     {
         if(!$endpoint->getName()){
-            throw new Exception(ErrorCodes::GEN_SYSTEM, 'No name provided for endpoint');
+            throw new Exception(ErrorCode::GEN_SYSTEM, 'No name provided for endpoint');
         }
 
         $this->endpoint($endpoint->getName(), $endpoint);
@@ -240,26 +239,49 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->multipleKey;
     }
 
-    /**
-     * @param string $name
-     * @param string $prefix
-     * @param string $model
-     * @param string $singleKey
-     * @param string $multipleKey
-     * @param string $transformer
-     * @param string $controller
-     *
-     * @return static
-     */
-    public static function create($name=null, $prefix=null, $model=null, $singleKey='item', $multipleKey='items', $transformer='\PhalconRest\Transformer\Model', $controller='\PhalconRest\Mvc\Controller\Resource')
-    {
-        $resource = new Resource($prefix, $model, $singleKey, $multipleKey, $transformer, $controller);
+    public static function factory(
+        $prefix = null,
+        $model = null,
+        $singleKey = 'item',
+        $multipleKey = 'items',
+        $transformer = '\PhalconRest\Transformer\ModelTransformer',
+        $controller = '\PhalconRest\Mvc\Controller\ResourceController'
+    ) {
 
-        if($name){
-            $resource->name($name);
-        }
+        return new Resource(
+            $prefix,
+            $model,
+            $singleKey,
+            $multipleKey,
+            $transformer,
+            $controller
+        );
+    }
+
+    public static function crud(
+        $prefix = null,
+        $model = null,
+        $singleKey = 'item',
+        $multipleKey = 'items',
+        $transformer = '\PhalconRest\Transformer\ModelTransformer',
+        $controller = '\PhalconRest\Mvc\Controller\CrudResourceController'
+    ) {
+
+        $resource = new Resource(
+            $prefix,
+            $model,
+            $singleKey,
+            $multipleKey,
+            $transformer,
+            $controller
+        );
+
+        $resource->endpoint(Endpoint::all())
+            ->endpoint(Endpoint::find())
+            ->endpoint(Endpoint::create())
+            ->endpoint(Endpoint::update())
+            ->endpoint(Endpoint::delete());
 
         return $resource;
     }
-
 }

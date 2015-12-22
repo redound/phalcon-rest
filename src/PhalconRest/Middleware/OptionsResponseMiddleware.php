@@ -4,7 +4,7 @@ namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
 
-class OptionsResponse extends \PhalconRest\Mvc\Plugin
+class OptionsResponseMiddleware extends \PhalconRest\Mvc\Plugin
 {
     public function beforeHandleRoute(Event $event, \PhalconRest\Api $api)
     {

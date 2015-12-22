@@ -2,11 +2,10 @@
 namespace PhalconRest\Mvc\Controller;
 
 use Phalcon\Mvc\Model;
-use PhalconRest\Api\Resource;
-use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Exceptions\Exception;
+use PhalconRest\Constant\ErrorCode;
+use PhalconRest\Exception;
 
-class ResourceCrud extends \PhalconRest\Mvc\Controller\Resource
+class CrudResourceController extends \PhalconRest\Mvc\Controller\ResourceController
 {
     /*** ALL ***/
 
@@ -244,21 +243,21 @@ class ResourceCrud extends \PhalconRest\Mvc\Controller\Resource
 
     protected function onItemNotFound($id)
     {
-        throw new Exception(ErrorCodes::DATA_NOTFOUND, 'Item was not found');
+        throw new Exception(ErrorCode::DATA_NOTFOUND, 'Item was not found');
     }
 
     protected function onCreateFailed($data)
     {
-        throw new Exception(ErrorCodes::DATA_FAIL, 'Unable to create item');
+        throw new Exception(ErrorCode::DATA_FAIL, 'Unable to create item');
     }
 
     protected function onUpdateFailed(Model $item, $data)
     {
-        throw new Exception(ErrorCodes::DATA_FAIL, 'Unable to update item');
+        throw new Exception(ErrorCode::DATA_FAIL, 'Unable to update item');
     }
 
     protected function onDeleteFailed(Model $item)
     {
-        throw new Exception(ErrorCodes::DATA_FAIL, 'Unable to delete item');
+        throw new Exception(ErrorCode::DATA_FAIL, 'Unable to delete item');
     }
 }
