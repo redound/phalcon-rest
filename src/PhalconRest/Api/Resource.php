@@ -49,6 +49,10 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      */
     public function name($name)
     {
+        if(strstr($name, ' ') !== false){
+            throw new Exception(ErrorCodes::GEN_SYSTEM, 'Resource name should not contain any spaces');
+        }
+
         $this->name = $name;
 
         return $this;
@@ -156,26 +160,28 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         $endpoint->name($name);
         $this->endpoints[$name] = $endpoint;
 
+        $routeName = $this->name . ' ' . $name;
+
         switch($endpoint->getHttpMethod()){
 
             case Http::GET:
 
-                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $routeName);
                 break;
 
             case Http::POST:
 
-                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $routeName);
                 break;
 
             case Http::PUT:
 
-                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $routeName);
                 break;
 
             case Http::DELETE:
 
-                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod());
+                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $routeName);
                 break;
         }
 

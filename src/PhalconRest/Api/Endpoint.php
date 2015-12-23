@@ -2,6 +2,9 @@
 
 namespace PhalconRest\Api;
 
+use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Exceptions\Exception;
+
 class Endpoint
 {
     protected $name;
@@ -26,6 +29,10 @@ class Endpoint
      */
     public function name($name)
     {
+        if(strstr($name, ' ') !== false){
+            throw new Exception(ErrorCodes::GEN_SYSTEM, 'Endpoint name should not contain any spaces');
+        }
+
         $this->name = $name;
         return $this;
     }
