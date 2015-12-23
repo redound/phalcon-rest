@@ -11,6 +11,13 @@ class AuthorizationMiddleware extends \PhalconRest\Mvc\Plugin
 {
     public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
     {
+        $resource = $api->getMatchedResource();
+        $endpoint = $api->getMatchedEndpoint();
+
+        var_dump($resource);
+        var_dump($endpoint);
+        exit;
+
         $roles = [AclRoles::NONE];
 
         if ($this->authManager->loggedIn()) {

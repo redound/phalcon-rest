@@ -12,34 +12,12 @@ class Endpoint
     protected $path;
     protected $handlerMethod;
 
-    public function __construct($path = null, $httpMethod = null, $handlerMethod = null)
-    {
-        $this->path($path);
-        $this->httpMethod($httpMethod);
-        $this->handlerMethod($handlerMethod);
-
-        return $this;
-    }
-
-    /**
-     * @param string $path Path for the endpoint
-     *
-     * @return static
-     */
-    public function path($path)
+    public function __construct($path, $httpMethod = HttpMethods::GET, $handlerMethod = null)
     {
         $this->path = $path;
-        return $this;
-    }
-
-    /**
-     * @param string $httpMethod HTTP method for the endpoint
-     *
-     * @return static
-     */
-    public function httpMethod($httpMethod)
-    {
         $this->httpMethod = $httpMethod;
+        $this->handlerMethod($handlerMethod);
+
         return $this;
     }
 
@@ -61,7 +39,7 @@ class Endpoint
      *
      * @return static
      */
-    public static function factory($path = null, $httpMethod = null, $handlerMethod = null)
+    public static function factory($path, $httpMethod = HttpMethods::GET, $handlerMethod = null)
     {
         return new Endpoint($path, $httpMethod, $handlerMethod);
     }

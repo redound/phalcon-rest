@@ -7,6 +7,8 @@ use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\HttpMethods;
 use PhalconRest\Constants\Services;
 use PhalconRest\Exception;
+use PhalconRest\Transformers\ModelTransformer;
+use PhalconRest\Mvc\Controllers\CrudResourceController;
 
 class Resource extends \Phalcon\Mvc\Micro\Collection
 {
@@ -24,22 +26,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     protected $_modelPrimaryKey;
 
 
-    public function __construct(
-        $prefix = null,
-        $model = null,
-        $singleKey = 'item',
-        $multipleKey = 'items',
-        $transformer = '\PhalconRest\Transformer\Model',
-        $controller = '\PhalconRest\Mvc\Controller\Resource'
-    ) {
-        $this->prefix($prefix);
-        $this->model($model);
-        $this->singleKey($singleKey);
-        $this->multipleKey($multipleKey);
-        $this->transformer($transformer);
-        $this->controller($controller);
-
-        return $this;
+    public function __construct($prefix)
+    {
+        parent::setPrefix($prefix);
     }
 
     /**
@@ -58,15 +47,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->name;
     }
 
-    /**
-     * @param string $prefix Route prefix
-     *
-     * @return static
-     */
-    public function prefix($prefix)
+    public function setPrefix($prefix)
     {
-        $this->setPrefix($prefix);
-        return $this;
+        throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'Setting prefix after initialization is prohibited.');
     }
 
     /**
@@ -152,32 +135,43 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      */
     public function endpoint(Endpoint $endpoint)
     {
+        $this->prefixLock = true;
+
         $this->endpoints[] = $endpoint;
 
         switch ($endpoint->getHttpMethod()) {
 
             case HttpMethods::GET:
 
-                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
+                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
                 break;
 
             case HttpMethods::POST:
 
-                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
+                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
                 break;
 
             case HttpMethods::PUT:
 
-                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
+                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
                 break;
 
             case HttpMethods::DELETE:
 
-                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
+                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
                 break;
         }
 
         return $this;
+    }
+
+    protected function _createRouteName(Endpoint $endpoint)
+    {
+        return serialize([
+            'resourcePrefix' => $this->getPrefix() ? $this->getPrefix() : '',
+            'endpointPath' => $endpoint->getPath(),
+            'httpMethod' => $endpoint->getHttpMethod()
+        ]);
     }
 
     /**
@@ -188,11 +182,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      */
     public function mount(Endpoint $endpoint)
     {
-        if (!$endpoint->getName()) {
-            throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'No name provided for endpoint');
-        }
-
-        $this->endpoint($endpoint->getName(), $endpoint);
+        $this->endpoint($endpoint);
         return $this;
     }
 
@@ -238,37 +228,27 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this->multipleKey;
     }
 
-    public static function factory(
-        $prefix = null,
-        $model = null,
-        $singleKey = 'item',
-        $multipleKey = 'items',
-        $transformer = \PhalconRest\Transformers\ModelTransformer::class,
-        $controller = \PhalconRest\Mvc\Controllers\CrudResourceController::class
-    ) {
+    public static function factory($prefix)
+    {
+        $resource = new Resource($prefix);
 
-        return new Resource(
-            $prefix,
-            $model,
-            $singleKey,
-            $multipleKey,
-            $transformer,
-            $controller
-        );
+        $resource
+            ->singleKey('item')
+            ->multipleKey('items')
+            ->transformer(ModelTransformer::class)
+            ->controller(CrudResourceController::class);
+
+        return $resource;
     }
 
-    public static function crud($name = null)
+    public static function crud($prefix)
     {
-        $resource = Resource::factory()
+        $resource = Resource::factory($prefix)
             ->endpoint(Endpoint::all())
             ->endpoint(Endpoint::find())
             ->endpoint(Endpoint::create())
             ->endpoint(Endpoint::update())
             ->endpoint(Endpoint::delete());
-
-        if ($name) {
-            $resource->name($name);
-        }
 
         return $resource;
     }
