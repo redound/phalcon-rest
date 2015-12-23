@@ -12,6 +12,10 @@ class Endpoint
     protected $path;
     protected $handlerMethod;
 
+    protected $allowedRoles = [];
+    protected $deniedRoles = [];
+
+
     public function __construct($path, $httpMethod = HttpMethods::GET, $handlerMethod = null)
     {
         $this->path = $path;
@@ -98,5 +102,38 @@ class Endpoint
     public function getHandlerMethod()
     {
         return $this->handlerMethod;
+    }
+
+    public function allow($roleName)
+    {
+        if (!in_array($roleName, $this->allowedRoles)) {
+            $this->allowedRoles[] = $roleName;
+        }
+
+        return $this;
+    }
+
+    public function getAllowedRoles()
+    {
+        return $this->allowedRoles;
+    }
+
+    public function deny($roleName)
+    {
+        if (!in_array($roleName, $this->deniedRoles)) {
+            $this->deniedRoles[] = $roleName;
+        }
+
+        return $this;
+    }
+
+    public function getDeniedRoles()
+    {
+        return $this->deniedRoles;
+    }
+
+    public function getIdentifier()
+    {
+        return $this->getHttpMethod() . ' ' . $this->getPath();
     }
 }

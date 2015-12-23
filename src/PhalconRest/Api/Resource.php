@@ -21,6 +21,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     protected $singleKey = 'item';
     protected $multipleKey = 'items';
 
+    protected $allowedRoles = [];
+    protected $deniedRoles = [];
+
     protected $endpoints = [];
 
     protected $_modelPrimaryKey;
@@ -226,6 +229,34 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     public function getMultipleKey()
     {
         return $this->multipleKey;
+    }
+
+    public function allow($roleName)
+    {
+        if (!in_array($roleName, $this->allowedRoles)) {
+            $this->allowedRoles[] = $roleName;
+        }
+
+        return $this;
+    }
+
+    public function getAllowedRoles()
+    {
+        return $this->allowedRoles;
+    }
+
+    public function deny($roleName)
+    {
+        if (!in_array($roleName, $this->deniedRoles)) {
+            $this->deniedRoles[] = $roleName;
+        }
+
+        return $this;
+    }
+
+    public function getDeniedRoles()
+    {
+        return $this->deniedRoles;
     }
 
     public static function factory($prefix)

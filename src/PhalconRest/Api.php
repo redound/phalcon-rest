@@ -11,7 +11,7 @@ class Api extends \Phalcon\Mvc\Micro
     protected $matchedRouteNameParts = null;
     protected $resourcesByPrefix = [];
     protected $resourcesByName = [];
-    protected $endpointsByMethodPath = [];
+    protected $endpointsByIdentifier = [];
 
     /**
      * @return Resource[]
@@ -32,7 +32,7 @@ class Api extends \Phalcon\Mvc\Micro
     }
 
     /**
-     * @param Resource $resource
+     * @param \PhalconRest\Api\Resource $resource
      *
      * @return static
      * @throws Exception
@@ -57,7 +57,7 @@ class Api extends \Phalcon\Mvc\Micro
 
             /** @var Endpoint $endpoint */
             foreach($collection->getEndpoints() as $endpoint){
-                $this->endpointsByMethodPath[$endpoint->getHttpMethod() . $endpoint->getPath()] = $endpoint;
+                $this->endpointsByIdentifier[$endpoint->getIdentifier()] = $endpoint;
             }
         }
 
@@ -102,7 +102,7 @@ class Api extends \Phalcon\Mvc\Micro
     }
 
     /**
-     * @return Resource|null  The matched resource
+     * @return \PhalconRest\Api\Resource|null  The matched resource
      */
     public function getMatchedResource()
     {
@@ -116,7 +116,7 @@ class Api extends \Phalcon\Mvc\Micro
     }
 
     /**
-     * @return Endpoint|null  The matched endpoint
+     * @return \PhalconRest\Api\Endpoint|null  The matched endpoint
      */
     public function getMatchedEndpoint()
     {
@@ -127,8 +127,8 @@ class Api extends \Phalcon\Mvc\Micro
             return null;
         }
 
-        $endpointPath = $httpMethod . $endpointPath;
+        $endpointPath = $httpMethod . ' ' . $endpointPath;
 
-        return array_key_exists($endpointPath, $this->endpointsByMethodPath) ? $this->endpointsByMethodPath[$endpointPath] : null;
+        return array_key_exists($endpointPath, $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$endpointPath] : null;
     }
 }

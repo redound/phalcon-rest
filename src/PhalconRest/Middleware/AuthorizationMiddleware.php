@@ -2,6 +2,8 @@
 
 namespace PhalconRest\Middleware;
 
+use App\Constants\Services;
+use Phalcon\Acl;
 use Phalcon\Events\Event;
 use PhalconRest\Constants\AclRoles;
 use PhalconRest\Constants\ErrorCodes;
@@ -14,19 +16,14 @@ class AuthorizationMiddleware extends \PhalconRest\Mvc\Plugin
         $resource = $api->getMatchedResource();
         $endpoint = $api->getMatchedEndpoint();
 
-        var_dump($resource);
-        var_dump($endpoint);
-        exit;
-
-        $roles = [AclRoles::NONE];
-
-        if ($this->authManager->loggedIn()) {
-            $roles = [AclRoles::NONE, AclRoles::USER];
+        if (!$resource || !$endpoint) {
+            return;
         }
 
-//        $allowed = $this->aclService->isAllowed($api->getCurrentResource(), $api->getCurrentEndpoint(), $roles);
+        /** @var \Phalcon\Acl\Adapter $acl */
+        $acl = $this->di->get(Services::ACL);
 
-        $allowed = true;
+        $allowed = $acl->isAllowed(AclRoles::ADMINISTRATOR, $resource->getPrefix(), $endpoint->getIdentifier());
 
         if (!$allowed) {
             throw new Exception(ErrorCodes::ACCESS_DENIED);

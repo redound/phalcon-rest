@@ -11,11 +11,10 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
     {
         parent::__construct();
 
-        $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request());
-        $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response());
+        $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request);
+        $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response);
 
-        $this->setShared(Services::AUTH_MANAGER, new \PhalconRest\Auth\Manager());
-        $this->setShared(Services::ACL_SERVICE, new \PhalconRest\Acl\Service());
+        $this->setShared(Services::AUTH_MANAGER, new \PhalconRest\Auth\Manager);
 
         $this->setShared(Services::FRACTAL_MANAGER, function () {
 
@@ -48,5 +47,8 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 
             return new \PhalconRest\Data\Query\QueryParsers\UrlQueryParser();
         });
+
+        $this->setShared(Services::ACL, new \Phalcon\Acl\Adapter\Memory);
+        $this->setShared(Services::ACL_HELPER, new \PhalconRest\Acl\Helper);
     }
 }
