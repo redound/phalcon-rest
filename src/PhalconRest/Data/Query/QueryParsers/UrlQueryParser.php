@@ -1,12 +1,12 @@
 <?php
 
-namespace PhalconRest\Data\Query\Parser;
+namespace PhalconRest\Data\Query\QueryParsers;
 
 use \PhalconRest\Data\Query\Condition;
 use \PhalconRest\Data\Query\Sorter;
 use \PhalconRest\Data\Query;
 
-class Url
+class UrlQueryParser
 {
     const OPERATOR_IS_EQUAL = 'e';
     const OPERATOR_IS_GREATER_THAN = 'gt';

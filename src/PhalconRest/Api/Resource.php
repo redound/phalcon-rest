@@ -3,9 +3,9 @@
 namespace PhalconRest\Api;
 
 use Phalcon\Di;
-use PhalconRest\Constant\ErrorCode;
-use PhalconRest\Constant\Http;
-use PhalconRest\Constant\Service;
+use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Constants\HttpMethods;
+use PhalconRest\Constants\Services;
 use PhalconRest\Exception;
 
 class Resource extends \Phalcon\Mvc\Micro\Collection
@@ -91,7 +91,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         if(!$this->_modelPrimaryKey){
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Service::MODELS_METADATA);
+            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
             $modelClass = $this->getModel();
 
@@ -130,7 +130,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
             $controller = new $controller();
 
-            if($controller instanceof \PhalconRest\Mvc\Controller\ResourceController){
+            if($controller instanceof \PhalconRest\Mvc\ResourceInjectableInterface){
                 $controller->setResource($this);
             }
 
@@ -157,22 +157,22 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
         switch($endpoint->getHttpMethod()){
 
-            case Http::GET:
+            case HttpMethods::GET:
 
                 $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
 
-            case Http::POST:
+            case HttpMethods::POST:
 
                 $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
 
-            case Http::PUT:
+            case HttpMethods::PUT:
 
                 $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
 
-            case Http::DELETE:
+            case HttpMethods::DELETE:
 
                 $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->getName() . '/');
                 break;
@@ -190,7 +190,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     public function mount(Endpoint $endpoint)
     {
         if(!$endpoint->getName()){
-            throw new Exception(ErrorCode::GEN_SYSTEM, 'No name provided for endpoint');
+            throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'No name provided for endpoint');
         }
 
         $this->endpoint($endpoint->getName(), $endpoint);
@@ -244,8 +244,8 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         $model = null,
         $singleKey = 'item',
         $multipleKey = 'items',
-        $transformer = '\PhalconRest\Transformer\ModelTransformer',
-        $controller = '\PhalconRest\Mvc\Controller\ResourceController'
+        $transformer = \PhalconRest\Transformers\ModelTransformer::class,
+        $controller = \PhalconRest\Mvc\Controllers\CrudResourceController::class
     ) {
 
         return new Resource(
@@ -258,29 +258,18 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         );
     }
 
-    public static function crud(
-        $prefix = null,
-        $model = null,
-        $singleKey = 'item',
-        $multipleKey = 'items',
-        $transformer = '\PhalconRest\Transformer\ModelTransformer',
-        $controller = '\PhalconRest\Mvc\Controller\CrudResourceController'
-    ) {
-
-        $resource = new Resource(
-            $prefix,
-            $model,
-            $singleKey,
-            $multipleKey,
-            $transformer,
-            $controller
-        );
-
-        $resource->endpoint(Endpoint::all())
+    public static function crud($name = null)
+    {
+        $resource = Resource::factory()
+            ->endpoint(Endpoint::all())
             ->endpoint(Endpoint::find())
             ->endpoint(Endpoint::create())
             ->endpoint(Endpoint::update())
             ->endpoint(Endpoint::delete());
+
+        if ($name) {
+            $resource->name($name);
+        }
 
         return $resource;
     }

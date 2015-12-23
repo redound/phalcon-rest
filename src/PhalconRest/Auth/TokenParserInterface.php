@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Auth;
 
-interface TokenParser
+interface TokenParserInterface
 {
     /**
      * @param Session $session Session to generate token for

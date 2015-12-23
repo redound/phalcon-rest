@@ -3,147 +3,64 @@
 namespace PhalconRest\Http;
 
 
+use PhalconRest\Constants\ErrorCodes;
+
 class Response extends \Phalcon\Http\Response
 {
     protected $defaultErrorMessages = [
 
         // General
-        1001 => [
-           'statuscode' => 404,
-           'message' => 'General: Not found',
+        ErrorCodes::GENERAL_SYSTEM => [
+            'statusCode' => 500,
+            'message' => 'General: System Error'
         ],
 
-        // Data
-        2001 => [
-           'statuscode' => 404,
-           'message' => 'Data: Duplicate data',
-        ],
-
-        2002 => [
-           'statuscode' => 404,
-           'message' => 'Data: Not Found',
-        ],
-
-        2003 => [
-           'statuscode' => 404,
-           'message' => 'Failed to process data',
-        ],
-
-        2004 => [
-           'statuscode' => 404,
-           'message' => 'Data: Invalid',
-        ],
-
-        2005 => [
-           'statuscode' => 404,
-           'message' => 'Action failed',
-        ],
-
-        2010 => [
-           'statuscode' => 404,
-           'message' => 'Data: Not Found',
-        ],
-
-        2020 => [
-           'statuscode' => 500,
-           'message' => 'Data: Failed to create',
-        ],
-
-        2030 => [
-           'statuscode' => 500,
-           'message' => 'Data: Failed to update',
-        ],
-
-        2040 => [
-           'statuscode' => 500,
-           'message' => 'Data: Failed to delete',
-        ],
-
-        2060 => [
-           'statuscode' => 404,
-           'message' => 'Data: Rejected',
-        ],
-
-        2070 => [
-           'statuscode' => 403,
-           'message' => 'Data: Action not allowed',
+        ErrorCodes::GENERAL_NOT_FOUND => [
+            'statusCode' => 404,
+            'message' => 'General: Not Found'
         ],
 
         // Authentication
-        3006 => [
-           'statuscode' => 400,
-           'message' => 'Auth: Provided token invalid',
+        ErrorCodes::AUTH_INVALID_ACCOUNT_TYPE => [
+            'statusCode' => 400,
+            'message' => 'Authentication: Invalid Account Type'
         ],
 
-        3007 => [
-           'statuscode' => 404,
-           'message' => 'Auth: No username present',
+        ErrorCodes::AUTH_LOGIN_FAILED => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Login Failed'
         ],
 
-        3008 => [
-           'statuscode' => 404,
-           'message' => 'Auth: Invalid authentication bearer type',
+        ErrorCodes::AUTH_TOKEN_INVALID => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Login Failed'
         ],
 
-        3009 => [
-           'statuscode' => 404,
-           'message' => 'Auth: Bad login credentials',
+        ErrorCodes::AUTH_SESSION_EXPIRED => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Session Expired'
         ],
 
-        3010 => [
-           'statuscode' => 401,
-           'message' => 'Auth: Unauthorized',
+        ErrorCodes::AUTH_SESSION_INVALID => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Session Invalid'
         ],
 
-        3020 => [
-           'statuscode' => 403,
-           'message' => 'Auth: Forbidden',
+        // Access Control
+        ErrorCodes::ACCESS_DENIED => [
+            'statusCode' => 403,
+            'message' => 'Access: Denied'
         ],
 
-        3030 => [
-           'statuscode' => 401,
-           'message' => 'Auth: Session expired',
+        // Data
+        ErrorCodes::DATA_FAILED => [
+            'statusCode' => 500,
+            'message' => 'Data: Failed'
         ],
 
-        4001 => [
-           'statuscode' => 404,
-           'message' => 'Google: No data',
-        ],
-
-        4002 => [
-           'statuscode' => 404,
-           'message' => 'Google: Bad login',
-        ],
-
-        4003 => [
-           'statuscode' => 404,
-           'message' => 'User: Not active',
-        ],
-
-        4004 => [
-           'statuscode' => 404,
-           'message' => 'User: Not found',
-        ],
-
-        4005 => [
-           'statuscode' => 404,
-           'message' => 'User: Registration failed',
-        ],
-
-        4006 => [
-           'statuscode' => 404,
-           'message' => 'User: Modification failed',
-        ],
-
-        4007 => [
-           'statuscode' => 404,
-           'message' => 'User: Creation failed',
-        ],
-
-        // PDO
-        23000 => [
-           'statuscode' => 404,
-           'message' => 'Duplicate entry',
+        ErrorCodes::DATA_NOT_FOUND => [
+            'statusCode' => 404,
+            'message' => 'Data: Not Found'
         ]
     ];
 
@@ -168,13 +85,12 @@ class Response extends \Phalcon\Http\Response
 
             $defaultMessage = $this->defaultErrorMessages[$errorCode];
 
-            $statusCode = $defaultMessage['statuscode'];
+            $statusCode = $defaultMessage['statusCode'];
             $message = $defaultMessage['message'];
         }
 
         $error = [
             'code' => $errorCode,
-            'status' => $statusCode,
             'message' => $message,
         ];
 

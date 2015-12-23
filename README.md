@@ -42,7 +42,7 @@ For a full implementation of the library, check out the [Boilerplate application
     /**
      * @description App - \PhalconRest\Api\Service
      */
-    $di->setShared(Service::API_SERVICE, function () {
+    $di->setShared(Services::API_SERVICE, function () {
     
         $apiService = new \PhalconRest\Api\Service;
     
@@ -145,10 +145,10 @@ For a full implementation of the library, check out the [Boilerplate application
 
     ````php
     /** @var \PhalconRest\Data\Query $query */
-    $query = $this->get(Service::QUERY);
+    $query = $this->get(Services::QUERY);
 
     /** @var \PhalconRest\Data\Query\Parser\Phql $phqlQueryParser */
-    $phqlQueryParser = $this->get(Service::PHQL_QUERY_PARSER);
+    $phqlQueryParser = $this->get(Services::PHQL_QUERY_PARSER);
 
     /** @var \Phalcon\Mvc\Model\Query\Builder $phqlBuilder */
     $phqlBuilder = $phqlQueryParser->fromQuery($query);

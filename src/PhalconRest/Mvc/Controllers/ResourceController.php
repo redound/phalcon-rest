@@ -1,8 +1,10 @@
 <?php
 
-namespace PhalconRest\Mvc\Controller;
+namespace PhalconRest\Mvc\Controllers;
 
-class ResourceController extends \PhalconRest\Mvc\Controller\FractalController
+use PhalconRest\Mvc\ResourceInjectableInterface;
+
+class ResourceController extends FractalController implements ResourceInjectableInterface
 {
     /** @var \PhalconRest\Api\Resource */
     protected $resource;
@@ -33,7 +35,7 @@ class ResourceController extends \PhalconRest\Mvc\Controller\FractalController
         $transformerClass = $this->resource->getTransformer();
         $transformer = new $transformerClass();
 
-        if($transformer instanceof \PhalconRest\Transformer\ModelTransformer){
+        if($transformer instanceof \PhalconRest\Transformers\ModelTransformer){
             $transformer->setModelClass($this->resource->getModel());
         }
 

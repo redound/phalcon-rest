@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Api;
 
-use PhalconRest\Constant\Http;
+use PhalconRest\Constants\HttpMethods;
 
 class Endpoint
 {
@@ -99,26 +99,26 @@ class Endpoint
 
     public static function all()
     {
-        return new Endpoint('/', Http::GET, 'all');
+        return new Endpoint('/', HttpMethods::GET, 'all');
     }
 
     public static function create()
     {
-        return new Endpoint('/', Http::POST, 'create');
+        return new Endpoint('/', HttpMethods::POST, 'create');
     }
 
     public static function update()
     {
-        return new Endpoint('/{id}', Http::PUT, 'update');
+        return new Endpoint('/{id}', HttpMethods::PUT, 'update');
     }
 
     public static function delete()
     {
-        return new Endpoint('/{id}', Http::DELETE, 'delete');
+        return new Endpoint('/{id}', HttpMethods::DELETE, 'delete');
     }
 
     public static function find()
     {
-        return new Endpoint('/{id}', Http::GET, 'find');
+        return new Endpoint('/{id}', HttpMethods::GET, 'find');
     }
 }

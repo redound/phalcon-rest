@@ -1,12 +1,12 @@
 <?php
 
-namespace PhalconRest\Data\Query\Parser;
+namespace PhalconRest\Data\Query\QueryParsers;
 
 use \PhalconRest\Data\Query;
 use \PhalconRest\Data\Query\Sorter;
 use \PhalconRest\Data\Query\Condition;
 
-class Phql extends \Phalcon\Mvc\User\Plugin
+class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
 {
     const OPERATOR_IS_EQUAL = '=';
     const OPERATOR_IS_GREATER_THAN = '>';

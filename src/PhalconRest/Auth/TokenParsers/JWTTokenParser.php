@@ -1,12 +1,12 @@
 <?php
 
-namespace PhalconRest\Auth\TokenParser;
+namespace PhalconRest\Auth\TokenParsers;
 
 use PhalconRest\Auth\Session;
-use PhalconRest\Constant\ErrorCode;
+use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Exception;
 
-class JWT implements \PhalconRest\Auth\TokenParser
+class JWT implements \PhalconRest\Auth\TokenParserInterface
 {
     const ALGORITHM_HS256 = 'HS256';
     const ALGORITHM_HS512 = 'HS512';
@@ -20,7 +20,7 @@ class JWT implements \PhalconRest\Auth\TokenParser
     public function __construct($secret, $algorithm = self::ALGORITHM_HS256)
     {
         if(!class_exists('\Firebase\JWT\JWT'))
-            throw new Exception(ErrorCode::GEN_SYSTEM, 'JWT class is needed for the JWT token parser');
+            throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'JWT class is needed for the JWT token parser');
 
         $this->algorithm = $algorithm;
         $this->secret = $secret;

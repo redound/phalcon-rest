@@ -1,8 +1,8 @@
 <?php
 
-namespace PhalconRest\Constant;
+namespace PhalconRest\Constants;
 
-class Http
+class HttpMethods
 {
     const GET = "GET";
     const POST = "POST";

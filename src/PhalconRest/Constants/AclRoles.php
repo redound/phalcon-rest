@@ -1,8 +1,8 @@
 <?php
 
-namespace PhalconRest\Constant;
+namespace PhalconRest\Constants;
 
-class AclRole
+class AclRoles
 {
     const NONE = 'none';
     const USER = 'user';

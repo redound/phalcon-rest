@@ -1,10 +1,10 @@
 <?php
 
-namespace PhalconRest\Mvc\Controller;
+namespace PhalconRest\Mvc\Controllers;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use PhalconRest\Constant\Service;
+use PhalconRest\Constants\Services;
 use PhalconRest\Mvc\Controller;
 
 class FractalController extends Controller
@@ -14,7 +14,7 @@ class FractalController extends Controller
 
     public function onConstruct()
     {
-        $this->fractal = $this->di->get(Service::FRACTAL_MANAGER);
+        $this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
     }
 
     protected function createArrayResponse($array, $key)

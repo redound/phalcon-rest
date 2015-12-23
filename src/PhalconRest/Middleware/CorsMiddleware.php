@@ -3,7 +3,7 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
-use PhalconRest\Constant\Http;
+use PhalconRest\Constants\HttpMethods;
 
 class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 {
@@ -33,7 +33,7 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
      * @param array|null $allowedMethods Allowed methods
      * @param array|null $allowedHeaders Allowed headers
      */
-    public function __construct(array $allowedOrigins = self::ALL_ORIGINS, array $allowedMethods = Http::ALL_METHODS, array $allowedHeaders = self::DEFAULT_HEADERS)
+    public function __construct(array $allowedOrigins = self::ALL_ORIGINS, array $allowedMethods = HttpMethods::ALL_METHODS, array $allowedHeaders = self::DEFAULT_HEADERS)
     {
         $this->setAllowedOrigins($allowedOrigins);
         $this->setAllowedMethods($allowedMethods);

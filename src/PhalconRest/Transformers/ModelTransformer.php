@@ -1,10 +1,10 @@
 <?php
 
-namespace PhalconRest\Transformer;
+namespace PhalconRest\Transformers;
 
 use Phalcon\Db\Column;
 use Phalcon\Di;
-use PhalconRest\Constant\Service;
+use PhalconRest\Constants\Services;
 
 class ModelTransformer extends \League\Fractal\TransformerAbstract
 {
@@ -25,7 +25,6 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     const TYPE_BIGINTEGER = Column::TYPE_BIGINTEGER;
     const TYPE_JSON = Column::TYPE_JSON;
     const TYPE_JSONB = Column::TYPE_JSONB;
-    const TYPE_TIMESTAMP = Column::TYPE_TIMESTAMP;
 
 
     protected $modelClass;
@@ -49,7 +48,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     protected function includedProperties()
     {
         /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-        $modelsMetaData = Di::getDefault()->get(Service::MODELS_METADATA);
+        $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
         $modelClass = $this->getModelClass();
 
@@ -182,7 +181,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
         if(!$this->_modelDataTypes){
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Service::MODELS_METADATA);
+            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
             $modelClass = $this->getModelClass();
 

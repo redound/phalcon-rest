@@ -1,8 +1,8 @@
 <?php
 
-namespace PhalconRest\Constant;
+namespace PhalconRest\Constants;
 
-class Service
+class Services
 {
     // Phalcon
     const DISPATCHER = "dispatcher";
