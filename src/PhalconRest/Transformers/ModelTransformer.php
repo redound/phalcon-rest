@@ -29,7 +29,9 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     protected $modelClass;
 
-    protected $_modelDataTypes;
+    protected $modelDataTypes;
+    protected $modelColumnMap;
+    protected $mmodelAttributes;
 
 
     public function getModelClass()
@@ -47,12 +49,18 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
      */
     protected function includedProperties()
     {
-        /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-        $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
+        $attributes =  $this->getModelAttributes();
+        $columnMap = $this->getModelColumnMap();
 
-        $modelClass = $this->getModelClass();
+        if(!is_array($columnMap)){
+            return $attributes;
+        }
 
-        return $modelsMetaData->getAttributes(new $modelClass);
+        return array_map(function($attribute) use ($columnMap){
+
+            return array_key_exists($attribute, $columnMap) ? $columnMap[$attribute] : $attribute;
+
+        }, $attributes);
     }
 
     /**
@@ -88,7 +96,8 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     protected function getFieldValue($item, $propertyName, $fieldName)
     {
         $dataType = array_key_exists($propertyName,
-            $this->_getModelDataTypes()) ? $this->_getModelDataTypes()[$propertyName] : null;
+            $this->getModelDataTypes()) ? $this->getModelDataTypes()[$propertyName] : null;
+
         $value = $item->$propertyName;
         $typedValue = $value;
 
@@ -132,8 +141,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
             }
 
             case self::TYPE_DATE:
-            case self::TYPE_DATETIME:
-            case self::TYPE_TIMESTAMP: {
+            case self::TYPE_DATETIME: {
 
                 $typedValue = strtotime($value);
                 break;
@@ -153,15 +161,10 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     public function transform($item)
     {
-        return $this->_transform($item, $this->getResponseProperties());
-    }
-
-    protected function _transform($item, $properties = null)
-    {
         $result = [];
         $keyMap = $this->keyMap();
 
-        foreach ($properties as $property) {
+        foreach ($this->getResponseProperties() as $property) {
 
             $fieldName = array_key_exists($property, $keyMap) ? $keyMap[$property] : $property;
             $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
@@ -177,18 +180,66 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
         return array_diff($this->includedProperties(), $this->excludedProperties());
     }
 
-    protected function _getModelDataTypes()
+    protected function getModelAttributes()
     {
-        if (!$this->_modelDataTypes) {
+        if (!$this->mmodelAttributes) {
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
             $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
             $modelClass = $this->getModelClass();
 
-            $this->_modelDataTypes = array_merge($modelsMetaData->getDataTypes(new $modelClass), $this->typeMap());
+            $this->mmodelAttributes = $modelsMetaData->getAttributes(new $modelClass);
         }
 
-        return $this->_modelDataTypes;
+        return $this->mmodelAttributes;
+    }
+
+    protected function getModelDataTypes()
+    {
+        if (!$this->modelDataTypes) {
+
+            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
+            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
+
+            $modelClass = $this->getModelClass();
+            $columnMap = $this->getModelColumnMap();
+
+            $dataTypes = $modelsMetaData->getDataTypes(new $modelClass);
+
+            $mappedDataTypes = [];
+
+            if(is_array($columnMap)) {
+
+                foreach ($dataTypes as $attributeName => $dataType) {
+
+                    $mappedAttributeName = array_key_exists($attributeName, $columnMap) ? $columnMap[$attributeName] : $attributeName;
+                    $mappedDataTypes[$mappedAttributeName] = $dataType;
+                }
+            }
+            else {
+
+                $mappedDataTypes = $dataTypes;
+            }
+
+            $this->modelDataTypes = array_merge($mappedDataTypes, $this->typeMap());
+        }
+
+        return $this->modelDataTypes;
+    }
+
+    protected function getModelColumnMap()
+    {
+        if (!$this->modelColumnMap) {
+
+            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
+            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
+
+            $modelClass = $this->getModelClass();
+
+            $this->modelColumnMap = array_merge($modelsMetaData->getColumnMap(new $modelClass), $this->keyMap());
+        }
+
+        return $this->modelColumnMap;
     }
 }

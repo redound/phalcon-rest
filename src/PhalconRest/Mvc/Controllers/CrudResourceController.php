@@ -193,9 +193,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     }
 
 
-    /*** DELETE ***/
+    /*** REMOVE ***/
 
-    public function delete($id)
+    public function remove($id)
     {
         $item = $this->getItem($id);
 
@@ -203,38 +203,38 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onItemNotFound($id);
         }
 
-        $this->beforeDelete($item);
+        $this->beforeRemove($item);
 
-        $success = $this->deleteItem($item);
+        $success = $this->removeItem($item);
 
         if (!$success) {
-            return $this->onDeleteFailed($item);
+            return $this->onRemoveFailed($item);
         }
 
-        $this->afterDelete($item);
+        $this->afterRemove($item);
 
-        return $this->getDeleteResponse($item);
+        return $this->getRemoveResponse($item);
     }
 
-    protected function beforeDelete(Model $item)
+    protected function beforeRemove(Model $item)
     {
     }
 
-    protected function afterDelete(Model $deletedItem)
+    protected function afterRemove(Model $removedItem)
     {
     }
 
     /**
      * @param Model $item
      *
-     * @return bool Deletion succeeded/failed
+     * @return bool Remove succeeded/failed
      */
-    protected function deleteItem(Model $item)
+    protected function removeItem(Model $item)
     {
         return $item->delete();
     }
 
-    protected function getDeleteResponse(Model $deletedItem)
+    protected function getRemoveResponse(Model $removedItem)
     {
         return $this->createOkResponse();
     }
@@ -276,8 +276,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to update item');
     }
 
-    protected function onDeleteFailed(Model $item)
+    protected function onRemoveFailed(Model $item)
     {
-        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to delete item');
+        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to remove item');
     }
 }

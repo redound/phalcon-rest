@@ -24,7 +24,7 @@ class Helper
             return $apiEndpoint->getIdentifier();
         }, $apiResource->getEndpoints());
 
-        $acl->addResource(new Resource($apiResource->getPrefix(), $apiResource->getName()), $apiEndpointIdentifiers);
+        $acl->addResource(new Resource($apiResource->getIdentifier(), $apiResource->getName()), $apiEndpointIdentifiers);
 
         $defaultAllowedRoles = $apiResource->getAllowedRoles();
         $defaultDeniedRoles = $apiResource->getDeniedRoles();
@@ -53,11 +53,11 @@ class Helper
                 }
 
                 if ($rule === true) {
-                    $acl->allow($role, $apiResource->getPrefix(), $apiEndpoint->getIdentifier());
+                    $acl->allow($role, $apiResource->getIdentifier(), $apiEndpoint->getIdentifier());
                 }
 
                 if ($rule === false) {
-                    $acl->deny($role, $apiResource->getPrefix(), $apiEndpoint->getIdentifier());
+                    $acl->deny($role, $apiResource->getIdentifier(), $apiEndpoint->getIdentifier());
                 }
             }
         }

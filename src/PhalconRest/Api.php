@@ -9,7 +9,7 @@ use PhalconRest\Constants\Services;
 class Api extends \Phalcon\Mvc\Micro
 {
     protected $matchedRouteNameParts = null;
-    protected $resourcesByPrefix = [];
+    protected $resourcesByIdentifier = [];
     protected $resourcesByName = [];
     protected $endpointsByIdentifier = [];
 
@@ -18,13 +18,13 @@ class Api extends \Phalcon\Mvc\Micro
      */
     public function getResources()
     {
-        return array_values($this->resourcesByPrefix);
+        return array_values($this->resourcesByIdentifier);
     }
 
     /**
      * @param $name
      *
-     * @return Resource
+     * @return Resource|null
      */
     public function getResource($name)
     {
@@ -53,7 +53,7 @@ class Api extends \Phalcon\Mvc\Micro
                 $this->resourcesByName[$resourceName] = $collection;
             }
 
-            $this->resourcesByPrefix[$collection->getPrefix()] = $collection;
+            $this->resourcesByIdentifier[$collection->getIdentifier()] = $collection;
 
             /** @var Endpoint $endpoint */
             foreach($collection->getEndpoints() as $endpoint){
@@ -81,6 +81,34 @@ class Api extends \Phalcon\Mvc\Micro
         return $this;
     }
 
+    /**
+     * @return \PhalconRest\Api\Resource|null  The matched resource
+     */
+    public function getMatchedResource()
+    {
+        $resourceIdentifier = $this->getMatchedRouteNamePart('resource');
+
+        if (!$resourceIdentifier) {
+            return null;
+        }
+
+        return array_key_exists($resourceIdentifier, $this->resourcesByIdentifier) ? $this->resourcesByIdentifier[$resourceIdentifier] : null;
+    }
+
+    /**
+     * @return \PhalconRest\Api\Endpoint|null  The matched endpoint
+     */
+    public function getMatchedEndpoint()
+    {
+        $endpointIdentifier = $this->getMatchedRouteNamePart('endpoint');
+
+        if (!$endpointIdentifier) {
+            return null;
+        }
+
+        return array_key_exists($endpointIdentifier, $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$endpointIdentifier] : null;
+    }
+
     protected function getMatchedRouteNamePart($key)
     {
         if (is_null($this->matchedRouteNameParts)) {
@@ -99,36 +127,5 @@ class Api extends \Phalcon\Mvc\Micro
         }
 
         return null;
-    }
-
-    /**
-     * @return \PhalconRest\Api\Resource|null  The matched resource
-     */
-    public function getMatchedResource()
-    {
-        $resourcePrefix = $this->getMatchedRouteNamePart('resourcePrefix');
-
-        if (!$resourcePrefix) {
-            return null;
-        }
-
-        return array_key_exists($resourcePrefix, $this->resourcesByPrefix) ? $this->resourcesByPrefix[$resourcePrefix] : null;
-    }
-
-    /**
-     * @return \PhalconRest\Api\Endpoint|null  The matched endpoint
-     */
-    public function getMatchedEndpoint()
-    {
-        $httpMethod = $this->getMatchedRouteNamePart('httpMethod');
-        $endpointPath = $this->getMatchedRouteNamePart('endpointPath');
-
-        if (!$httpMethod || !$endpointPath) {
-            return null;
-        }
-
-        $endpointPath = $httpMethod . ' ' . $endpointPath;
-
-        return array_key_exists($endpointPath, $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$endpointPath] : null;
     }
 }

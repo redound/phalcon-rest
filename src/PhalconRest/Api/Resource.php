@@ -28,10 +28,17 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
     protected $_modelPrimaryKey;
 
-
     public function __construct($prefix)
     {
         parent::setPrefix($prefix);
+    }
+
+    /**
+     * @return string Unique identifier for this resource (returns the prefix)
+     */
+    public function getIdentifier()
+    {
+        return $this->getPrefix();
     }
 
     /**
@@ -45,6 +52,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return string|null Name of the resource
+     */
     public function getName()
     {
         return $this->name;
@@ -66,19 +76,29 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return string|null Classname of the model
+     */
     public function getModel()
     {
         return $this->model;
     }
 
+    /**
+     * @return string|null Primary key of the model
+     */
     public function getModelPrimaryKey()
     {
+        if (!$this->model) {
+            return null;
+        }
+
         if (!$this->_modelPrimaryKey) {
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
             $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
-            $modelClass = $this->getModel();
+            $modelClass = $this->model;
 
             $this->_modelPrimaryKey = $modelsMetaData->getIdentityField(new $modelClass);
         }
@@ -97,6 +117,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return string|null Classname of the transformer
+     */
     public function getTransformer()
     {
         return $this->transformer;
@@ -125,63 +148,57 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return string|null Classname of the controller
+     */
     public function getController()
     {
         return $this->controller;
     }
 
     /**
-     * @param string $name Name for the endpoint
-     * @param Endpoint $endpoint
+     * Mounts endpoint to the resource
+     *
+     * @param \PhalconRest\Api\Endpoint $endpoint Endpoint to mount
      *
      * @return static
      */
     public function endpoint(Endpoint $endpoint)
     {
-        $this->prefixLock = true;
-
         $this->endpoints[] = $endpoint;
 
         switch ($endpoint->getHttpMethod()) {
 
             case HttpMethods::GET:
 
-                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
+                $this->get($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->createRouteName($endpoint));
                 break;
 
             case HttpMethods::POST:
 
-                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
+                $this->post($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->createRouteName($endpoint));
                 break;
 
             case HttpMethods::PUT:
 
-                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
+                $this->put($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->createRouteName($endpoint));
                 break;
 
             case HttpMethods::DELETE:
 
-                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->_createRouteName($endpoint));
+                $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->createRouteName($endpoint));
                 break;
         }
 
         return $this;
     }
 
-    protected function _createRouteName(Endpoint $endpoint)
-    {
-        return serialize([
-            'resourcePrefix' => $this->getPrefix() ? $this->getPrefix() : '',
-            'endpointPath' => $endpoint->getPath(),
-            'httpMethod' => $endpoint->getHttpMethod()
-        ]);
-    }
-
     /**
-     * @param Endpoint $endpoint Endpoint to mound (shortcut for endpoint function)
+     * Mounts endpoint to the resource
+     *
+     * @param \PhalconRest\Api\Endpoint $endpoint Endpoint to mount (shortcut for endpoint function)
      *
      * @return static
-     * @throws Exception
      */
     public function mount(Endpoint $endpoint)
     {
@@ -189,11 +206,19 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return \PhalconRest\Api\Endpoint[] Array of all mounted endpoints
+     */
     public function getEndpoints()
     {
         return $this->endpoints;
     }
 
+    /**
+     * @param string $name Name for the endpoint to return
+     *
+     * @return \PhalconRest\Api\Endpoint|null Endpoint with the given name
+     */
     public function getEndpoint($name)
     {
         return array_key_exists($name, $this->endpoints) ? $this->endpoints[$name] : null;
@@ -210,6 +235,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return string Response key for single item
+     */
     public function getSingleKey()
     {
         return $this->singleKey;
@@ -226,40 +254,85 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
         return $this;
     }
 
+    /**
+     * @return string Response key for multiple items
+     */
     public function getMultipleKey()
     {
         return $this->multipleKey;
     }
 
-    public function allow($roleName)
+    /**
+     * Allows access to this resource for role with the given names. This can be overwritten on the Endpoint level.
+     *
+     * @param array ...$roleNames Names of the roles to allow
+     *
+     * @return static
+     */
+    public function allow(...$roleNames)
     {
-        if (!in_array($roleName, $this->allowedRoles)) {
-            $this->allowedRoles[] = $roleName;
+        foreach($roleNames as $role) {
+
+            if (!in_array($role, $this->allowedRoles)) {
+                $this->allowedRoles[] = $role;
+            }
         }
 
         return $this;
     }
 
+    /**
+     * @return string[] Array of allowed role-names
+     */
     public function getAllowedRoles()
     {
         return $this->allowedRoles;
     }
 
-    public function deny($roleName)
+    /***
+     * Denies access to this resource for role with the given names. This can be overwritten on the Endpoint level.
+     *
+     * @param array ...$roleNames Names of the roles to deny
+     *
+     * @return $this
+     */
+    public function deny(...$roleNames)
     {
-        if (!in_array($roleName, $this->deniedRoles)) {
-            $this->deniedRoles[] = $roleName;
+        foreach($roleNames as $role) {
+
+            if (!in_array($role, $this->deniedRoles)) {
+                $this->deniedRoles[] = $role;
+            }
         }
 
         return $this;
     }
 
+    /**
+     * @return string[] Array of denied role-names
+     */
     public function getDeniedRoles()
     {
         return $this->deniedRoles;
     }
 
-    public static function factory($prefix)
+    protected function createRouteName(Endpoint $endpoint)
+    {
+        return serialize([
+            'resource' => $this->getIdentifier(),
+            'endpoint' => $endpoint->getIdentifier()
+        ]);
+    }
+
+    /**
+     * Returns resource with default values
+     *
+     * @param string $prefix Prefix for the resource (e.g. /user)
+     * @param string $name Name for the resource (e.g. users) (optional)
+     *
+     * @return static
+     */
+    public static function factory($prefix, $name=null)
     {
         $resource = new Resource($prefix);
 
@@ -269,18 +342,28 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
             ->transformer(ModelTransformer::class)
             ->controller(CrudResourceController::class);
 
+        if($name){
+            $resource->name($name);
+        }
+
         return $resource;
     }
 
-    public static function crud($prefix)
+    /**
+     * Returns resource with default values & all, find, create, update and delete endpoints pre-configured
+     *
+     * @param string $prefix Prefix for the resource (e.g. /user)
+     * @param string $name Name for the resource (e.g. users) (optional)
+     *
+     * @return static
+     */
+    public static function crud($prefix, $name=null)
     {
-        $resource = Resource::factory($prefix)
+        return self::factory($prefix, $name)
             ->endpoint(Endpoint::all())
             ->endpoint(Endpoint::find())
             ->endpoint(Endpoint::create())
             ->endpoint(Endpoint::update())
-            ->endpoint(Endpoint::delete());
-
-        return $resource;
+            ->endpoint(Endpoint::remove());
     }
 }
