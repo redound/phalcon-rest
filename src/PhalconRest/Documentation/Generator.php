@@ -15,27 +15,22 @@ class Generator extends \Phalcon\Mvc\User\Plugin
         $this->reader = new \Phalcon\Annotations\Adapter\Memory();
     }
 
-    protected function getCollectionClasses()
+    public function generate()
     {
-        if (empty($this->collectionClasses)) {
-
-            foreach ($this->collections as $collection) {
-
-                $this->collectionClasses[] = new $collection;
-            }
-        }
-
-        return $this->collectionClasses;
+        return $this->getDocumentedRoutesFromCollections();
     }
 
-    protected function getAnnotationsFromCollection($collection)
+    protected function getDocumentedRoutesFromCollections()
     {
-        $handler = $collection->getHandler();
-        $reflector = $this->reader->get($handler);
-        return [
-            "class" => $reflector->getClassAnnotations(),
-            "methods" => $reflector->getMethodsAnnotations(),
-        ];
+        $collections = $this->getAnnotationsFromCollections();
+        $data = [];
+
+        foreach ($collections as $collection) {
+
+            $data[] = new Resource($collection["resource"], $collection["collection"], $collection["annotations"]);
+        }
+
+        return $data;
     }
 
     protected function getAnnotationsFromCollections()
@@ -63,22 +58,27 @@ class Generator extends \Phalcon\Mvc\User\Plugin
         return $data;
     }
 
-    protected function getDocumentedRoutesFromCollections()
+    protected function getCollectionClasses()
     {
-        $collections = $this->getAnnotationsFromCollections();
-        $data = [];
+        if (empty($this->collectionClasses)) {
 
-        foreach ($collections as $collection) {
+            foreach ($this->collections as $collection) {
 
-            $data[] = new Resource($collection["resource"], $collection["collection"], $collection["annotations"]);
+                $this->collectionClasses[] = new $collection;
+            }
         }
 
-        return $data;
+        return $this->collectionClasses;
     }
 
-    public function generate()
+    protected function getAnnotationsFromCollection($collection)
     {
-        return $this->getDocumentedRoutesFromCollections();
+        $handler = $collection->getHandler();
+        $reflector = $this->reader->get($handler);
+        return [
+            "class" => $reflector->getClassAnnotations(),
+            "methods" => $reflector->getMethodsAnnotations(),
+        ];
     }
 
     public function generatePostmanCollection($hostName = 'http://no-hostname-defined.local/')

@@ -19,8 +19,9 @@ class JWT implements \PhalconRest\Auth\TokenParserInterface
 
     public function __construct($secret, $algorithm = self::ALGORITHM_HS256)
     {
-        if(!class_exists('\Firebase\JWT\JWT'))
+        if (!class_exists('\Firebase\JWT\JWT')) {
             throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'JWT class is needed for the JWT token parser');
+        }
 
         $this->algorithm = $algorithm;
         $this->secret = $secret;
@@ -37,9 +38,10 @@ class JWT implements \PhalconRest\Auth\TokenParserInterface
     }
 
 
-    public function getToken(Session $session, $expirationTime=null)
+    public function getToken(Session $session, $expirationTime = null)
     {
-        $tokenData = $this->create($session->getAccountTypeName(), $session->getIdentity(), $session->getStartTime(), $session->getExpirationTime());
+        $tokenData = $this->create($session->getAccountTypeName(), $session->getIdentity(), $session->getStartTime(),
+            $session->getExpirationTime());
 
         return $this->encode($tokenData);
     }

@@ -75,13 +75,13 @@ class Response extends \Phalcon\Http\Response
         $this->defaultErrorMessages = $messages;
     }
 
-    public function setErrorContent(\Exception $e, $developerInfo=false)
+    public function setErrorContent(\Exception $e, $developerInfo = false)
     {
         $errorCode = $e->getCode();
         $statusCode = 500;
         $message = 'Unspecified error';
 
-        if(array_key_exists($errorCode, $this->defaultErrorMessages)){
+        if (array_key_exists($errorCode, $this->defaultErrorMessages)) {
 
             $defaultMessage = $this->defaultErrorMessages[$errorCode];
 

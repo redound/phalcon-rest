@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Data\Query\QueryParsers;
 
-use \PhalconRest\Data\Query\Condition;
-use \PhalconRest\Data\Query\Sorter;
-use \PhalconRest\Data\Query;
+use PhalconRest\Data\Query;
+use PhalconRest\Data\Query\Condition;
+use PhalconRest\Data\Query\Sorter;
 
 class UrlQueryParser
 {
@@ -49,7 +49,7 @@ class UrlQueryParser
 
         if ($having) {
 
-            foreach($having as $field => $value) {
+            foreach ($having as $field => $value) {
 
                 $query->addCondition(new Condition(Condition::TYPE_OR, $field, Query::OPERATOR_IS_EQUAL, $value));
             }
@@ -73,11 +73,11 @@ class UrlQueryParser
 
         if ($or) {
 
-            foreach($or as $where) {
+            foreach ($or as $where) {
 
-                foreach($where as $field => $conditions) {
+                foreach ($where as $field => $conditions) {
 
-                    foreach($conditions as $rawOperator => $value) {
+                    foreach ($conditions as $rawOperator => $value) {
 
                         $operator = $this->extractOperator($rawOperator);
 
@@ -91,7 +91,7 @@ class UrlQueryParser
 
         if ($in) {
 
-            foreach($in as $field => $values) {
+            foreach ($in as $field => $values) {
 
                 if (!is_array($values)) {
                     continue;
@@ -103,11 +103,11 @@ class UrlQueryParser
 
         if ($sort) {
 
-            foreach($sort as $field => $rawDirection) {
+            foreach ($sort as $field => $rawDirection) {
 
                 $direction = null;
 
-                switch($rawDirection) {
+                switch ($rawDirection) {
 
                     case self::SORT_DESCENDING:
                         $direction = Sorter::DESCENDING;
@@ -145,7 +145,7 @@ class UrlQueryParser
             return null;
         }
 
-        return (int) $int;
+        return (int)$int;
     }
 
     private function extractArray($data, $field)

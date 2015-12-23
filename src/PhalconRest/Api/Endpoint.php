@@ -22,39 +22,7 @@ class Endpoint
     }
 
     /**
-     * @param string $name  Name for the endpoint
-     *
-     * @return static
-     */
-    public function name($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $httpMethod  HTTP method for the endpoint
-     *
-     * @return static
-     */
-    public function httpMethod($httpMethod)
-    {
-        $this->httpMethod = $httpMethod;
-        return $this;
-    }
-
-    public function getHttpMethod()
-    {
-        return $this->httpMethod;
-    }
-
-    /**
-     * @param string $path  Path for the endpoint
+     * @param string $path Path for the endpoint
      *
      * @return static
      */
@@ -64,13 +32,19 @@ class Endpoint
         return $this;
     }
 
-    public function getPath()
+    /**
+     * @param string $httpMethod HTTP method for the endpoint
+     *
+     * @return static
+     */
+    public function httpMethod($httpMethod)
     {
-        return $this->path;
+        $this->httpMethod = $httpMethod;
+        return $this;
     }
 
     /**
-     * @param string $handlerMethod  Method in the controller to be called
+     * @param string $handlerMethod Method in the controller to be called
      *
      * @return static
      */
@@ -78,11 +52,6 @@ class Endpoint
     {
         $this->handlerMethod = $handlerMethod;
         return $this;
-    }
-
-    public function getHandlerMethod()
-    {
-        return $this->handlerMethod;
     }
 
     /**
@@ -120,5 +89,36 @@ class Endpoint
     public static function find()
     {
         return new Endpoint('/{id}', HttpMethods::GET, 'find');
+    }
+
+    /**
+     * @param string $name Name for the endpoint
+     *
+     * @return static
+     */
+    public function name($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getHttpMethod()
+    {
+        return $this->httpMethod;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function getHandlerMethod()
+    {
+        return $this->handlerMethod;
     }
 }

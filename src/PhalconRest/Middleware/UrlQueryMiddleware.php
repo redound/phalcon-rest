@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Middleware;
 
-use \PhalconRest\Constants\Services;
+use PhalconRest\Constants\Services;
 
 class UrlQueryMiddleware extends \PhalconRest\Mvc\Plugin
 {

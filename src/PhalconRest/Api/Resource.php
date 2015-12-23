@@ -43,14 +43,13 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $name  Name for the resource
+     * @param string $name Name for the resource
      *
      * @return static
      */
     public function name($name)
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -60,7 +59,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $prefix  Route prefix
+     * @param string $prefix Route prefix
      *
      * @return static
      */
@@ -71,7 +70,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $model  Classname of the model
+     * @param string $model Classname of the model
      *
      * @return static
      */
@@ -88,7 +87,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
 
     public function getModelPrimaryKey()
     {
-        if(!$this->_modelPrimaryKey){
+        if (!$this->_modelPrimaryKey) {
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
             $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
@@ -102,7 +101,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $transformer  Classname of the transformer
+     * @param string $transformer Classname of the transformer
      *
      * @return static
      */
@@ -118,7 +117,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $controller  Classname of the controller
+     * @param string $controller Classname of the controller
      *
      * @return static
      */
@@ -126,11 +125,11 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     {
         $this->controller = $controller;
 
-        if($controller){
+        if ($controller) {
 
             $controller = new $controller();
 
-            if($controller instanceof \PhalconRest\Mvc\ResourceInjectableInterface){
+            if ($controller instanceof \PhalconRest\Mvc\ResourceInjectableInterface) {
                 $controller->setResource($this);
             }
 
@@ -146,7 +145,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $name  Name for the endpoint
+     * @param string $name Name for the endpoint
      * @param Endpoint $endpoint
      *
      * @return static
@@ -155,7 +154,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     {
         $this->endpoints[] = $endpoint;
 
-        switch($endpoint->getHttpMethod()){
+        switch ($endpoint->getHttpMethod()) {
 
             case HttpMethods::GET:
 
@@ -182,14 +181,14 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param Endpoint $endpoint  Endpoint to mound (shortcut for endpoint function)
+     * @param Endpoint $endpoint Endpoint to mound (shortcut for endpoint function)
      *
      * @return static
      * @throws Exception
      */
     public function mount(Endpoint $endpoint)
     {
-        if(!$endpoint->getName()){
+        if (!$endpoint->getName()) {
             throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'No name provided for endpoint');
         }
 
@@ -208,7 +207,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $singleKey  Response key for single item
+     * @param string $singleKey Response key for single item
      *
      * @return static
      */
@@ -224,7 +223,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     }
 
     /**
-     * @param string $multipleKey  Response key for multiple items
+     * @param string $multipleKey Response key for multiple items
      *
      * @return static
      */

@@ -9,7 +9,7 @@ class FractalMiddleware extends \PhalconRest\Mvc\Plugin
 {
     public $parseIncludes;
 
-    public function __construct($parseIncludes=true)
+    public function __construct($parseIncludes = true)
     {
         $this->parseIncludes = $parseIncludes;
     }
@@ -19,11 +19,11 @@ class FractalMiddleware extends \PhalconRest\Mvc\Plugin
         /** @var \League\Fractal\Manager $fractal */
         $fractal = $this->di->get(Services::FRACTAL_MANAGER);
 
-        if($this->parseIncludes){
+        if ($this->parseIncludes) {
 
             $include = $this->request->getQuery('include');
 
-            if(!is_null($include)){
+            if (!is_null($include)) {
                 $fractal->parseIncludes($include);
             }
         }

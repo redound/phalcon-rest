@@ -24,7 +24,7 @@ class Request extends \Phalcon\Http\Request
 
     protected function parseBearerValue($string)
     {
-        if(strpos(trim($string), 'Bearer') !== 0){
+        if (strpos(trim($string), 'Bearer') !== 0) {
             return null;
         }
 

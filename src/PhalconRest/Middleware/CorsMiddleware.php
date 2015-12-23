@@ -33,8 +33,11 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
      * @param array|null $allowedMethods Allowed methods
      * @param array|null $allowedHeaders Allowed headers
      */
-    public function __construct(array $allowedOrigins = self::ALL_ORIGINS, array $allowedMethods = HttpMethods::ALL_METHODS, array $allowedHeaders = self::DEFAULT_HEADERS)
-    {
+    public function __construct(
+        array $allowedOrigins = self::ALL_ORIGINS,
+        array $allowedMethods = HttpMethods::ALL_METHODS,
+        array $allowedHeaders = self::DEFAULT_HEADERS
+    ) {
         $this->setAllowedOrigins($allowedOrigins);
         $this->setAllowedMethods($allowedMethods);
         $this->setAllowedHeaders($allowedHeaders);
@@ -48,7 +51,7 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 
     public function setAllowedOrigins(array $allowedOrigins)
     {
-        if($allowedOrigins === null){
+        if ($allowedOrigins === null) {
             $allowedOrigins = [];
         }
 
@@ -68,7 +71,7 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 
     public function setAllowedMethods(array $allowedMethods)
     {
-        if($allowedMethods === null){
+        if ($allowedMethods === null) {
             $allowedMethods = [];
         }
 
@@ -88,7 +91,7 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 
     public function setAllowedHeaders(array $allowedHeaders)
     {
-        if($allowedHeaders === null){
+        if ($allowedHeaders === null) {
             $allowedHeaders = [];
         }
 
@@ -103,7 +106,7 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 
     public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
     {
-        if(count($this->_allowedOrigins) == 0){
+        if (count($this->_allowedOrigins) == 0) {
             return;
         }
 
@@ -111,22 +114,21 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
         $originIsWildcard = in_array('*', $this->_allowedOrigins);
         $originValue = null;
 
-        if($originIsWildcard){
+        if ($originIsWildcard) {
             $originValue = '*';
-        }
-        else {
+        } else {
 
             $origin = $this->request->getHeader('Origin');
             $originDomain = $origin ? parse_url($origin, PHP_URL_HOST) : null;
 
-            if($originDomain){
+            if ($originDomain) {
 
                 $allowed = false;
 
-                foreach($this->_allowedOrigins as $allowedOrigin){
+                foreach ($this->_allowedOrigins as $allowedOrigin) {
 
                     // First try exact domain
-                    if($originDomain == $allowedOrigin){
+                    if ($originDomain == $allowedOrigin) {
 
                         $allowed = true;
                         break;
@@ -134,32 +136,32 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
 
                     // Parse wildcards
                     $expression = '/^' . str_replace('\*', '(.+)', preg_quote($allowedOrigin, '/')) . '$/';
-                    if(preg_match($expression, $originDomain) == 1){
+                    if (preg_match($expression, $originDomain) == 1) {
 
                         $allowed = true;
                         break;
                     }
                 }
 
-                if($allowed){
+                if ($allowed) {
 
                     $originValue = $origin;
                 }
             }
         }
 
-        if($originValue != null){
+        if ($originValue != null) {
 
             $this->response->setHeader('Access-Control-Allow-Origin', $originValue);
 
             // Allowed methods
-            if(count($this->_allowedMethods) > 0){
+            if (count($this->_allowedMethods) > 0) {
 
                 $this->response->setHeader('Access-Control-Allow-Methods', implode(',', $this->_allowedMethods));
             }
 
             // Allowed headers
-            if(count($this->_allowedHeaders) > 0){
+            if (count($this->_allowedHeaders) > 0) {
 
                 $this->response->setHeader('Access-Control-Allow-Headers', implode(',', $this->_allowedHeaders));
             }

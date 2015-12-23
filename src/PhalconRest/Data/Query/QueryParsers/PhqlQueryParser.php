@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Data\Query\QueryParsers;
 
-use \PhalconRest\Data\Query;
-use \PhalconRest\Data\Query\Sorter;
-use \PhalconRest\Data\Query\Condition;
+use PhalconRest\Data\Query;
+use PhalconRest\Data\Query\Condition;
+use PhalconRest\Data\Query\Sorter;
 
 class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
 {
@@ -47,7 +47,7 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
             $firstWhere = true;
 
             /** @var Condition $condition */
-            foreach($conditions as $conditionIndex => $condition) {
+            foreach ($conditions as $conditionIndex => $condition) {
 
                 $operator = $this->getOperator($condition->getOperator());
                 $parsedValues = $this->parseValues($operator, $condition->getValue());
@@ -64,7 +64,7 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
                     continue;
                 }
 
-                switch($condition->getType()) {
+                switch ($condition->getType()) {
 
                     case Condition::TYPE_OR:
                         $builder->orWhere($conditionString, $bindValues);
@@ -82,9 +82,9 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
             $sorters = $query->getSorters();
 
             /** @var Sorter $sorter */
-            foreach($sorters as $sorter) {
+            foreach ($sorters as $sorter) {
 
-                switch($sorter->getDirection()) {
+                switch ($sorter->getDirection()) {
 
                     case Sorter::DESCENDING:
                         $direction = 'DESC';
@@ -131,7 +131,7 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
     {
         $format = null;
 
-        switch($operator) {
+        switch ($operator) {
 
             case self::OPERATOR_IS_IN:
                 $format = '%s %s (%s)';
@@ -192,7 +192,7 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
 
         if (is_array($values)) {
 
-            return array_map(function($value) use ($self, $operator) {
+            return array_map(function ($value) use ($self, $operator) {
                 return $self->parseValue($operator, $value);
             }, $values);
         }
@@ -204,7 +204,7 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
     {
         $parsed = null;
 
-        switch($operator) {
+        switch ($operator) {
 
             case self::OPERATOR_IS_LIKE:
                 $parsed = '%' . $value . '%';

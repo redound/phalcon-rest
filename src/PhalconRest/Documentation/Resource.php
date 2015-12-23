@@ -4,23 +4,16 @@ namespace PhalconRest\Documentation;
 
 class Resource
 {
+    public $endpoints = [];
     protected $methods;
     protected $collection;
-    public $endpoints = [];
 
     public function __construct($resource, $collection, $annotations)
     {
-
         $this->resource = $resource;
         $this->collection = $collection;
         $this->parseHandlers($collection->getHandlers());
         $this->parseAnnotations($annotations);
-    }
-
-    protected function getMethod($method)
-    {
-
-        return isset($this->methods[$method]) ? $this->methods[$method] : false;
     }
 
     protected function parseHandlers($handlers)
@@ -61,5 +54,11 @@ class Resource
 
             $this->endpoints[] = $docEndpoint;
         }
+    }
+
+    protected function getMethod($method)
+    {
+
+        return isset($this->methods[$method]) ? $this->methods[$method] : false;
     }
 }

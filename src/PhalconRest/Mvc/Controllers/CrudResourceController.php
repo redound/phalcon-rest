@@ -20,9 +20,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $response;
     }
 
-    protected function beforeAll() {}
+    protected function beforeAll()
+    {
+    }
 
-    protected function afterAll($response) {}
+    protected function afterAll($response)
+    {
+    }
 
     protected function getAllData()
     {
@@ -46,7 +50,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $item = $this->getFindData($id);
 
-        if(!$item){
+        if (!$item) {
             return $this->onItemNotFound($id);
         }
 
@@ -57,9 +61,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $response;
     }
 
-    protected function beforeFind() {}
+    protected function beforeFind()
+    {
+    }
 
-    protected function afterFind($response) {}
+    protected function afterFind($response)
+    {
+    }
 
     protected function getFindData($id)
     {
@@ -92,7 +100,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $item = $this->createItem($data);
 
-        if(!$item){
+        if (!$item) {
             return $this->onCreateFailed($data);
         }
 
@@ -101,9 +109,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->getCreateResponse($item, $data);
     }
 
-    protected function beforeCreate($data) {}
+    protected function beforeCreate($data)
+    {
+    }
 
-    protected function afterCreate(Model $createdItem, $data) {}
+    protected function afterCreate(Model $createdItem, $data)
+    {
+    }
 
     /**
      * @param $data
@@ -136,7 +148,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $data = $this->getPostedData();
         $item = $this->getItem($id);
 
-        if(!$item){
+        if (!$item) {
             return $this->onItemNotFound($id);
         }
 
@@ -144,7 +156,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $item = $this->updateItem($item, $data);
 
-        if(!$item){
+        if (!$item) {
             return $this->onUpdateFailed($item, $data);
         }
 
@@ -153,9 +165,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->getUpdateResponse($item, $data);
     }
 
-    protected function beforeUpdate(Model $item, $data) {}
+    protected function beforeUpdate(Model $item, $data)
+    {
+    }
 
-    protected function afterUpdate(Model $updatedItem, $data) {}
+    protected function afterUpdate(Model $updatedItem, $data)
+    {
+    }
 
     /**
      * @param Model $item
@@ -183,7 +199,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         $item = $this->getItem($id);
 
-        if(!$item){
+        if (!$item) {
             return $this->onItemNotFound($id);
         }
 
@@ -191,7 +207,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $success = $this->deleteItem($item);
 
-        if(!$success){
+        if (!$success) {
             return $this->onDeleteFailed($item);
         }
 
@@ -200,9 +216,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->getDeleteResponse($item);
     }
 
-    protected function beforeDelete(Model $item) {}
+    protected function beforeDelete(Model $item)
+    {
+    }
 
-    protected function afterDelete(Model $deletedItem) {}
+    protected function afterDelete(Model $deletedItem)
+    {
+    }
 
     /**
      * @param Model $item

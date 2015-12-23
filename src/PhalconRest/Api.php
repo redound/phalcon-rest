@@ -54,10 +54,10 @@ class Api extends \Phalcon\Mvc\Micro
 
     public function mount(\Phalcon\Mvc\Micro\CollectionInterface $collection)
     {
-        if($collection instanceof Resource){
+        if ($collection instanceof Resource) {
 
             $resourceName = $collection->getName();
-            if(!$resourceName){
+            if (!$resourceName) {
                 throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'No name provided for resource');
             }
 
@@ -75,7 +75,7 @@ class Api extends \Phalcon\Mvc\Micro
      */
     public function attach($middleware)
     {
-        if(!$this->getEventsManager()){
+        if (!$this->getEventsManager()) {
             $this->setEventsManager($this->getDI()->get(Services::EVENTS_MANAGER));
         }
 

@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Middleware;
 
+use Phalcon\Events\Event;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Exception;
-use Phalcon\Events\Event;
 
 class NotFoundMiddleware extends \PhalconRest\Mvc\Plugin
 {

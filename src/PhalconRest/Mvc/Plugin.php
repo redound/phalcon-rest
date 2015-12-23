@@ -15,7 +15,7 @@ namespace PhalconRest\Mvc;
  * @property \PhalconRest\Data\Query $query
  * @property \PhalconRest\Data\Query\Parser\Phql $phqlQueryParser
  * @property \PhalconRest\Data\Query\Parser\Url $urlQueryParser
-*/
+ */
 
 class Plugin extends \Phalcon\Mvc\User\Plugin
 {

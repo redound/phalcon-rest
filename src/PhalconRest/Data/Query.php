@@ -2,8 +2,8 @@
 
 namespace PhalconRest\Data;
 
-use \PhalconRest\Data\Query\Condition;
-use \PhalconRest\Data\Query\Sorter;
+use PhalconRest\Data\Query\Condition;
+use PhalconRest\Data\Query\Sorter;
 
 class Query
 {

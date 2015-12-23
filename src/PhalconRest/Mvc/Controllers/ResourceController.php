@@ -17,7 +17,20 @@ class ResourceController extends FractalController implements ResourceInjectable
 
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
-        return $this->createCollectionResponse($collection, $this->getTransformer(), $this->resource->getMultipleKey(), $meta);
+        return $this->createCollectionResponse($collection, $this->getTransformer(), $this->resource->getMultipleKey(),
+            $meta);
+    }
+
+    protected function getTransformer()
+    {
+        $transformerClass = $this->resource->getTransformer();
+        $transformer = new $transformerClass();
+
+        if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
+            $transformer->setModelClass($this->resource->getModel());
+        }
+
+        return $transformer;
     }
 
     protected function createResourceResponse($item, $meta = null)
@@ -28,17 +41,5 @@ class ResourceController extends FractalController implements ResourceInjectable
     protected function createResourceOkResponse($item, $meta = null)
     {
         return $this->createItemOkResponse($item, $this->getTransformer(), $this->resource->getSingleKey(), $meta);
-    }
-
-    protected function getTransformer()
-    {
-        $transformerClass = $this->resource->getTransformer();
-        $transformer = new $transformerClass();
-
-        if($transformer instanceof \PhalconRest\Transformers\ModelTransformer){
-            $transformer->setModelClass($this->resource->getModel());
-        }
-
-        return $transformer;
     }
 }

@@ -160,17 +160,16 @@ class Manager extends \PhalconRest\Mvc\Plugin
         try {
 
             $session = $this->tokenParser->getSession($token);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
 
             throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
         }
 
-        if(!$session){
+        if (!$session) {
             return false;
         }
 
-        if($session->getExpirationTime() < time()){
+        if ($session->getExpirationTime() < time()) {
 
             throw new Exception(ErrorCodes::AUTH_SESSION_EXPIRED);
         }

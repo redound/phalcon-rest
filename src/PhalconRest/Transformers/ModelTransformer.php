@@ -87,11 +87,12 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     protected function getFieldValue($item, $propertyName, $fieldName)
     {
-        $dataType = array_key_exists($propertyName, $this->_getModelDataTypes()) ? $this->_getModelDataTypes()[$propertyName] : null;
+        $dataType = array_key_exists($propertyName,
+            $this->_getModelDataTypes()) ? $this->_getModelDataTypes()[$propertyName] : null;
         $value = $item->$propertyName;
         $typedValue = $value;
 
-        switch($dataType) {
+        switch ($dataType) {
 
             case self::TYPE_INTEGER:
             case self::TYPE_BIGINTEGER: {
@@ -155,12 +156,12 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
         return $this->_transform($item, $this->getResponseProperties());
     }
 
-    protected function _transform($item, $properties=null)
+    protected function _transform($item, $properties = null)
     {
         $result = [];
         $keyMap = $this->keyMap();
 
-        foreach($properties as $property){
+        foreach ($properties as $property) {
 
             $fieldName = array_key_exists($property, $keyMap) ? $keyMap[$property] : $property;
             $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
@@ -178,7 +179,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     protected function _getModelDataTypes()
     {
-        if(!$this->_modelDataTypes){
+        if (!$this->_modelDataTypes) {
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
             $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
