@@ -25,7 +25,6 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
      */
     protected $_allowedHeaders;
 
-
     /**
      * Cors constructor.
      *
@@ -42,7 +41,6 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
         $this->setAllowedMethods($allowedMethods);
         $this->setAllowedHeaders($allowedHeaders);
     }
-
 
     public function getAllowedOrigins()
     {
@@ -63,7 +61,6 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
         $this->_allowedOrigins[] = $origin;
     }
 
-
     public function getAllowedMethods()
     {
         return $this->_allowedMethods;
@@ -82,7 +79,6 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
     {
         $this->_allowedMethods[] = $method;
     }
-
 
     public function getAllowedHeaders()
     {
@@ -103,8 +99,7 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
         $this->_allowedHeaders[] = $header;
     }
 
-
-    public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
+    public function beforeHandleRoute(Event $event, \PhalconRest\Api $api)
     {
         if (count($this->_allowedOrigins) == 0) {
             return;
