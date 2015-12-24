@@ -14,13 +14,7 @@ namespace PhalconRest\Mvc;
  * @property \PhalconRest\Data\Query\QueryParsers\UrlQueryParser $urlQueryParser
  */
 
-class Controller extends \Phalcon\Mvc\Controller implements ApiInjectableInterface
+class Controller extends \Phalcon\Mvc\Controller
 {
-    /** @var \PhalconRest\Api */
-    protected $api;
 
-    public function setApi(\PhalconRest\Api $api)
-    {
-        $this->api = $api;
-    }
 }

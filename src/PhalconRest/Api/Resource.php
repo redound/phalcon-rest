@@ -18,7 +18,6 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
 
     protected $model;
     protected $transformer;
-    protected $controller;
 
     protected $singleKey = 'item';
     protected $multipleKey = 'items';
@@ -67,6 +66,12 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
     public function setPrefix($prefix)
     {
         throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'Setting prefix after initialization is prohibited.');
+    }
+
+    public function handler($handler, $lazy = false)
+    {
+        $this->setHandler($handler, $lazy);
+        return $this;
     }
 
     /**
@@ -127,32 +132,6 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
     public function getTransformer()
     {
         return $this->transformer;
-    }
-
-    /**
-     * @param string $controller Classname of the controller
-     *
-     * @return static
-     */
-    public function controller($controller)
-    {
-        if (is_string($controller)) {
-            $this->controller = new $controller();
-        } else {
-            $this->controller = $controller;
-        }
-
-        $this->setHandler($this->controller);
-
-        return $this;
-    }
-
-    /**
-     * @return string|null Classname of the controller
-     */
-    public function getController()
-    {
-        return $this->controller;
     }
 
     /**
@@ -438,7 +417,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
             ->singleKey('item')
             ->multipleKey('items')
             ->transformer(ModelTransformer::class)
-            ->controller(CrudResourceController::class);
+            ->setHandler(CrudResourceController::class, true);
 
         if ($name) {
             $resource->name($name);

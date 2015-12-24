@@ -16,7 +16,7 @@ class ResourceController extends FractalController
     public function getResource()
     {
         if(!$this->_resource){
-            $this->_resource = $this->api->getMatchedResource();
+            $this->_resource = $this->application->getMatchedResource();
         }
 
         return $this->_resource;
@@ -28,7 +28,7 @@ class ResourceController extends FractalController
     public function getEndpoint()
     {
         if(!$this->_endpoint){
-            $this->_endpoint = $this->api->getMatchedEndpoint();
+            $this->_endpoint = $this->application->getMatchedEndpoint();
         }
 
         return $this->_endpoint;

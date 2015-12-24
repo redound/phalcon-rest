@@ -5,7 +5,6 @@ namespace PhalconRest;
 use PhalconRest\Api\Endpoint;
 use PhalconRest\Api\Resource;
 use PhalconRest\Constants\Services;
-use PhalconRest\Mvc\ApiInjectableInterface;
 
 class Api extends \Phalcon\Mvc\Micro
 {
@@ -61,13 +60,6 @@ class Api extends \Phalcon\Mvc\Micro
 
                 $fullIdentifier = $collection->getIdentifier() . ' ' . $endpoint->getIdentifier();
                 $this->endpointsByIdentifier[$fullIdentifier] = $endpoint;
-            }
-
-            // Attach API to controller
-            $controller = $collection->getController();
-
-            if ($controller instanceof ApiInjectableInterface) {
-                $controller->setApi($this);
             }
         }
 
