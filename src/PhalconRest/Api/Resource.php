@@ -79,7 +79,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
         throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'Setting prefix after initialization is prohibited.');
     }
 
-    public function handler($handler, $lazy = false)
+    public function handler($handler, $lazy = true)
     {
         $this->setHandler($handler, $lazy);
         return $this;

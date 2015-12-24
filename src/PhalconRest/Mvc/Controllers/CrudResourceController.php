@@ -12,17 +12,19 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function all()
     {
+        $this->beforeHandle();
+        $this->beforeAll();
+
         $data = $this->getAllData();
 
         if (!$this->allAllowed($data)) {
             return $this->onNotAllowed();
         }
 
-        $this->beforeAll();
-
         $response = $this->getAllResponse($data);
 
-        $this->afterAll($response);
+        $this->afterAll($data, $response);
+        $this->afterHandle();
 
         return $response;
     }
@@ -31,7 +33,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
-    protected function afterAll($response)
+    protected function afterAll($data, $response)
+    {
+    }
+
+    protected function modifyAllQuery(\Phalcon\Mvc\Model\Query\Builder $query)
     {
     }
 
@@ -39,6 +45,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
         $phqlBuilder->from($this->getResource()->getModel());
+
+        $this->modifyAllQuery($phqlBuilder);
 
         return $phqlBuilder->getQuery()->execute();
     }
@@ -57,6 +65,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function find($id)
     {
+        $this->beforeHandle();
+        $this->beforeFind($id);
+
         $item = $this->getFindData($id);
 
         if (!$item) {
@@ -67,20 +78,23 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onNotAllowed();
         }
 
-        $this->beforeFind();
-
         $response = $this->getFindResponse($item);
 
-        $this->afterFind($response);
+        $this->afterFind($item, $response);
+        $this->afterHandle();
 
         return $response;
     }
 
-    protected function beforeFind()
+    protected function beforeFind($id)
     {
     }
 
-    protected function afterFind($response)
+    protected function afterFind(Model $item, $response)
+    {
+    }
+
+    protected function modifyFindQuery(\Phalcon\Mvc\Model\Query\Builder $query, $id)
     {
     }
 
@@ -93,6 +107,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             ->from($this->getResource()->getModel())
             ->andWhere($modelPrimaryKey . ' = :id:', ['id' => $id])
             ->limit(1);
+
+        $this->modifyFindQuery($phqlBuilder, $id);
 
         $results = $phqlBuilder->getQuery()->execute();
 
@@ -113,13 +129,14 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function create()
     {
+        $this->beforeHandle();
+        $this->beforeCreate();
+
         $data = $this->getPostedData();
 
         if (!$this->createAllowed($data)) {
             return $this->onNotAllowed();
         }
-
-        $this->beforeCreate($data);
 
         $item = $this->createItem($data);
 
@@ -127,16 +144,19 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onCreateFailed($data);
         }
 
-        $this->afterCreate($item, $data);
+        $response = $this->getCreateResponse($item, $data);
 
-        return $this->getCreateResponse($item, $data);
+        $this->afterCreate($item, $data, $response);
+        $this->afterHandle();
+
+        return $response;
     }
 
-    protected function beforeCreate($data)
+    protected function beforeCreate()
     {
     }
 
-    protected function afterCreate(Model $createdItem, $data)
+    protected function afterCreate(Model $createdItem, $data, $response)
     {
     }
 
@@ -172,6 +192,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function update($id)
     {
+        $this->beforeHandle();
+        $this->beforeUpdate($id);
+
         $data = $this->getPostedData();
         $item = $this->getItem($id);
 
@@ -183,24 +206,25 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onNotAllowed();
         }
 
-        $this->beforeUpdate($item, $data);
-
         $item = $this->updateItem($item, $data);
 
         if (!$item) {
             return $this->onUpdateFailed($item, $data);
         }
 
-        $this->afterUpdate($item, $data);
+        $response = $this->getUpdateResponse($item, $data);
 
-        return $this->getUpdateResponse($item, $data);
+        $this->afterUpdate($item, $data, $response);
+        $this->afterHandle();
+
+        return $response;
     }
 
-    protected function beforeUpdate(Model $item, $data)
+    protected function beforeUpdate($id)
     {
     }
 
-    protected function afterUpdate(Model $updatedItem, $data)
+    protected function afterUpdate(Model $updatedItem, $data, $response)
     {
     }
 
@@ -232,6 +256,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function remove($id)
     {
+        $this->beforeHandle();
+        $this->beforeRemove($id);
+
         $item = $this->getItem($id);
 
         if (!$item) {
@@ -242,24 +269,25 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onNotAllowed();
         }
 
-        $this->beforeRemove($item);
-
         $success = $this->removeItem($item);
 
         if (!$success) {
             return $this->onRemoveFailed($item);
         }
 
-        $this->afterRemove($item);
+        $response = $this->getRemoveResponse($item);
 
-        return $this->getRemoveResponse($item);
+        $this->afterRemove($item, $response);
+        $this->afterHandle();
+
+        return $response;
     }
 
-    protected function beforeRemove(Model $item)
+    protected function beforeRemove($id)
     {
     }
 
-    protected function afterRemove(Model $removedItem)
+    protected function afterRemove(Model $removedItem, $response)
     {
     }
 
@@ -324,6 +352,14 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         $modelClass = $this->getResource()->getModel();
         return $modelClass::findFirst($id);
+    }
+
+    protected function beforeHandle()
+    {
+    }
+
+    protected function afterHandle()
+    {
     }
 
     /*** ERROR HOOKS ***/

@@ -3,6 +3,7 @@
 namespace PhalconRest\Mvc;
 
 /**
+ * @property \PhalconRest\Api $application
  * @property \PhalconRest\Http\Request $request
  * @property \PhalconRest\Http\Response $response
  * @property \Phalcon\Acl\AdapterInterface $acl

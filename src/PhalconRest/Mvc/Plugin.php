@@ -7,6 +7,7 @@ namespace PhalconRest\Mvc;
  * This class allows to access services in the services container by just only accessing a public property
  * with the same name of a registered service
  *
+ * @property \PhalconRest\Api $application
  * @property \PhalconRest\Http\Request $request
  * @property \PhalconRest\Http\Response $response
  * @property \Phalcon\Acl\AdapterInterface $acl
