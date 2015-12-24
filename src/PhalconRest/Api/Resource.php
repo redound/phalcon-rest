@@ -2,6 +2,7 @@
 
 namespace PhalconRest\Api;
 
+use Phalcon\Acl;
 use Phalcon\Di;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\HttpMethods;
@@ -10,7 +11,7 @@ use PhalconRest\Exception;
 use PhalconRest\Transformers\ModelTransformer;
 use PhalconRest\Mvc\Controllers\CrudResourceController;
 
-class Resource extends \Phalcon\Mvc\Micro\Collection
+class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl\MountableInterface
 {
     protected $name;
 
@@ -271,7 +272,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      */
     public function allow(...$roleNames)
     {
-        foreach($roleNames as $role) {
+        foreach ($roleNames as $role) {
 
             if (!in_array($role, $this->allowedRoles)) {
                 $this->allowedRoles[] = $role;
@@ -298,7 +299,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      */
     public function deny(...$roleNames)
     {
-        foreach($roleNames as $role) {
+        foreach ($roleNames as $role) {
 
             if (!in_array($role, $this->deniedRoles)) {
                 $this->deniedRoles[] = $role;
@@ -314,6 +315,64 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
     public function getDeniedRoles()
     {
         return $this->deniedRoles;
+    }
+
+    public function getAclResources()
+    {
+        $apiEndpointIdentifiers = array_map(function (Endpoint $apiEndpoint) {
+            return $apiEndpoint->getIdentifier();
+        }, $this->endpoints);
+
+        return [
+            [new \Phalcon\Acl\Resource($this->getIdentifier(), $this->getName()), $apiEndpointIdentifiers]
+        ];
+    }
+
+    public function getAclRules(array $roles)
+    {
+        $allowedResponse = [];
+        $deniedResponse = [];
+
+        $defaultAllowedRoles = $this->allowedRoles;
+        $defaultDeniedRoles = $this->deniedRoles;
+
+        foreach ($roles as $role) {
+
+            /** @var Endpoint $apiEndpoint */
+            foreach ($this->endpoints as $apiEndpoint) {
+
+                $rule = null;
+
+                if (in_array($role, $defaultAllowedRoles)) {
+                    $rule = true;
+                }
+
+                if (in_array($role, $defaultDeniedRoles)) {
+                    $rule = false;
+                }
+
+                if (in_array($role, $apiEndpoint->getAllowedRoles())) {
+                    $rule = true;
+                }
+
+                if (in_array($role, $apiEndpoint->getDeniedRoles())) {
+                    $rule = false;
+                }
+
+                if ($rule === true) {
+                    $allowedResponse[] = [$role, $this->getIdentifier(), $apiEndpoint->getIdentifier()];
+                }
+
+                if ($rule === false) {
+                    $deniedResponse[] = [$role, $this->getIdentifier(), $apiEndpoint->getIdentifier()];
+                }
+            }
+        }
+
+        return [
+            Acl::ALLOW => $allowedResponse,
+            Acl::DENY => $deniedResponse
+        ];
     }
 
     protected function createRouteName(Endpoint $endpoint)
@@ -332,7 +391,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      *
      * @return static
      */
-    public static function factory($prefix, $name=null)
+    public static function factory($prefix, $name = null)
     {
         $resource = new Resource($prefix);
 
@@ -342,7 +401,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
             ->transformer(ModelTransformer::class)
             ->controller(CrudResourceController::class);
 
-        if($name){
+        if ($name) {
             $resource->name($name);
         }
 
@@ -357,7 +416,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection
      *
      * @return static
      */
-    public static function crud($prefix, $name=null)
+    public static function crud($prefix, $name = null)
     {
         return self::factory($prefix, $name)
             ->endpoint(Endpoint::all())

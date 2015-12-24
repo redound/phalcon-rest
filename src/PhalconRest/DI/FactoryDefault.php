@@ -48,7 +48,6 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             return new \PhalconRest\Data\Query\QueryParsers\UrlQueryParser();
         });
 
-        $this->setShared(Services::ACL, new \Phalcon\Acl\Adapter\Memory);
-        $this->setShared(Services::ACL_HELPER, new \PhalconRest\Acl\Helper);
+        $this->setShared(Services::ACL, new \PhalconRest\Acl\Adapter\Memory());
     }
 }

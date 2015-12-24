@@ -32,7 +32,6 @@ class Services
     // PhalconRest
     const AUTH_MANAGER = 'authManager';
     const ACL = 'acl';
-    const ACL_HELPER = 'aclHelper';
     const FRACTAL_MANAGER = 'fractalManager';
     const TOKEN_PARSER = 'tokenParser';
     const QUERY = 'query';

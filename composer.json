@@ -23,6 +23,9 @@
     "autoload": {
         "psr-4": {
             "PhalconRest\\": "src/PhalconRest"
+        },
+        "psr-0": {
+            "AclAdapterMountTrait": "src/PhalconRest/Acl"
         }
     }
 }
