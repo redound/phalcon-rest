@@ -99,6 +99,11 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
             $this->getModelDataTypes()) ? $this->getModelDataTypes()[$propertyName] : null;
 
         $value = $item->$propertyName;
+
+        if($value === null){
+            return null;
+        }
+
         $typedValue = $value;
 
         switch ($dataType) {
