@@ -236,8 +236,9 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
             $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
             $modelClass = $this->getModelClass();
+            $metaDataColumnMap = $modelsMetaData->getColumnMap(new $modelClass);
 
-            $this->modelColumnMap = array_merge($modelsMetaData->getColumnMap(new $modelClass), $this->keyMap());
+            $this->modelColumnMap = array_merge($metaDataColumnMap ? $metaDataColumnMap : [], $this->keyMap());
         }
 
         return $this->modelColumnMap;
