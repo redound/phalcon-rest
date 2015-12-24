@@ -12,9 +12,15 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function all()
     {
+        $data = $this->getAllData();
+
+        if (!$this->allAllowed($data)) {
+            return $this->onNotAllowed();
+        }
+
         $this->beforeAll();
 
-        $response = $this->getAllResponse($this->getAllData());
+        $response = $this->getAllResponse($data);
 
         $this->afterAll($response);
 
@@ -37,6 +43,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $phqlBuilder->getQuery()->execute();
     }
 
+    protected function allAllowed($data)
+    {
+        return true;
+    }
+
     protected function getAllResponse($data)
     {
         return $this->createResourceCollectionResponse($data);
@@ -46,13 +57,17 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     public function find($id)
     {
-        $this->beforeFind();
-
         $item = $this->getFindData($id);
 
         if (!$item) {
             return $this->onItemNotFound($id);
         }
+
+        if (!$this->findAllowed($id, $item)) {
+            return $this->onNotAllowed();
+        }
+
+        $this->beforeFind();
 
         $response = $this->getFindResponse($item);
 
@@ -84,6 +99,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return count($results) >= 1 ? $results->getFirst() : null;
     }
 
+    protected function findAllowed($id, Model $item)
+    {
+        return true;
+    }
+
     protected function getFindResponse(Model $item)
     {
         return $this->createResourceResponse($item);
@@ -94,6 +114,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function create()
     {
         $data = $this->getPostedData();
+
+        if (!$this->createAllowed($data)) {
+            return $this->onNotAllowed();
+        }
 
         $this->beforeCreate($data);
 
@@ -114,6 +138,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     protected function afterCreate(Model $createdItem, $data)
     {
+    }
+
+    protected function createAllowed($data)
+    {
+        return true;
     }
 
     /**
@@ -150,6 +179,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onItemNotFound($id);
         }
 
+        if (!$this->updateAllowed($item, $data)) {
+            return $this->onNotAllowed();
+        }
+
         $this->beforeUpdate($item, $data);
 
         $item = $this->updateItem($item, $data);
@@ -169,6 +202,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     protected function afterUpdate(Model $updatedItem, $data)
     {
+    }
+
+    protected function updateAllowed(Model $item, $data)
+    {
+        return true;
     }
 
     /**
@@ -200,6 +238,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onItemNotFound($id);
         }
 
+        if (!$this->removeAllowed($item)) {
+            return $this->onNotAllowed();
+        }
+
         $this->beforeRemove($item);
 
         $success = $this->removeItem($item);
@@ -219,6 +261,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     protected function afterRemove(Model $removedItem)
     {
+    }
+
+    protected function removeAllowed(Model $item)
+    {
+        return true;
     }
 
     /**
@@ -284,6 +331,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     protected function onItemNotFound($id)
     {
         throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found');
+    }
+
+    protected function onNotAllowed()
+    {
+        throw new Exception(ErrorCodes::ACCESS_DENIED, 'Operation is not allowed');
     }
 
     protected function onCreateFailed($data)
