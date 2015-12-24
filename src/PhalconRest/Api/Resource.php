@@ -6,6 +6,7 @@ use Phalcon\Acl;
 use Phalcon\Di;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\HttpMethods;
+use PhalconRest\Constants\PostedDataMethods;
 use PhalconRest\Constants\Services;
 use PhalconRest\Exception;
 use PhalconRest\Transformers\ModelTransformer;
@@ -24,6 +25,8 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
 
     protected $allowedRoles = [];
     protected $deniedRoles = [];
+
+    protected $postedDataMethod = PostedDataMethods::AUTO;
 
     protected $endpoints = [];
 
@@ -133,18 +136,13 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
      */
     public function controller($controller)
     {
-        $this->controller = $controller;
-
-        if ($controller) {
-
-            $controller = new $controller();
-
-            if ($controller instanceof \PhalconRest\Mvc\ResourceInjectableInterface) {
-                $controller->setResource($this);
-            }
-
-            $this->setHandler($controller);
+        if (is_string($controller)) {
+            $this->controller = new $controller();
+        } else {
+            $this->controller = $controller;
         }
+
+        $this->setHandler($this->controller);
 
         return $this;
     }
@@ -261,6 +259,47 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
     public function getMultipleKey()
     {
         return $this->multipleKey;
+    }
+
+    /**
+     * @param string $method One of the method constants defined in PostedDataMethods
+     *
+     * @return static
+     */
+    public function postedDataMethod($method)
+    {
+        $this->postedDataMethod = $method;
+        return $this;
+    }
+
+    /**
+     * @return string $method One of the method constants defined in PostedDataMethods
+     */
+    public function getPostedDataMethod()
+    {
+        return $this->postedDataMethod;
+    }
+
+    /**
+     * Sets the posted data method to POST
+     *
+     * @return static
+     */
+    public function expectsPostData()
+    {
+        $this->postedDataMethod(PostedDataMethods::POST);
+        return $this;
+    }
+
+    /**
+     * Sets the posted data method to JSON_BODY
+     *
+     * @return static
+     */
+    public function expectsJsonData()
+    {
+        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
+        return $this;
     }
 
     /**

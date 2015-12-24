@@ -3,6 +3,7 @@
 namespace PhalconRest\Api;
 
 use PhalconRest\Constants\HttpMethods;
+use PhalconRest\Constants\PostedDataMethods;
 
 class Endpoint
 {
@@ -17,6 +18,8 @@ class Endpoint
     protected $httpMethod;
     protected $path;
     protected $handlerMethod;
+
+    protected $postedDataMethod = PostedDataMethods::AUTO;
 
     protected $allowedRoles = [];
     protected $deniedRoles = [];
@@ -88,6 +91,47 @@ class Endpoint
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * @param string $method One of the method constants defined in PostedDataMethods
+     *
+     * @return static
+     */
+    public function postedDataMethod($method)
+    {
+        $this->postedDataMethod = $method;
+        return $this;
+    }
+
+    /**
+     * @return string $method One of the method constants defined in PostedDataMethods
+     */
+    public function getPostedDataMethod()
+    {
+        return $this->postedDataMethod;
+    }
+
+    /**
+     * Sets the posted data method to POST
+     *
+     * @return static
+     */
+    public function expectsPostData()
+    {
+        $this->postedDataMethod(PostedDataMethods::POST);
+        return $this;
+    }
+
+    /**
+     * Sets the posted data method to JSON_BODY
+     *
+     * @return static
+     */
+    public function expectsJsonData()
+    {
+        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
+        return $this;
     }
 
     /**

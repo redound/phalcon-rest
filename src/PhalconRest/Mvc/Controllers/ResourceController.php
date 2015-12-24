@@ -2,32 +2,51 @@
 
 namespace PhalconRest\Mvc\Controllers;
 
-use PhalconRest\Mvc\ResourceInjectableInterface;
-
-class ResourceController extends FractalController implements ResourceInjectableInterface
+class ResourceController extends FractalController
 {
     /** @var \PhalconRest\Api\Resource */
-    protected $resource;
+    protected $_resource;
 
-    public function setResource(\PhalconRest\Api\Resource $resource)
+    /** @var \PhalconRest\Api\Endpoint */
+    protected $_endpoint;
+
+    /**
+     * @return \PhalconRest\Api\Resource
+     */
+    public function getResource()
     {
-        $this->resource = $resource;
-        return $this;
+        if(!$this->_resource){
+            $this->_resource = $this->api->getMatchedResource();
+        }
+
+        return $this->_resource;
+    }
+
+    /**
+     * @return \PhalconRest\Api\Endpoint
+     */
+    public function getEndpoint()
+    {
+        if(!$this->_endpoint){
+            $this->_endpoint = $this->api->getMatchedEndpoint();
+        }
+
+        return $this->_endpoint;
     }
 
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
-        return $this->createCollectionResponse($collection, $this->getTransformer(), $this->resource->getMultipleKey(),
+        return $this->createCollectionResponse($collection, $this->getTransformer(), $this->getResource()->getMultipleKey(),
             $meta);
     }
 
     protected function getTransformer()
     {
-        $transformerClass = $this->resource->getTransformer();
+        $transformerClass = $this->getResource()->getTransformer();
         $transformer = new $transformerClass();
 
         if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
-            $transformer->setModelClass($this->resource->getModel());
+            $transformer->setModelClass($this->getResource()->getModel());
         }
 
         return $transformer;
@@ -35,11 +54,11 @@ class ResourceController extends FractalController implements ResourceInjectable
 
     protected function createResourceResponse($item, $meta = null)
     {
-        return $this->createItemResponse($item, $this->getTransformer(), $this->resource->getSingleKey(), $meta);
+        return $this->createItemResponse($item, $this->getTransformer(), $this->getResource()->getSingleKey(), $meta);
     }
 
     protected function createResourceOkResponse($item, $meta = null)
     {
-        return $this->createItemOkResponse($item, $this->getTransformer(), $this->resource->getSingleKey(), $meta);
+        return $this->createItemOkResponse($item, $this->getTransformer(), $this->getResource()->getSingleKey(), $meta);
     }
 }

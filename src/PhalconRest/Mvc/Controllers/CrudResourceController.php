@@ -3,6 +3,7 @@ namespace PhalconRest\Mvc\Controllers;
 
 use Phalcon\Mvc\Model;
 use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Constants\PostedDataMethods;
 use PhalconRest\Exception;
 
 class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceController
@@ -31,7 +32,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     protected function getAllData()
     {
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
-        $phqlBuilder->from($this->resource->getModel());
+        $phqlBuilder->from($this->getResource()->getModel());
 
         return $phqlBuilder->getQuery()->execute();
     }
@@ -40,7 +41,6 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         return $this->createResourceCollectionResponse($data);
     }
-
 
     /*** FIND ***/
 
@@ -73,9 +73,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
 
-        $modelPrimaryKey = $this->resource->getModelPrimaryKey();
+        $modelPrimaryKey = $this->getResource()->getModelPrimaryKey();
         $phqlBuilder
-            ->from($this->resource->getModel())
+            ->from($this->getResource()->getModel())
             ->andWhere($modelPrimaryKey . ' = :id:', ['id' => $id])
             ->limit(1);
 
@@ -88,7 +88,6 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         return $this->createResourceResponse($item);
     }
-
 
     /*** CREATE ***/
 
@@ -124,7 +123,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
      */
     protected function createItem($data)
     {
-        $modelClass = $this->resource->getModel();
+        $modelClass = $this->getResource()->getModel();
 
         /** @var Model $item */
         $item = new $modelClass();
@@ -139,7 +138,6 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         return $this->createResourceOkResponse($createdItem);
     }
-
 
     /*** UPDATE ***/
 
@@ -192,7 +190,6 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceOkResponse($updatedItem);
     }
 
-
     /*** REMOVE ***/
 
     public function remove($id)
@@ -239,12 +236,36 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createOkResponse();
     }
 
-
     /*** GENERAL HOOKS ***/
 
     protected function getPostedData()
     {
-        return (array)$this->request->getJsonRawBody();
+        $resourcePostedDataMode = $this->getResource()->getPostedDataMethod();
+        $endpointPostedDataMode = $this->getEndpoint()->getPostedDataMethod();
+
+        $postedDataMode = $resourcePostedDataMode;
+        if ($endpointPostedDataMode != PostedDataMethods::AUTO) {
+            $postedDataMode = $endpointPostedDataMode;
+        }
+
+        $postedData = null;
+
+        switch ($postedDataMode) {
+
+            case PostedDataMethods::POST:
+                $postedData = $this->request->getPost();
+                break;
+
+            case PostedDataMethods::JSON_BODY:
+                $postedData = $this->request->getJsonRawBody(true);
+                break;
+
+            case PostedDataMethods::AUTO:
+            default:
+                $postedData = $this->request->getPostedData();
+        }
+
+        return $postedData;
     }
 
     /**
@@ -254,10 +275,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
      */
     protected function getItem($id)
     {
-        $modelClass = $this->resource->getModel();
+        $modelClass = $this->getResource()->getModel();
         return $modelClass::findFirst($id);
     }
-
 
     /*** ERROR HOOKS ***/
 

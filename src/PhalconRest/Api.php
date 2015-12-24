@@ -5,6 +5,7 @@ namespace PhalconRest;
 use PhalconRest\Api\Endpoint;
 use PhalconRest\Api\Resource;
 use PhalconRest\Constants\Services;
+use PhalconRest\Mvc\ApiInjectableInterface;
 
 class Api extends \Phalcon\Mvc\Micro
 {
@@ -56,8 +57,17 @@ class Api extends \Phalcon\Mvc\Micro
             $this->resourcesByIdentifier[$collection->getIdentifier()] = $collection;
 
             /** @var Endpoint $endpoint */
-            foreach($collection->getEndpoints() as $endpoint){
-                $this->endpointsByIdentifier[$endpoint->getIdentifier()] = $endpoint;
+            foreach ($collection->getEndpoints() as $endpoint) {
+
+                $fullIdentifier = $collection->getIdentifier() . ' ' . $endpoint->getIdentifier();
+                $this->endpointsByIdentifier[$fullIdentifier] = $endpoint;
+            }
+
+            // Attach API to controller
+            $controller = $collection->getController();
+
+            if ($controller instanceof ApiInjectableInterface) {
+                $controller->setApi($this);
             }
         }
 
@@ -68,6 +78,7 @@ class Api extends \Phalcon\Mvc\Micro
      * Attaches middleware to the API
      *
      * @param $middleware
+     *
      * @return static
      */
     public function attach($middleware)
@@ -92,7 +103,8 @@ class Api extends \Phalcon\Mvc\Micro
             return null;
         }
 
-        return array_key_exists($resourceIdentifier, $this->resourcesByIdentifier) ? $this->resourcesByIdentifier[$resourceIdentifier] : null;
+        return array_key_exists($resourceIdentifier,
+            $this->resourcesByIdentifier) ? $this->resourcesByIdentifier[$resourceIdentifier] : null;
     }
 
     /**
@@ -100,13 +112,17 @@ class Api extends \Phalcon\Mvc\Micro
      */
     public function getMatchedEndpoint()
     {
+        $resourceIdentifier = $this->getMatchedRouteNamePart('resource');
         $endpointIdentifier = $this->getMatchedRouteNamePart('endpoint');
 
         if (!$endpointIdentifier) {
             return null;
         }
 
-        return array_key_exists($endpointIdentifier, $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$endpointIdentifier] : null;
+        $fullIdentifier = $resourceIdentifier . ' ' . $endpointIdentifier;
+
+        return array_key_exists($fullIdentifier,
+            $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$fullIdentifier] : null;
     }
 
     protected function getMatchedRouteNamePart($key)
