@@ -6,7 +6,7 @@ use PhalconRest\Auth\Session;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Exception;
 
-class JWT implements \PhalconRest\Auth\TokenParserInterface
+class JWTTokenParser implements \PhalconRest\Auth\TokenParserInterface
 {
     const ALGORITHM_HS256 = 'HS256';
     const ALGORITHM_HS512 = 'HS512';
