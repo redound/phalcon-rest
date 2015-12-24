@@ -28,6 +28,8 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             return new $className();
         });
 
+        $this->setShared(Services::USER_SERVICE, new \PhalconRest\User\Service);
+
         $this->setShared(Services::TOKEN_PARSER, function () {
 
             return new \PhalconRest\Auth\TokenParsers\JWT('this_should_be_changed');

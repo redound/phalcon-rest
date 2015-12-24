@@ -15,6 +15,11 @@ class Response extends \Phalcon\Http\Response
             'message' => 'General: System Error'
         ],
 
+        ErrorCodes::GENERAL_NOT_IMPLEMENTED => [
+            'statusCode' => 500,
+            'message' => 'General: Not Implemented'
+        ],
+
         ErrorCodes::GENERAL_NOT_FOUND => [
             'statusCode' => 404,
             'message' => 'General: Not Found'

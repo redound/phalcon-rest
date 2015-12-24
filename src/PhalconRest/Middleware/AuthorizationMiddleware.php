@@ -19,11 +19,8 @@ class AuthorizationMiddleware extends \PhalconRest\Mvc\Plugin
             return;
         }
 
-        /** @var \Phalcon\Acl\Adapter $acl */
-        $acl = $this->di->get(Services::ACL);
-
-        // TODO: Get the right role
-        $allowed = $acl->isAllowed('administrator', $resource->getIdentifier(), $endpoint->getIdentifier());
+        $allowed = $this->acl->isAllowed($this->userService->getRole(), $resource->getIdentifier(),
+            $endpoint->getIdentifier());
 
         if (!$allowed) {
             throw new Exception(ErrorCodes::ACCESS_DENIED);
