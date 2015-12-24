@@ -23,7 +23,6 @@ class Api extends \Phalcon\Mvc\Micro
 
     /**
      * @param $name
-     *
      * @return Resource|null
      */
     public function getResource($name)

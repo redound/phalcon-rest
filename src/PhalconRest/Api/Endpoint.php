@@ -14,6 +14,7 @@ class Endpoint
     const REMOVE = 'remove';
 
     protected $name;
+    protected $description;
 
     protected $httpMethod;
     protected $path;
@@ -75,6 +76,16 @@ class Endpoint
     public function getName()
     {
         return $this->name;
+    }
+
+    public function description($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

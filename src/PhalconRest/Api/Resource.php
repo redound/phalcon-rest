@@ -15,6 +15,7 @@ use PhalconRest\Mvc\Controllers\CrudResourceController;
 class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl\MountableInterface
 {
     protected $name;
+    protected $description;
 
     protected $model;
     protected $transformer;
@@ -61,6 +62,16 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
     public function getName()
     {
         return $this->name;
+    }
+
+    public function description($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     public function setPrefix($prefix)

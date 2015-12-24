@@ -5,6 +5,7 @@ namespace PhalconRest\Constants;
 class Services
 {
     // Phalcon
+    const APPLICATION = "application";
     const DISPATCHER = "dispatcher";
     const ROUTER = "router";
     const URL = "url";

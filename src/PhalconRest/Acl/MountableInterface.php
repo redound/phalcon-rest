@@ -8,7 +8,7 @@ interface MountableInterface
      * Returns the ACL resources in the following format:
      *
      * [
-     *   [ Resource, ['endpoint1', 'endpoint2'] ]
+     *   [ Resources, ['endpoint1', 'endpoint2'] ]
      * ]
      *
      * @return array

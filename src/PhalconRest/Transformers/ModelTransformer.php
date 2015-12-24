@@ -200,7 +200,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
         return $this->mmodelAttributes;
     }
 
-    protected function getModelDataTypes()
+    public function getModelDataTypes()
     {
         if (!$this->modelDataTypes) {
 
