@@ -267,7 +267,7 @@ class Endpoint
     {
         return self::factory('/{id}', HttpMethods::PUT, 'update')
             ->name(self::UPDATE)
-            ->description('Returns an existing identified by {id} using the posted data');
+            ->description('Updates an existing item identified by {id}, using the posted data');
     }
 
     /**
