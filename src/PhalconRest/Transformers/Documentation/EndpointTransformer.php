@@ -13,6 +13,7 @@ class EndpointTransformer extends \League\Fractal\TransformerAbstract
             'description' => $endpoint->getDescription(),
             'httpMethod' => $endpoint->getHttpMethod(),
             'path' => $endpoint->getPath(),
+            'exampleResponse' => $endpoint->getExampleResponse(),
             'allowedRoles' => $endpoint->getAllowedRoles()
         ];
     }

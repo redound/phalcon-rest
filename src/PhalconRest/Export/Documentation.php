@@ -86,6 +86,7 @@ class Documentation extends \PhalconRest\Mvc\Plugin
             $endpoint->setDescription($apiEndpoint->getDescription());
             $endpoint->setHttpMethod($apiEndpoint->getHttpMethod());
             $endpoint->setPath($apiEndpoint->getPath());
+            $endpoint->setExampleResponse($apiEndpoint->getExampleResponse());
 
             $allowedRoleNames = [];
 

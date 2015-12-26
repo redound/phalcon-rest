@@ -21,6 +21,7 @@ class Endpoint
     protected $handlerMethod;
 
     protected $postedDataMethod = PostedDataMethods::AUTO;
+    protected $exampleResponse;
 
     protected $allowedRoles = [];
     protected $deniedRoles = [];
@@ -103,6 +104,25 @@ class Endpoint
     public function getHttpMethod()
     {
         return $this->httpMethod;
+    }
+
+    /**
+     * @param string $exampleResponse Example of the response of the endpoint
+     *
+     * @return $this
+     */
+    public function exampleResponse($exampleResponse)
+    {
+        $this->exampleResponse = $exampleResponse;
+        return $this;
+    }
+
+    /**
+     * @return string Example of the response of the endpoint
+     */
+    public function getExampleResponse()
+    {
+        return $this->exampleResponse;
     }
 
     /**
