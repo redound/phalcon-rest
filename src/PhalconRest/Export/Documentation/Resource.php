@@ -4,107 +4,61 @@ namespace PhalconRest\Export\Documentation;
 
 class Resource
 {
-    protected $resource;
+    protected $name;
+    protected $description;
+    protected $path;
+
     protected $endpoints = [];
-    protected $allowedRolesPerEndpoint = [];
-    protected $deniedRolesPerEndpoint = [];
-    protected $source;
-    protected $columnMap;
-    protected $whitelist;
-    protected $dataTypes;
+    protected $fields;
 
-    public function __construct($allowedRolesPerEndpoint = [], $deniedRolesPerEndpoint = [])
+    public function getName()
     {
-        $this->allowedRolesPerEndpoint = $allowedRolesPerEndpoint;
-        $this->deniedRolesPerEndpoint = $deniedRolesPerEndpoint;
+        return $this->name;
     }
 
-    public function setDetails(\PhalconRest\Api\Resource $details)
+    public function setName($name)
     {
-        $this->details = $details;
+        $this->name = $name;
     }
 
-    public function getDetails()
+    public function getDescription()
     {
-        return $this->details;
+        return $this->description;
     }
 
-    public function setSource($source)
+    public function setDescription($description)
     {
-        $this->source = $source;
+        $this->description = $description;
     }
 
-    public function getSource()
+    public function getPath()
     {
-        return $this->source;
+        return $this->path;
     }
 
-    public function setColumnMap($columnMap)
+    public function setPath($path)
     {
-        $this->columnMap = $columnMap;
+        $this->path = $path;
     }
 
-    public function getColumnMap()
+    public function setFields($fields)
     {
-        return $this->columnMap;
+        $this->fields = $fields;
     }
 
-    public function setWhitelist($whitelist)
+    public function getFields()
     {
-        $this->whitelist = $whitelist;
+        return $this->fields;
     }
 
-    public function getWhitelist()
-    {
-        return $this->whitelist;
-    }
-
-    public function setDataTypes($dataTypes)
-    {
-        $this->dataTypes = $dataTypes;
-    }
-
-    public function getDataTypes()
-    {
-        return $this->dataTypes;
-    }
-
-    public function importManyEndpoints(array $endpoints)
+    public function addManyEndpoints(array $endpoints)
     {
         foreach($endpoints as $endpoint) {
-            $this->importEndpoint($endpoint);
+            $this->addEndpoint($endpoint);
         }
     }
 
-    public function importEndpoint(\PhalconRest\Api\Endpoint $details)
-    {
-        $endpoint = new Endpoint();
-        $endpoint->setDetails($details);
-
-        foreach($this->allowedRolesPerEndpoint as $roleConfig) {
-
-            /** @var \Phalcon\Acl\Role $role */
-            $role = $roleConfig[0];
-
-            if ($roleConfig[2] == $details->getIdentifier()) {
-                $endpoint->addAllowedRole($role->getName());
-            }
-        }
-
-        foreach($this->deniedRolesPerEndpoint as $roleConfig) {
-
-            /** @var \Phalcon\Acl\Role $role */
-            $role = $roleConfig[0];
-
-            if ($roleConfig[2] == $details->getIdentifier()) {
-                $endpoint->addDeniedRole($role->getName());
-            }
-        }
-
-        $this->addEndpoint($endpoint);
-    }
-
-    protected function addEndpoint($endpoint)
+    public function addEndpoint(Endpoint $endpoint)
     {
         $this->endpoints[] = $endpoint;
     }

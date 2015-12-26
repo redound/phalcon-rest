@@ -4,28 +4,50 @@ namespace PhalconRest\Export\Documentation;
 
 class Endpoint
 {
-    protected $details;
+    protected $name;
+    protected $description;
+    protected $httpMethod;
+    protected $path;
     protected $allowedRoles = [];
-    protected $deniedRoles = [];
 
-    public function setDetails(\PhalconRest\Api\Endpoint $details)
+    public function getName()
     {
-        $this->details = $details;
+        return $this->name;
     }
 
-    public function getDetails()
+    public function setName($name)
     {
-        return $this->details;
+        $this->name = $name;
     }
 
-    public function addAllowedRole($role)
+    public function getDescription()
     {
-        $this->allowedRoles[] = $role;
+        return $this->description;
     }
 
-    public function addDeniedRole($role)
+    public function setDescription($description)
     {
-        $this->deniedRoles[] = $role;
+        $this->description = $description;
+    }
+
+    public function getHttpMethod()
+    {
+        return $this->httpMethod;
+    }
+
+    public function setHttpMethod($httpMethod)
+    {
+        $this->httpMethod = $httpMethod;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 
     public function getAllowedRoles()
@@ -33,8 +55,8 @@ class Endpoint
         return $this->allowedRoles;
     }
 
-    public function getDeniedRoles()
+    public function setAllowedRoles($allowedRoles)
     {
-        return $this->deniedRoles;
+        $this->allowedRoles = $allowedRoles;
     }
 }
