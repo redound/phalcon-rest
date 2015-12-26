@@ -16,15 +16,15 @@ class Collection
         $this->basePath = $basePath;
     }
 
-    public function importManyRoutes(array $routes)
+    public function addManyRoutes(array $routes)
     {
         /** @var \Phalcon\Mvc\Router\Route $route */
         foreach ($routes as $route) {
-            $this->importRoute($route);
+            $this->addRoute($route);
         }
     }
 
-    public function importRoute(\Phalcon\Mvc\Router\Route $route)
+    public function addRoute(\Phalcon\Mvc\Router\Route $route)
     {
         if (@unserialize($route->getName())) {
             return;
@@ -45,20 +45,15 @@ class Collection
         ));
     }
 
-    public function addRequest(Request $request)
-    {
-        $this->requests[] = $request;
-    }
-
-    public function importManyResources(array $resources)
+    public function addManyResources(array $resources)
     {
         /** @var \PhalconRest\Api\Resource $resource */
         foreach ($resources as $resource) {
-            $this->importResource($resource);
+            $this->addResource($resource);
         }
     }
 
-    public function importResource(\PhalconRest\Api\Resource $resource)
+    public function addResource(\PhalconRest\Api\Resource $resource)
     {
         foreach ($resource->getEndpoints() as $endpoint) {
 
@@ -79,5 +74,10 @@ class Collection
     public function getRequests()
     {
         return $this->requests;
+    }
+
+    public function addRequest(Request $request)
+    {
+        $this->requests[] = $request;
     }
 }

@@ -6,11 +6,6 @@ use League\Fractal;
 
 class RequestTransformer extends Fractal\TransformerAbstract
 {
-    /**
-     * Turn this resource object into a generic array
-     *
-     * @return array
-     */
     public function transform(\PhalconRest\Export\Postman\Request $request)
     {
         return [
