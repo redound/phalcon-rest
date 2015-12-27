@@ -3,6 +3,7 @@
 namespace PhalconRest\Export;
 
 use Phalcon\Acl;
+use PhalconRest\Transformers\ModelTransformer;
 
 class Documentation extends \PhalconRest\Mvc\Plugin
 {
@@ -17,15 +18,15 @@ class Documentation extends \PhalconRest\Mvc\Plugin
         $this->basePath = $basePath;
     }
 
-    public function importManyRoutes(array $routes)
+    public function addManyRoutes(array $routes)
     {
         /** @var \Phalcon\Mvc\Router\Route $route */
         foreach ($routes as $route) {
-            $this->importRoute($route);
+            $this->addRoute($route);
         }
     }
 
-    public function importRoute(\Phalcon\Mvc\Router\Route $route)
+    public function addRoute(\Phalcon\Mvc\Router\Route $route)
     {
         if (@unserialize($route->getName())) {
             return;
@@ -34,41 +35,27 @@ class Documentation extends \PhalconRest\Mvc\Plugin
         $this->routes[] = $route;
     }
 
-    public function importManyResources(array $resources)
+    public function addManyResources(array $resources)
     {
         /** @var \PhalconRest\Api\Resource $resource */
         foreach ($resources as $resource) {
-            $this->importResource($resource);
+            $this->addResource($resource);
         }
     }
 
-    public function importResource(\PhalconRest\Api\Resource $details)
+    public function addResource(\PhalconRest\Api\Resource $apiResource)
     {
-        $aclRules = $details->getAclRules($this->acl->getRoles());
+        $aclRoles = $this->acl->getRoles();
 
-        $resource = new \PhalconRest\Export\Documentation\Resource($aclRules[Acl::ALLOW], $aclRules[Acl::DENY]);
-        $resource->allowedRoles = $aclRules[Acl::ALLOW];
-        $resource->deniedRoles = $aclRules[Acl::DENY];
-        $resource->setDetails($details);
+        $resource = new \PhalconRest\Export\Documentation\Resource();
+        $resource->setName($apiResource->getName());
+        $resource->setDescription($apiResource->getDescription());
+        $resource->setPath($apiResource->getPrefix());
 
-        if ($modelClass = $details->getModel()) {
+        // Set fields
+        if ($modelClass = $apiResource->getModel()) {
 
-            /** @var \PhalconRest\Mvc\Model $model */
-            $model = new $modelClass;
-
-            if (method_exists($model, 'getSource')) {
-                $resource->setSource($model->getSource());
-            }
-
-            if (method_exists($model, 'columnMap')) {
-                $resource->setColumnMap($model->columnMap());
-            }
-
-            if (method_exists($model, 'whitelist')) {
-                $resource->setWhitelist($model->whitelist());
-            }
-
-            if ($transformerClass = $details->getTransformer()) {
+            if ($transformerClass = $apiResource->getTransformer()) {
 
                 /** @var \PhalconRest\Transformers\ModelTransformer $transformer */
                 $transformer = new $transformerClass;
@@ -76,27 +63,46 @@ class Documentation extends \PhalconRest\Mvc\Plugin
                 if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
 
                     $transformer->setModelClass($modelClass);
-                    $reflectionClass = new \ReflectionClass($transformer);
-                    $constants = $reflectionClass->getConstants();
-                    $reversedConstants = array_flip($constants);
+
+                    $responseFields = $transformer->getResponseProperties();
                     $dataTypes = $transformer->getModelDataTypes();
 
-                    $dataTypes = array_map(function($dataType) use ($reversedConstants) {
-                        return $reversedConstants[$dataType];
-                    }, $dataTypes);
+                    $fields = [];
 
-                    $resource->setDataTypes($dataTypes);
+                    foreach($responseFields as $field){
+                        $fields[$field] = array_key_exists($field, $dataTypes) ? $dataTypes[$field] : ModelTransformer::TYPE_UNKNOWN;
+                    }
+
+                    $resource->setFields($fields);
                 }
             }
         }
 
-        $resource->importManyEndpoints($details->getEndpoints());
+        // Add endpoints
+        foreach($apiResource->getEndpoints() as $apiEndpoint)
+        {
+            $endpoint = new \PhalconRest\Export\Documentation\Endpoint();
+            $endpoint->setName($apiEndpoint->getName());
+            $endpoint->setDescription($apiEndpoint->getDescription());
+            $endpoint->setHttpMethod($apiEndpoint->getHttpMethod());
+            $endpoint->setPath($apiEndpoint->getPath());
+            $endpoint->setExampleResponse($apiEndpoint->getExampleResponse());
 
-        $this->addResource($resource);
-    }
+            $allowedRoleNames = [];
 
-    protected function addResource(\PhalconRest\Export\Documentation\Resource $resource)
-    {
+            /** @var \Phalcon\Acl\Role $role */
+            foreach($aclRoles as $role){
+
+                if($this->acl->isAllowed($role->getName(), $apiResource->getIdentifier(), $apiEndpoint->getIdentifier())){
+                    $allowedRoleNames[] = $role->getName();
+                }
+            }
+
+            $endpoint->setAllowedRoles($allowedRoleNames);
+
+            $resource->addEndpoint($endpoint);
+        }
+
         $this->resources[] = $resource;
     }
 

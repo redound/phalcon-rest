@@ -64,11 +64,20 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
         return $this->name;
     }
 
+    /**
+     * @param string $description Description of the resource
+     *
+     * @return static
+     */
     public function description($description)
     {
         $this->description = $description;
+        return $this;
     }
 
+    /**
+     * @return string Description of the resource
+     */
     public function getDescription()
     {
         return $this->description;

@@ -8,24 +8,15 @@ use PhalconRest\Constants\Services;
 
 class ModelTransformer extends \League\Fractal\TransformerAbstract
 {
-    const TYPE_INTEGER = Column::TYPE_INTEGER;
-    const TYPE_DATE = Column::TYPE_DATE;
-    const TYPE_VARCHAR = Column::TYPE_VARCHAR;
-    const TYPE_DECIMAL = Column::TYPE_DECIMAL;
-    const TYPE_DATETIME = Column::TYPE_DATETIME;
-    const TYPE_CHAR = Column::TYPE_CHAR;
-    const TYPE_TEXT = Column::TYPE_TEXT;
-    const TYPE_FLOAT = Column::TYPE_FLOAT;
-    const TYPE_BOOLEAN = Column::TYPE_BOOLEAN;
-    const TYPE_DOUBLE = Column::TYPE_DOUBLE;
-    const TYPE_TINYBLOB = Column::TYPE_TINYBLOB;
-    const TYPE_BLOB = Column::TYPE_BLOB;
-    const TYPE_MEDIUMBLOB = Column::TYPE_MEDIUMBLOB;
-    const TYPE_LONGBLOB = Column::TYPE_LONGBLOB;
-    const TYPE_BIGINTEGER = Column::TYPE_BIGINTEGER;
-    const TYPE_JSON = Column::TYPE_JSON;
-    const TYPE_JSONB = Column::TYPE_JSONB;
+    const TYPE_UNKNOWN = 0;
 
+    const TYPE_INTEGER = 1;
+    const TYPE_FLOAT = 2;
+    const TYPE_DOUBLE = 3;
+    const TYPE_BOOLEAN = 4;
+    const TYPE_STRING = 5;
+    const TYPE_DATE = 6;
+    const TYPE_JSON = 7;
 
     protected $modelClass;
 
@@ -108,14 +99,12 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
         switch ($dataType) {
 
-            case self::TYPE_INTEGER:
-            case self::TYPE_BIGINTEGER: {
+            case self::TYPE_INTEGER: {
 
                 $typedValue = (int)$value;
                 break;
             }
 
-            case self::TYPE_DECIMAL:
             case self::TYPE_FLOAT: {
 
                 $typedValue = (float)$value;
@@ -134,26 +123,19 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
                 break;
             }
 
-            case self::TYPE_VARCHAR:
-            case self::TYPE_CHAR:
-            case self::TYPE_TEXT:
-            case self::TYPE_BLOB:
-            case self::TYPE_MEDIUMBLOB:
-            case self::TYPE_LONGBLOB: {
+            case self::TYPE_STRING: {
 
                 $typedValue = (string)$value;
                 break;
             }
 
-            case self::TYPE_DATE:
-            case self::TYPE_DATETIME: {
+            case self::TYPE_DATE: {
 
                 $typedValue = strtotime($value);
                 break;
             }
 
-            case self::TYPE_JSON:
-            case self::TYPE_JSONB: {
+            case self::TYPE_JSON: {
 
                 $typedValue = json_decode($value);
                 break;
@@ -180,9 +162,73 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
         return $combinedResult;
     }
 
-    protected function getResponseProperties()
+    public function getResponseProperties()
     {
         return array_diff($this->includedProperties(), $this->excludedProperties());
+    }
+
+    protected function getMappedDatabaseType($type)
+    {
+        $responseType = null;
+
+        switch ($type) {
+
+            case Column::TYPE_INTEGER:
+            case Column::TYPE_BIGINTEGER: {
+
+                $responseType = self::TYPE_INTEGER;
+                break;
+            }
+
+            case Column::TYPE_DECIMAL:
+            case Column::TYPE_FLOAT: {
+
+                $responseType = self::TYPE_FLOAT;
+                break;
+            }
+
+            case Column::TYPE_DOUBLE: {
+
+                $responseType = self::TYPE_DOUBLE;
+                break;
+            }
+
+            case Column::TYPE_BOOLEAN: {
+
+                $responseType = self::TYPE_BOOLEAN;
+                break;
+            }
+
+            case Column::TYPE_VARCHAR:
+            case Column::TYPE_CHAR:
+            case Column::TYPE_TEXT:
+            case Column::TYPE_BLOB:
+            case Column::TYPE_MEDIUMBLOB:
+            case Column::TYPE_LONGBLOB: {
+
+                $responseType = self::TYPE_STRING;
+                break;
+            }
+
+            case Column::TYPE_DATE:
+            case Column::TYPE_DATETIME: {
+
+                $responseType = self::TYPE_DATE;
+                break;
+            }
+
+            case Column::TYPE_JSON:
+            case Column::TYPE_JSONB: {
+
+                $responseType = self::TYPE_JSON;
+                break;
+            }
+
+            default:
+                $responseType = self::TYPE_STRING;
+        }
+
+        return $responseType;
     }
 
     protected function getModelAttributes()
@@ -219,7 +265,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
                 foreach ($dataTypes as $attributeName => $dataType) {
 
                     $mappedAttributeName = array_key_exists($attributeName, $columnMap) ? $columnMap[$attributeName] : $attributeName;
-                    $mappedDataTypes[$mappedAttributeName] = $dataType;
+                    $mappedDataTypes[$mappedAttributeName] = $this->getMappedDatabaseType($dataType);
                 }
             }
             else {

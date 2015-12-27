@@ -21,6 +21,7 @@ class Endpoint
     protected $handlerMethod;
 
     protected $postedDataMethod = PostedDataMethods::AUTO;
+    protected $exampleResponse;
 
     protected $allowedRoles = [];
     protected $deniedRoles = [];
@@ -78,11 +79,20 @@ class Endpoint
         return $this->name;
     }
 
+    /**
+     * @param string $description Description for the endpoint
+     *
+     * @return static
+     */
     public function description($description)
     {
         $this->description = $description;
+        return $this;
     }
 
+    /**
+     * @return string Description for the endpoint
+     */
     public function getDescription()
     {
         return $this->description;
@@ -94,6 +104,25 @@ class Endpoint
     public function getHttpMethod()
     {
         return $this->httpMethod;
+    }
+
+    /**
+     * @param string $exampleResponse Example of the response of the endpoint
+     *
+     * @return $this
+     */
+    public function exampleResponse($exampleResponse)
+    {
+        $this->exampleResponse = $exampleResponse;
+        return $this;
+    }
+
+    /**
+     * @return string Example of the response of the endpoint
+     */
+    public function getExampleResponse()
+    {
+        return $this->exampleResponse;
     }
 
     /**
@@ -220,7 +249,9 @@ class Endpoint
      */
     public static function all()
     {
-        return self::factory('/', HttpMethods::GET, 'all')->name(self::ALL);
+        return self::factory('/', HttpMethods::GET, 'all')
+            ->name(self::ALL)
+            ->description('Returns all items');
     }
 
     /**
@@ -230,7 +261,9 @@ class Endpoint
      */
     public static function find()
     {
-        return self::factory('/{id}', HttpMethods::GET, 'find')->name(self::FIND);
+        return self::factory('/{id}', HttpMethods::GET, 'find')
+            ->name(self::FIND)
+            ->description('Returns the item identified by {id}');
     }
 
     /**
@@ -240,7 +273,9 @@ class Endpoint
      */
     public static function create()
     {
-        return self::factory('/', HttpMethods::POST, 'create')->name(self::CREATE);
+        return self::factory('/', HttpMethods::POST, 'create')
+            ->name(self::CREATE)
+            ->description('Creates a new item using the posted data');
     }
 
     /**
@@ -250,7 +285,9 @@ class Endpoint
      */
     public static function update()
     {
-        return self::factory('/{id}', HttpMethods::PUT, 'update')->name(self::UPDATE);
+        return self::factory('/{id}', HttpMethods::PUT, 'update')
+            ->name(self::UPDATE)
+            ->description('Updates an existing item identified by {id}, using the posted data');
     }
 
     /**
@@ -260,7 +297,9 @@ class Endpoint
      */
     public static function remove()
     {
-        return self::factory('/{id}', HttpMethods::DELETE, 'remove')->name(self::REMOVE);
+        return self::factory('/{id}', HttpMethods::DELETE, 'remove')
+            ->name(self::REMOVE)
+            ->description('Removes the item identified by {id}');
     }
 
     /**
