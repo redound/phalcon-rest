@@ -34,6 +34,12 @@ class ResourceController extends FractalController
         return $this->_endpoint;
     }
 
+    protected function getUser()
+    {
+        return $this->userService->getDetails();
+    }
+
+
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
         return $this->createCollectionResponse($collection, $this->getTransformer(), $this->getResource()->getMultipleKey(),

@@ -68,9 +68,14 @@ class Response extends \Phalcon\Http\Response
             'message' => 'Data: Not Found'
         ],
 
-        ErrorCodes::DATA_NOT_PROVIDED => [
+        ErrorCodes::POST_DATA_NOT_PROVIDED => [
             'statusCode' => 400,
-            'message' => 'Data: Not provided'
+            'message' => 'Postdata: Not provided'
+        ],
+
+        ErrorCodes::POST_DATA_INVALID => [
+            'statusCode' => 400,
+            'message' => 'Postdata: Invalid'
         ]
     ];
 

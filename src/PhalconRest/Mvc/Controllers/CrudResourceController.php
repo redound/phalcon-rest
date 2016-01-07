@@ -13,8 +13,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function all()
     {
         $this->beforeHandle();
-        $this->beforeRead();
-        $this->beforeAll();
+        $this->beforeHandleRead();
+        $this->beforeHandleAll();
 
         $data = $this->getAllData();
 
@@ -24,18 +24,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $response = $this->getAllResponse($data);
 
-        $this->afterAll($data, $response);
-        $this->afterRead();
+        $this->afterHandleAll($data, $response);
+        $this->afterHandleRead();
         $this->afterHandle();
 
         return $response;
     }
 
-    protected function beforeAll()
+    protected function beforeHandleAll()
     {
     }
 
-    protected function afterAll($data, $response)
+    protected function afterHandleAll($data, $response)
     {
     }
 
@@ -69,8 +69,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function find($id)
     {
         $this->beforeHandle();
-        $this->beforeRead();
-        $this->beforeFind($id);
+        $this->beforeHandleRead();
+        $this->beforeHandleFind($id);
 
         $item = $this->getFindData($id);
 
@@ -84,18 +84,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $response = $this->getFindResponse($item);
 
-        $this->afterFind($item, $response);
-        $this->beforeRead();
+        $this->afterHandleFind($item, $response);
+        $this->beforeHandleRead();
         $this->afterHandle();
 
         return $response;
     }
 
-    protected function beforeFind($id)
+    protected function beforeHandleFind($id)
     {
     }
 
-    protected function afterFind(Model $item, $response)
+    protected function afterHandleFind(Model $item, $response)
     {
     }
 
@@ -140,16 +140,16 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function create()
     {
         $this->beforeHandle();
-        $this->beforeWrite();
-        $this->beforeCreate();
+        $this->beforeHandleWrite();
+        $this->beforeHandleCreate();
 
         $data = $this->getPostedData();
 
-        if (!$this->createAllowed($data)) {
+        if (!$this->saveAllowed($data) || !$this->createAllowed($data)) {
             return $this->onNotAllowed();
         }
 
-        if(!$data || count($data) == 0){
+        if (!$data || count($data) == 0) {
             return $this->onNoDataProvided();
         }
 
@@ -161,18 +161,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $response = $this->getCreateResponse($item, $data);
 
-        $this->afterCreate($item, $data, $response);
-        $this->afterWrite();
+        $this->afterHandleCreate($item, $data, $response);
+        $this->afterHandleWrite();
         $this->afterHandle();
 
         return $response;
     }
 
-    protected function beforeCreate()
+    protected function beforeHandleCreate()
     {
     }
 
-    protected function afterCreate(Model $createdItem, $data, $response)
+    protected function afterHandleCreate(Model $createdItem, $data, $response)
     {
     }
 
@@ -192,9 +192,21 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         /** @var Model $item */
         $item = new $modelClass();
+
+        $this->beforeAssignData($item, $data);
         $item->assign($data);
+        $this->afterAssignData($item, $data);
+
+        $this->beforeSave($item);
+        $this->beforeCreate($item);
 
         $success = $item->create();
+
+        if ($success) {
+
+            $this->afterCreate($item);
+            $this->afterSave($item);
+        }
 
         return $success ? $item : null;
     }
@@ -204,13 +216,21 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceOkResponse($createdItem);
     }
 
+    protected function beforeCreate(Model $item)
+    {
+    }
+
+    protected function afterCreate(Model $item)
+    {
+    }
+
     /*** UPDATE ***/
 
     public function update($id)
     {
         $this->beforeHandle();
-        $this->beforeWrite();
-        $this->beforeUpdate($id);
+        $this->beforeHandleWrite();
+        $this->beforeHandleUpdate($id);
 
         $data = $this->getPostedData();
         $item = $this->getItem($id);
@@ -219,11 +239,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onItemNotFound($id);
         }
 
-        if(!$data || count($data) == 0){
+        if (!$data || count($data) == 0) {
             return $this->onNoDataProvided();
         }
 
-        if (!$this->updateAllowed($item, $data)) {
+        if (!$this->saveAllowed($data) || !$this->updateAllowed($item, $data)) {
             return $this->onNotAllowed();
         }
 
@@ -235,18 +255,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $response = $this->getUpdateResponse($item, $data);
 
-        $this->afterUpdate($item, $data, $response);
-        $this->afterWrite();
+        $this->afterHandleUpdate($item, $data, $response);
+        $this->afterHandleWrite();
         $this->afterHandle();
 
         return $response;
     }
 
-    protected function beforeUpdate($id)
+    protected function beforeHandleUpdate($id)
     {
     }
 
-    protected function afterUpdate(Model $updatedItem, $data, $response)
+    protected function afterHandleUpdate(Model $updatedItem, $data, $response)
     {
     }
 
@@ -263,8 +283,20 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
      */
     protected function updateItem(Model $item, $data)
     {
+        $this->beforeAssignData($item, $data);
         $item->assign($data);
+        $this->afterAssignData($item, $data);
+
+        $this->beforeSave($item);
+        $this->beforeUpdate($item);
+
         $success = $item->update();
+
+        if ($success) {
+
+            $this->afterUpdate($item);
+            $this->afterSave($item);
+        }
 
         return $success ? $item : null;
     }
@@ -274,13 +306,21 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceOkResponse($updatedItem);
     }
 
+    protected function beforeUpdate(Model $item)
+    {
+    }
+
+    protected function afterUpdate(Model $item)
+    {
+    }
+
     /*** REMOVE ***/
 
     public function remove($id)
     {
         $this->beforeHandle();
-        $this->beforeWrite();
-        $this->beforeRemove($id);
+        $this->beforeHandleWrite();
+        $this->beforeHandleRemove($id);
 
         $item = $this->getItem($id);
 
@@ -300,18 +340,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $response = $this->getRemoveResponse($item);
 
-        $this->afterRemove($item, $response);
-        $this->afterWrite();
+        $this->afterHandleRemove($item, $response);
+        $this->afterHandleWrite();
         $this->afterHandle();
 
         return $response;
     }
 
-    protected function beforeRemove($id)
+    protected function beforeHandleRemove($id)
     {
     }
 
-    protected function afterRemove(Model $removedItem, $response)
+    protected function afterHandleRemove(Model $removedItem, $response)
     {
     }
 
@@ -327,12 +367,28 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
      */
     protected function removeItem(Model $item)
     {
-        return $item->delete();
+        $this->beforeRemove($item);
+
+        $success = $item->delete();
+
+        if ($success) {
+            $this->afterRemove($item);
+        }
+
+        return $success;
     }
 
     protected function getRemoveResponse(Model $removedItem)
     {
         return $this->createOkResponse();
+    }
+
+    protected function beforeRemove(Model $item)
+    {
+    }
+
+    protected function afterRemove(Model $item)
+    {
     }
 
     /*** GENERAL HOOKS ***/
@@ -386,22 +442,42 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
-    protected function beforeRead()
+    protected function beforeHandleRead()
     {
     }
 
-    protected function afterRead()
+    protected function afterHandleRead()
     {
     }
 
-    protected function beforeWrite()
+    protected function beforeHandleWrite()
     {
     }
 
-    protected function afterWrite()
+    protected function afterHandleWrite()
     {
     }
 
+    protected function beforeAssignData(Model $item, $data)
+    {
+    }
+
+    protected function afterAssignData(Model $item, $data)
+    {
+    }
+
+    protected function beforeSave(Model $item)
+    {
+    }
+
+    protected function afterSave(Model $item)
+    {
+    }
+
+    protected function saveAllowed($data)
+    {
+        return true;
+    }
 
     /*** ERROR HOOKS ***/
 
@@ -412,7 +488,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     protected function onNoDataProvided()
     {
-        throw new Exception(ErrorCodes::DATA_NOT_PROVIDED, 'No data provided');
+        throw new Exception(ErrorCodes::POST_DATA_NOT_PROVIDED, 'No post-data provided');
     }
 
     protected function onNotAllowed()
