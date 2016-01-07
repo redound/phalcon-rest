@@ -13,6 +13,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function all()
     {
         $this->beforeHandle();
+        $this->beforeRead();
         $this->beforeAll();
 
         $data = $this->getAllData();
@@ -24,6 +25,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $response = $this->getAllResponse($data);
 
         $this->afterAll($data, $response);
+        $this->afterRead();
         $this->afterHandle();
 
         return $response;
@@ -66,6 +68,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function find($id)
     {
         $this->beforeHandle();
+        $this->beforeRead();
         $this->beforeFind($id);
 
         $item = $this->getFindData($id);
@@ -81,6 +84,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $response = $this->getFindResponse($item);
 
         $this->afterFind($item, $response);
+        $this->beforeRead();
         $this->afterHandle();
 
         return $response;
@@ -130,6 +134,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function create()
     {
         $this->beforeHandle();
+        $this->beforeWrite();
         $this->beforeCreate();
 
         $data = $this->getPostedData();
@@ -147,6 +152,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $response = $this->getCreateResponse($item, $data);
 
         $this->afterCreate($item, $data, $response);
+        $this->afterWrite();
         $this->afterHandle();
 
         return $response;
@@ -193,6 +199,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function update($id)
     {
         $this->beforeHandle();
+        $this->beforeWrite();
         $this->beforeUpdate($id);
 
         $data = $this->getPostedData();
@@ -215,6 +222,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $response = $this->getUpdateResponse($item, $data);
 
         $this->afterUpdate($item, $data, $response);
+        $this->afterWrite();
         $this->afterHandle();
 
         return $response;
@@ -257,6 +265,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     public function remove($id)
     {
         $this->beforeHandle();
+        $this->beforeWrite();
         $this->beforeRemove($id);
 
         $item = $this->getItem($id);
@@ -278,6 +287,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $response = $this->getRemoveResponse($item);
 
         $this->afterRemove($item, $response);
+        $this->afterWrite();
         $this->afterHandle();
 
         return $response;
@@ -361,6 +371,23 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     protected function afterHandle()
     {
     }
+
+    protected function beforeRead()
+    {
+    }
+
+    protected function afterRead()
+    {
+    }
+
+    protected function beforeWrite()
+    {
+    }
+
+    protected function afterWrite()
+    {
+    }
+
 
     /*** ERROR HOOKS ***/
 
