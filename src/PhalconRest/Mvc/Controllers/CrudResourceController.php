@@ -48,6 +48,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
         $phqlBuilder->from($this->getResource()->getModel());
 
+        $this->modifyReadQuery($phqlBuilder);
         $this->modifyAllQuery($phqlBuilder);
 
         return $phqlBuilder->getQuery()->execute();
@@ -112,6 +113,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             ->andWhere($modelPrimaryKey . ' = :id:', ['id' => $id])
             ->limit(1);
 
+        $this->modifyReadQuery($phqlBuilder);
         $this->modifyFindQuery($phqlBuilder, $id);
 
         $results = $phqlBuilder->getQuery()->execute();
@@ -129,6 +131,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceResponse($item);
     }
 
+    protected function modifyReadQuery(\Phalcon\Mvc\Model\Query\Builder $query)
+    {
+    }
+
     /*** CREATE ***/
 
     public function create()
@@ -141,6 +147,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         if (!$this->createAllowed($data)) {
             return $this->onNotAllowed();
+        }
+
+        if(!$data || count($data) == 0){
+            return $this->onNoDataProvided();
         }
 
         $item = $this->createItem($data);
@@ -207,6 +217,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         if (!$item) {
             return $this->onItemNotFound($id);
+        }
+
+        if(!$data || count($data) == 0){
+            return $this->onNoDataProvided();
         }
 
         if (!$this->updateAllowed($item, $data)) {
@@ -394,6 +408,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     protected function onItemNotFound($id)
     {
         throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found');
+    }
+
+    protected function onNoDataProvided()
+    {
+        throw new Exception(ErrorCodes::DATA_NOT_PROVIDED, 'No data provided');
     }
 
     protected function onNotAllowed()
