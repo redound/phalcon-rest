@@ -22,7 +22,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     protected $modelDataTypes;
     protected $modelColumnMap;
-    protected $mmodelAttributes;
+    protected $modelAttributes;
 
 
     public function getModelClass()
@@ -148,6 +148,10 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     public function transform($item)
     {
+        if($item == null){
+            return null;
+        }
+
         $result = [];
         $keyMap = $this->keyMap();
 
@@ -233,17 +237,17 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
     protected function getModelAttributes()
     {
-        if (!$this->mmodelAttributes) {
+        if (!$this->modelAttributes) {
 
             /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
             $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
 
             $modelClass = $this->getModelClass();
 
-            $this->mmodelAttributes = $modelsMetaData->getAttributes(new $modelClass);
+            $this->modelAttributes = $modelsMetaData->getAttributes(new $modelClass);
         }
 
-        return $this->mmodelAttributes;
+        return $this->modelAttributes;
     }
 
     public function getModelDataTypes()
