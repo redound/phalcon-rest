@@ -3,7 +3,7 @@
 namespace PhalconRest\DI;
 
 use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Exceptions\Exception;
+use PhalconRest\Exception;
 use PhalconRest\Constants\Services;
 
 class FactoryDefault extends \Phalcon\Di\FactoryDefault
