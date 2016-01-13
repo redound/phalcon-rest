@@ -145,18 +145,26 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $data = $this->getPostedData();
 
-        if (!$this->saveAllowed($data) || !$this->createAllowed($data)) {
-            return $this->onNotAllowed();
-        }
-
         if (!$data || count($data) == 0) {
             return $this->onNoDataProvided();
         }
 
-        $item = $this->createItem($data);
+        if(!$this->postDataValid($data, false)){
+            return $this->onDataInvalid($data);
+        }
+
+        if (!$this->saveAllowed($data) || !$this->createAllowed($data)) {
+            return $this->onNotAllowed();
+        }
+
+        $data = $this->transformPostData($data);
+
+        $item = $this->createModelInstance();
+
+        $item = $this->createItem($item, $data);
 
         if (!$item) {
-            return $this->onCreateFailed($data);
+            return $this->onCreateFailed($item, $data);
         }
 
         $response = $this->getCreateResponse($item, $data);
@@ -182,17 +190,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     }
 
     /**
+     * @param Model $item
      * @param $data
      *
-     * @return Model Created model
+     * @return Model Created item
      */
-    protected function createItem($data)
+    protected function createItem(Model $item, $data)
     {
-        $modelClass = $this->getResource()->getModel();
-
-        /** @var Model $item */
-        $item = new $modelClass();
-
         $this->beforeAssignData($item, $data);
         $item->assign($data);
         $this->afterAssignData($item, $data);
@@ -243,9 +247,15 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onNoDataProvided();
         }
 
+        if(!$this->postDataValid($data, true)){
+            return $this->onDataInvalid($data);
+        }
+
         if (!$this->saveAllowed($data) || !$this->updateAllowed($item, $data)) {
             return $this->onNotAllowed();
         }
+
+        $data = $this->transformPostData($data);
 
         $item = $this->updateItem($item, $data);
 
@@ -434,6 +444,19 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $modelClass::findFirst($id);
     }
 
+    /**
+     * @return Model
+     */
+    protected function createModelInstance()
+    {
+        $modelClass = $this->getResource()->getModel();
+
+        /** @var Model $item */
+        $item = new $modelClass();
+
+        return $item;
+    }
+
     protected function beforeHandle()
     {
     }
@@ -458,12 +481,22 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
+    protected function postDataValid($data, $isUpdate)
+    {
+        return true;
+    }
+
     protected function beforeAssignData(Model $item, $data)
     {
     }
 
     protected function afterAssignData(Model $item, $data)
     {
+    }
+
+    protected function transformPostData($data)
+    {
+        return $data;
     }
 
     protected function beforeSave(Model $item)
@@ -483,7 +516,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     protected function onItemNotFound($id)
     {
-        throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found');
+        throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found', ['id' => $id]);
     }
 
     protected function onNoDataProvided()
@@ -491,23 +524,46 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         throw new Exception(ErrorCodes::POST_DATA_NOT_PROVIDED, 'No post-data provided');
     }
 
+    protected function onDataInvalid($data)
+    {
+        throw new Exception(ErrorCodes::POST_DATA_INVALID, 'Post-data is invalid', ['data' => $data]);
+    }
+
     protected function onNotAllowed()
     {
         throw new Exception(ErrorCodes::ACCESS_DENIED, 'Operation is not allowed');
     }
 
-    protected function onCreateFailed($data)
+    protected function onCreateFailed(Model $item, $data)
     {
-        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to create item');
+        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to create item', [
+            'messages' => $this->_getMessages($item->getMessages()),
+            'data' => $data,
+            'item' => $item->toArray()
+        ]);
     }
 
     protected function onUpdateFailed(Model $item, $data)
     {
-        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to update item');
+        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to update item', [
+            'messages' => $this->_getMessages($item->getMessages()),
+            'data' => $data,
+            'item' => $item->toArray()
+        ]);
     }
 
     protected function onRemoveFailed(Model $item)
     {
-        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to remove item');
+        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to remove item', [
+            'messages' => $this->_getMessages($item->getMessages()),
+            'item' => $item->toArray()
+        ]);
+    }
+
+    private function _getMessages($messages)
+    {
+        return array_map(function(Model\Message $message){
+            return $message->getMessage();
+        }, $messages);
     }
 }

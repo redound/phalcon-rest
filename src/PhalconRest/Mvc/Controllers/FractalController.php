@@ -33,8 +33,8 @@ class FractalController extends Controller
 
     protected function createItemOkResponse($item, $transformer, $resourceKey, $meta = null)
     {
-        $response = $this->createItemResponse($item, $transformer, $resourceKey, $meta);
-        $response['result'] = 'OK';
+        $response = ['result' => 'OK'];
+        $response += $this->createItemResponse($item, $transformer, $resourceKey, $meta);
 
         return $this->createResponse($response);
     }

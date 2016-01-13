@@ -4,9 +4,17 @@ namespace PhalconRest;
 
 class Exception extends \Exception
 {
-    public function __construct($code, $message = null)
+    protected $info;
+
+    public function __construct($code, $message = null, $info = null)
     {
         $this->code = $code;
         $this->message = $message;
+        $this->info = $info;
+    }
+
+    public function getInfo()
+    {
+        return $this->info;
     }
 }

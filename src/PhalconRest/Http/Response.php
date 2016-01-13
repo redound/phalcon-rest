@@ -4,6 +4,8 @@ namespace PhalconRest\Http;
 
 
 use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Constants\Services;
+use PhalconRest\Exception;
 
 class Response extends \Phalcon\Http\Response
 {
@@ -92,6 +94,9 @@ class Response extends \Phalcon\Http\Response
 
     public function setErrorContent(\Exception $e, $developerInfo = false)
     {
+        /** @var Request $request */
+        $request = $this->getDI()->get(Services::REQUEST);
+
         $errorCode = $e->getCode();
         $statusCode = 500;
         $message = 'Unspecified error';
@@ -111,11 +116,18 @@ class Response extends \Phalcon\Http\Response
 
         if ($developerInfo === true) {
 
-            $error['developer'] = [
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
+            $developerResponse = [
                 'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'request' => $request->getMethod() . ' ' . $request->getURI()
             ];
+
+            if($e instanceof Exception && $e->getInfo() != null){
+                $developerResponse['info'] = $e->getInfo();
+            }
+
+            $error['developer'] = $developerResponse;
         }
 
         $this->setJsonContent(['error' => $error]);
