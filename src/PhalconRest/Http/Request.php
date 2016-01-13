@@ -2,8 +2,63 @@
 
 namespace PhalconRest\Http;
 
+use PhalconRest\Constants\PostedDataMethods;
+
 class Request extends \Phalcon\Http\Request
 {
+    protected $postedDataMethod = PostedDataMethods::POST;
+
+    /**
+     * Sets the posted data method to POST
+     *
+     * @return static
+     */
+    public function expectsPostData()
+    {
+        $this->postedDataMethod(PostedDataMethods::POST);
+        return $this;
+    }
+
+    /**
+     * Sets the posted data method to JSON_BODY
+     *
+     * @return static
+     */
+    public function expectsJsonData()
+    {
+        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
+        return $this;
+    }
+
+    /**
+     * @param string $method One of the method constants defined in PostedDataMethods
+     *
+     * @return static
+     */
+    public function postedDataMethod($method)
+    {
+        $this->postedDataMethod = $method;
+        return $this;
+    }
+
+    /**
+     * @return string $method One of the method constants defined in PostedDataMethods
+     */
+    public function getPostedDataMethod()
+    {
+        return $this->postedDataMethod;
+    }
+
+    /**
+     * Returns the data posted by the client. This method uses the set postedDataMethod to collect the data.
+     *
+     * @return mixed
+     */
+    public function getPostedData()
+    {
+        return $this->postedDataMethod == PostedDataMethods::JSON_BODY ? $this->getJsonRawBody(true) : $this->getPost();
+    }
+
     /**
      * Returns auth username
      *
@@ -25,17 +80,6 @@ class Request extends \Phalcon\Http\Request
     }
 
     /**
-     * Returns the data posted by the client. By default this method returns POST data.
-     * Override this method yo provide data from another source, e.g. JSON from the body
-     *
-     * @return mixed
-     */
-    public function getPostedData()
-    {
-        return $this->getPost();
-    }
-
-    /**
      * Returns token from the request.
      * Uses token URL query field, or Authorization header
      *
@@ -46,7 +90,7 @@ class Request extends \Phalcon\Http\Request
         $authHeader = $this->getHeader('AUTHORIZATION');
         $authQuery = $this->getQuery('token');
 
-        return ($authQuery ? $authQuery : $this->parseBearerValue($authHeader));
+        return $authQuery ? $authQuery : $this->parseBearerValue($authHeader);
     }
 
     protected function parseBearerValue($string)
