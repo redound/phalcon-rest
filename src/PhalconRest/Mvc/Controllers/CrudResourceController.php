@@ -161,15 +161,17 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $item = $this->createModelInstance();
 
-        $item = $this->createItem($item, $data);
+        $newItem = $this->createItem($item, $data);
 
-        if (!$item) {
+        if (!$newItem) {
             return $this->onCreateFailed($item, $data);
         }
 
-        $response = $this->getCreateResponse($item, $data);
+        $newItem->refresh();
 
-        $this->afterHandleCreate($item, $data, $response);
+        $response = $this->getCreateResponse($newItem, $data);
+
+        $this->afterHandleCreate($newItem, $data, $response);
         $this->afterHandleWrite();
         $this->afterHandle();
 
@@ -262,6 +264,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         if (!$item) {
             return $this->onUpdateFailed($item, $data);
         }
+
+        $item->refresh();
 
         $response = $this->getUpdateResponse($item, $data);
 
@@ -496,7 +500,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     protected function transformPostData($data)
     {
-        return $data;
+        $result = [];
+
+        foreach($data as $key => $value){
+            $result[$key] = $this->transformPostDataValue($key, $value, $data);
+        }
+
+        return $result;
+    }
+
+    protected function transformPostDataValue($key, $value, $data)
+    {
+        return $value;
     }
 
     protected function beforeSave(Model $item)
