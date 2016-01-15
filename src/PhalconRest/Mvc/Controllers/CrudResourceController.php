@@ -167,7 +167,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onCreateFailed($item, $data);
         }
 
-        $newItem->refresh();
+        $primaryKey = $this->getResource()->getModelPrimaryKey();
+        $newItem = $this->getItem($newItem->$primaryKey);
 
         $response = $this->getCreateResponse($newItem, $data);
 
@@ -259,17 +260,18 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
         $data = $this->transformPostData($data);
 
-        $item = $this->updateItem($item, $data);
+        $newItem = $this->updateItem($item, $data);
 
-        if (!$item) {
+        if (!$newItem) {
             return $this->onUpdateFailed($item, $data);
         }
 
-        $item->refresh();
+        $primaryKey = $this->getResource()->getModelPrimaryKey();
+        $newItem = $this->getItem($newItem->$primaryKey);
 
-        $response = $this->getUpdateResponse($item, $data);
+        $response = $this->getUpdateResponse($newItem, $data);
 
-        $this->afterHandleUpdate($item, $data, $response);
+        $this->afterHandleUpdate($newItem, $data, $response);
         $this->afterHandleWrite();
         $this->afterHandle();
 
