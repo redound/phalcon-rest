@@ -338,7 +338,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $this->beforeHandleWrite();
         $this->beforeHandleRemove($id);
 
-        $item = $this->getFind($id);
+        $item = $this->getFindData($id);
 
         if (!$item) {
             return $this->onItemNotFound($id);
