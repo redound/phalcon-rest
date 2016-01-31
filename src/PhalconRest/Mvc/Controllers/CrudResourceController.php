@@ -338,7 +338,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $this->beforeHandleWrite();
         $this->beforeHandleRemove($id);
 
-        $item = $this->getItem($id);
+        $item = $this->getFind($id);
 
         if (!$item) {
             return $this->onItemNotFound($id);
@@ -579,6 +579,8 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
     private function _getMessages($messages)
     {
+        $messages = isset($messages) ? $messages : [];
+
         return array_map(function(Model\Message $message){
             return $message->getMessage();
         }, $messages);
