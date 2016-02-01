@@ -182,11 +182,11 @@ class Manager extends \PhalconRest\Mvc\Plugin
             throw new Exception(ErrorCodes::AUTH_SESSION_INVALID);
         }
 
-        if ($account->authenticate($session->getIdentity())) {
+        if (!$account->authenticate($session->getIdentity())) {
 
-            $this->session = $session;
+            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
         }
 
-        return !!$this->session;
+        return $this->session = $session;
     }
 }
