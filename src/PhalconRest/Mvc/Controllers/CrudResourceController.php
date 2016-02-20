@@ -107,10 +107,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
 
-        $modelPrimaryKey = $this->getResource()->getModelPrimaryKey();
         $phqlBuilder
             ->from($this->getResource()->getModel())
-            ->andWhere('[' . $this->getResource()->getModel() . '].' . $modelPrimaryKey . ' = :id:', ['id' => $id])
+            ->andWhere('[' . $this->getResource()->getModel() . '].' . $this->getModelPrimaryKey() . ' = :id:', ['id' => $id])
             ->limit(1);
 
         $this->modifyReadQuery($phqlBuilder);
@@ -167,10 +166,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onCreateFailed($item, $data);
         }
 
-        $primaryKey = $this->getResource()->getModelPrimaryKey();
-        $newItem = $this->getItem($newItem->$primaryKey);
+        $primaryKey = $this->getModelPrimaryKey();
+        $responseData = $this->getFindData($newItem->$primaryKey);
 
-        $response = $this->getCreateResponse($newItem, $data);
+        $response = $this->getCreateResponse($responseData, $data);
 
         $this->afterHandleCreate($newItem, $data, $response);
         $this->afterHandleWrite();
@@ -218,7 +217,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $success ? $item : null;
     }
 
-    protected function getCreateResponse(Model $createdItem, $data)
+    protected function getCreateResponse($createdItem, $data)
     {
         return $this->createResourceOkResponse($createdItem);
     }
@@ -266,10 +265,10 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onUpdateFailed($item, $data);
         }
 
-        $primaryKey = $this->getResource()->getModelPrimaryKey();
-        $newItem = $this->getItem($newItem->$primaryKey);
+        $primaryKey = $this->getModelPrimaryKey();
+        $responseData = $this->getFindData($newItem->$primaryKey);
 
-        $response = $this->getUpdateResponse($newItem, $data);
+        $response = $this->getUpdateResponse($responseData, $data);
 
         $this->afterHandleUpdate($newItem, $data, $response);
         $this->afterHandleWrite();
@@ -317,7 +316,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $success ? $item : null;
     }
 
-    protected function getUpdateResponse(Model $updatedItem, $data)
+    protected function getUpdateResponse($updatedItem, $data)
     {
         return $this->createResourceOkResponse($updatedItem);
     }
@@ -338,7 +337,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $this->beforeHandleWrite();
         $this->beforeHandleRemove($id);
 
-        $item = $this->getFindData($id);
+        $item = $this->getItem($id);
 
         if (!$item) {
             return $this->onItemNotFound($id);
@@ -461,6 +460,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $item = new $modelClass();
 
         return $item;
+    }
+
+    protected function getModelPrimaryKey()
+    {
+        return $this->getResource()->getModelPrimaryKey();
     }
 
     protected function beforeHandle()
