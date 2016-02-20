@@ -95,7 +95,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
-    protected function afterHandleFind(Model $item, $response)
+    protected function afterHandleFind($item, $response)
     {
     }
 
@@ -110,7 +110,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $modelPrimaryKey = $this->getResource()->getModelPrimaryKey();
         $phqlBuilder
             ->from($this->getResource()->getModel())
-            ->andWhere($modelPrimaryKey . ' = :id:', ['id' => $id])
+            ->andWhere('[' . $this->getResource()->getModel() . '].' . $modelPrimaryKey . ' = :id:', ['id' => $id])
             ->limit(1);
 
         $this->modifyReadQuery($phqlBuilder);
@@ -121,12 +121,12 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return count($results) >= 1 ? $results->getFirst() : null;
     }
 
-    protected function findAllowed($id, Model $item)
+    protected function findAllowed($id, $item)
     {
         return true;
     }
 
-    protected function getFindResponse(Model $item)
+    protected function getFindResponse($item)
     {
         return $this->createResourceResponse($item);
     }

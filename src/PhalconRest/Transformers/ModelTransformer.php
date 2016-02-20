@@ -84,12 +84,18 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     }
 
 
+    protected function getModel($item)
+    {
+        return $item;
+    }
+
     protected function getFieldValue($item, $propertyName, $fieldName)
     {
         $dataType = array_key_exists($propertyName,
             $this->getModelDataTypes()) ? $this->getModelDataTypes()[$propertyName] : null;
 
-        $value = $item->$propertyName;
+        $model = $this->getModel($item);
+        $value = $model->$propertyName;
 
         if($value === null){
             return null;
