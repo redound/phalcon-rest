@@ -2,8 +2,8 @@
 
 namespace PhalconRest\Auth;
 
-use PhalconRest\Constants\ErrorCodes as ErrorCodes;
-use PhalconRest\Exceptions\UserException;
+use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Exception;
 
 class Manager extends \PhalconRest\Mvc\Plugin
 {
@@ -101,7 +101,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
      * @param array $data
      *
      * @return Session Created session
-     * @throws UserException
+     * @throws Exception
      *
      * Login a user with the specified account-type
      */
@@ -109,14 +109,14 @@ class Manager extends \PhalconRest\Mvc\Plugin
     {
         if (!$account = $this->getAccountType($accountTypeName)) {
 
-            throw new UserException(ErrorCodes::AUTH_INVALIDTYPE);
+            throw new Exception(ErrorCodes::AUTH_INVALID_ACCOUNT_TYPE);
         }
 
         $identity = $account->login($data);
 
         if (!$identity) {
 
-            throw new UserException(ErrorCodes::AUTH_BADLOGIN);
+            throw new Exception(ErrorCodes::AUTH_LOGIN_FAILED);
         }
 
         $startTime = time();
@@ -136,7 +136,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
      * @param string $password
      *
      * @return Session Created session
-     * @throws UserException
+     * @throws Exception
      *
      * Helper to login with username & password
      */
@@ -153,26 +153,25 @@ class Manager extends \PhalconRest\Mvc\Plugin
      * @param string $token Token to authenticate with
      *
      * @return bool
-     * @throws UserException
+     * @throws Exception
      */
     public function authenticateToken($token)
     {
         try {
 
             $session = $this->tokenParser->getSession($token);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
 
-            throw new UserException(ErrorCodes::AUTH_BADTOKEN);
+            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
         }
 
-        if(!$session){
+        if (!$session) {
             return false;
         }
 
-        if($session->getExpirationTime() < time()){
+        if ($session->getExpirationTime() < time()) {
 
-            throw new UserException(ErrorCodes::AUTH_EXPIRED);
+            throw new Exception(ErrorCodes::AUTH_SESSION_EXPIRED);
         }
 
         $session->setToken($token);
@@ -180,14 +179,14 @@ class Manager extends \PhalconRest\Mvc\Plugin
         // Authenticate identity
         if (!$account = $this->getAccountType($session->getAccountTypeName())) {
 
-            throw new UserException(ErrorCodes::DATA_NOTFOUND);
+            throw new Exception(ErrorCodes::AUTH_SESSION_INVALID);
         }
 
-        if($account->authenticate($session->getIdentity())){
+        if (!$account->authenticate($session->getIdentity())) {
 
-            $this->session = $session;
+            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
         }
 
-        return !!$this->session;
+        return $this->session = $session;
     }
 }

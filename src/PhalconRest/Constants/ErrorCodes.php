@@ -5,38 +5,24 @@ namespace PhalconRest\Constants;
 class ErrorCodes
 {
     // General
-    const GEN_SYSTEM = 0;
-    const GEN_NOTFOUND = 1001;
-
-    // Data
-    const DATA_DUPLICATE = 2001;
-    const DATA_NOTFOUND = 2002;
-    const DATA_INVALID = 2004;
-    const DATA_FAIL = 2005;
-
-    const DATA_FIND_FAIL = 2010;
-    const DATA_CREATE_FAIL = 2020;
-    const DATA_UPDATE_FAIL = 2030;
-    const DATA_DELETE_FAIL = 2040;
-    const DATA_REJECTED = 2060;
-    const DATA_NOTALLOWED = 2070;
+    const GENERAL_SYSTEM = 1010;
+    const GENERAL_NOT_IMPLEMENTED = 1020;
+    const GENERAL_NOT_FOUND = 1030;
 
     // Authentication
-    const AUTH_BADTOKEN = 3006;
-    const AUTH_NOUSERNAME = 3007;
-    const AUTH_INVALIDTYPE = 3008;
-    const AUTH_BADLOGIN = 3009;
-    const AUTH_UNAUTHORIZED = 3010;
-    const AUTH_FORBIDDEN = 3020;
-    const AUTH_EXPIRED = 3030;
+    const AUTH_INVALID_ACCOUNT_TYPE = 2010;
+    const AUTH_LOGIN_FAILED = 2020;
+    const AUTH_TOKEN_INVALID = 2030;
+    const AUTH_SESSION_EXPIRED = 2040;
+    const AUTH_SESSION_INVALID = 2050;
 
-    // User management
-    const USER_NOTACTIVE = 4003;
-    const USER_NOTFOUND = 4004;
-    const USER_REGISTERFAIL = 4005;
-    const USER_MODFAIL = 4006;
-    const USER_CREATEFAIL = 4007;
+    // Access Control
+    const ACCESS_DENIED = 3010;
 
-    // PDO
-    const PDO_DUPLICATE_ENTRY = 2300;
+    // Data
+    const DATA_FAILED = 4010;
+    const DATA_NOT_FOUND = 4020;
+
+    const POST_DATA_NOT_PROVIDED = 5010;
+    const POST_DATA_INVALID = 5020;
 }

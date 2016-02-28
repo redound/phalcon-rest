@@ -5,6 +5,7 @@ namespace PhalconRest\Constants;
 class Services
 {
     // Phalcon
+    const APPLICATION = "application";
     const DISPATCHER = "dispatcher";
     const ROUTER = "router";
     const URL = "url";
@@ -31,10 +32,11 @@ class Services
 
     // PhalconRest
     const AUTH_MANAGER = 'authManager';
+    const ACL = 'acl';
     const FRACTAL_MANAGER = 'fractalManager';
     const TOKEN_PARSER = 'tokenParser';
-    const API_SERVICE = 'apiService';
     const QUERY = 'query';
+    const USER_SERVICE = 'userService';
     const PHQL_QUERY_PARSER = 'phqlQueryParser';
     const URL_QUERY_PARSER = 'urlQueryParser';
 }
