@@ -3,6 +3,7 @@
 namespace PhalconRest\Di;
 
 use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Exception;
 use PhalconRest\Constants\Services;
 
 class FactoryDefault extends \Phalcon\Di\FactoryDefault
@@ -11,45 +12,45 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
     {
         parent::__construct();
 
-        $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request());
-        $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response());
+        $this->setShared(Services::REQUEST, new \PhalconRest\Http\Request);
+        $this->setShared(Services::RESPONSE, new \PhalconRest\Http\Response);
 
-        $this->setShared(Services::AUTH_MANAGER, new \PhalconRest\Auth\Manager());
+        $this->setShared(Services::AUTH_MANAGER, new \PhalconRest\Auth\Manager);
 
         $this->setShared(Services::FRACTAL_MANAGER, function () {
 
             $className = '\League\Fractal\Manager';
 
-            if(!class_exists($className)){
-                throw new \Exception(ErrorCodes::GEN_SYSTEM, '\League\Fractal\Manager was requested, but class could not be found');
+            if (!class_exists($className)) {
+                throw new Exception(ErrorCodes::GENERAL_SYSTEM,
+                    '\League\Fractal\Manager was requested, but class could not be found');
             }
 
             return new $className();
         });
 
+        $this->setShared(Services::USER_SERVICE, new \PhalconRest\User\Service);
+
         $this->setShared(Services::TOKEN_PARSER, function () {
 
-            return new \PhalconRest\Auth\TokenParser\JWT('this_should_be_changed');
+            return new \PhalconRest\Auth\TokenParsers\JWT('this_should_be_changed');
         });
 
-        $this->setShared(Services::API_SERVICE, function(){
-
-            return new \PhalconRest\Api\Service();
-        });
-
-        $this->setShared(Services::QUERY, function(){
+        $this->setShared(Services::QUERY, function () {
 
             return new \PhalconRest\Data\Query();
         });
 
-        $this->setShared(Services::PHQL_QUERY_PARSER, function(){
+        $this->setShared(Services::PHQL_QUERY_PARSER, function () {
 
-            return new \PhalconRest\Data\Query\Parser\Phql();
+            return new \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser();
         });
 
-        $this->setShared(Services::URL_QUERY_PARSER, function(){
+        $this->setShared(Services::URL_QUERY_PARSER, function () {
 
-            return new \PhalconRest\Data\Query\Parser\Url();
+            return new \PhalconRest\Data\Query\QueryParsers\UrlQueryParser();
         });
+
+        $this->setShared(Services::ACL, new \PhalconRest\Acl\Adapter\Memory());
     }
 }
