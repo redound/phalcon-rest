@@ -2,7 +2,6 @@
 
 namespace PhalconRest\Http;
 
-
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\Services;
 use PhalconRest\Exception;
@@ -99,25 +98,27 @@ class Response extends \Phalcon\Http\Response
 
         $errorCode = $e->getCode();
         $statusCode = 500;
-        $message = 'Unspecified error';
+        $message = $e->getMessage();
 
         if (array_key_exists($errorCode, $this->defaultErrorMessages)) {
 
             $defaultMessage = $this->defaultErrorMessages[$errorCode];
 
             $statusCode = $defaultMessage['statusCode'];
-            $message = $defaultMessage['message'];
+
+            if(!$message) {
+                $message = $defaultMessage['message'];
+            }
         }
 
         $error = [
             'code' => $errorCode,
-            'message' => $message,
+            'message' => $message ?: 'Unspecified error',
         ];
 
         if ($developerInfo === true) {
 
             $developerResponse = [
-                'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'request' => $request->getMethod() . ' ' . $request->getURI()

@@ -85,7 +85,7 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
 
     public function setPrefix($prefix)
     {
-        throw new Exception(ErrorCodes::GENERAL_SYSTEM, 'Setting prefix after initialization is prohibited.');
+        throw new Exception(ErrorCodes::GENERAL_SYSTEM, null, 'Setting prefix after initialization is prohibited.');
     }
 
     public function handler($handler, $lazy = true)

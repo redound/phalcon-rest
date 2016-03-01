@@ -245,12 +245,9 @@ class ModelTransformer extends Transformer
     {
         if (!$this->modelAttributes) {
 
-            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
-
             $modelClass = $this->getModelClass();
 
-            $this->modelAttributes = $modelsMetaData->getAttributes(new $modelClass);
+            $this->modelAttributes = $this->modelsMetadata->getAttributes(new $modelClass);
         }
 
         return $this->modelAttributes;
@@ -260,13 +257,10 @@ class ModelTransformer extends Transformer
     {
         if (!$this->modelDataTypes) {
 
-            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
-
             $modelClass = $this->getModelClass();
             $columnMap = $this->getModelColumnMap();
 
-            $dataTypes = $modelsMetaData->getDataTypes(new $modelClass);
+            $dataTypes = $this->modelsMetadata->getDataTypes(new $modelClass);
 
             $mappedDataTypes = [];
 
@@ -293,11 +287,8 @@ class ModelTransformer extends Transformer
     {
         if (!$this->modelColumnMap) {
 
-            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
-
             $modelClass = $this->getModelClass();
-            $metaDataColumnMap = $modelsMetaData->getColumnMap(new $modelClass);
+            $metaDataColumnMap = $this->modelsMetadata->getColumnMap(new $modelClass);
 
             $this->modelColumnMap = array_merge($metaDataColumnMap ? $metaDataColumnMap : [], $this->keyMap());
         }

@@ -35,7 +35,7 @@ class Service extends \PhalconRest\Mvc\Plugin
      */
     public function getRole()
     {
-        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED,
+        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED, null,
             'Unable to get role for identity, method getRole in user service not implemented. ' .
             'Make a subclass of \PhalconRest\User\Service with an implementation for this method, and register it in your DI.');
     }
@@ -50,7 +50,7 @@ class Service extends \PhalconRest\Mvc\Plugin
      */
     protected function getDetailsForIdentity($identity)
     {
-        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED,
+        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED, null,
             'Unable to get details for identity, method getDetailsForIdentity in user service not implemented. ' .
             'Make a subclass of \PhalconRest\User\Service with an implementation for this method, and register it in your DI.');
     }

@@ -22,7 +22,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             $className = '\League\Fractal\Manager';
 
             if (!class_exists($className)) {
-                throw new Exception(ErrorCodes::GENERAL_SYSTEM,
+                throw new Exception(ErrorCodes::GENERAL_SYSTEM, null,
                     '\League\Fractal\Manager was requested, but class could not be found');
             }
 
@@ -33,7 +33,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 
         $this->setShared(Services::TOKEN_PARSER, function () {
 
-            return new \PhalconRest\Auth\TokenParsers\JWT('this_should_be_changed');
+            return new \PhalconRest\Auth\TokenParsers\JWTTokenParser('this_should_be_changed');
         });
 
         $this->setShared(Services::QUERY, function () {
