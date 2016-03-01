@@ -4,6 +4,7 @@ namespace PhalconRest\Api;
 
 use PhalconRest\Constants\HttpMethods;
 use PhalconRest\Constants\PostedDataMethods;
+use PhalconRest\Core;
 
 class Endpoint
 {
@@ -183,6 +184,9 @@ class Endpoint
      */
     public function allow(...$roleNames)
     {
+        // Flatten array to allow array inputs
+        $roleNames = Core::array_flatten($roleNames);
+
         foreach ($roleNames as $role) {
 
             if (!in_array($role, $this->allowedRoles)) {
@@ -210,6 +214,9 @@ class Endpoint
      */
     public function deny(...$roleNames)
     {
+        // Flatten array to allow array inputs
+        $roleNames = Core::array_flatten($roleNames);
+
         foreach ($roleNames as $role) {
 
             if (!in_array($role, $this->deniedRoles)) {

@@ -4,7 +4,6 @@ namespace PhalconRest\Http;
 
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\Services;
-use PhalconRest\Exception;
 
 class Response extends \Phalcon\Http\Response
 {
@@ -124,7 +123,7 @@ class Response extends \Phalcon\Http\Response
                 'request' => $request->getMethod() . ' ' . $request->getURI()
             ];
 
-            if($e instanceof Exception && $e->getInfo() != null){
+            if($e instanceof \PhalconRest\Exception && $e->getInfo() != null){
                 $developerResponse['info'] = $e->getInfo();
             }
 

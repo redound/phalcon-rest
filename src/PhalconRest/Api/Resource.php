@@ -8,6 +8,7 @@ use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\HttpMethods;
 use PhalconRest\Constants\PostedDataMethods;
 use PhalconRest\Constants\Services;
+use PhalconRest\Core;
 use PhalconRest\Exception;
 use PhalconRest\Transformers\ModelTransformer;
 use PhalconRest\Mvc\Controllers\CrudResourceController;
@@ -35,6 +36,15 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
     public function __construct($prefix)
     {
         parent::setPrefix($prefix);
+
+        $this->initialize();
+    }
+
+    /**
+     * Use this method when you extend this class in order to define the resource
+     */
+    protected function initialize()
+    {
     }
 
     /**
@@ -310,6 +320,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
      */
     public function allow(...$roleNames)
     {
+        // Flatten array to allow array inputs
+        $roleNames = Core::array_flatten($roleNames);
+
         foreach ($roleNames as $role) {
 
             if (!in_array($role, $this->allowedRoles)) {
@@ -337,6 +350,9 @@ class Resource extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl
      */
     public function deny(...$roleNames)
     {
+        // Flatten array to allow array inputs
+        $roleNames = Core::array_flatten($roleNames);
+
         foreach ($roleNames as $role) {
 
             if (!in_array($role, $this->deniedRoles)) {
