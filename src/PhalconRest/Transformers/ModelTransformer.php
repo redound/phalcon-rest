@@ -6,7 +6,7 @@ use Phalcon\Db\Column;
 use Phalcon\Di;
 use PhalconRest\Constants\Services;
 
-class ModelTransformer extends \League\Fractal\TransformerAbstract
+class ModelTransformer extends Transformer
 {
     const TYPE_UNKNOWN = 0;
 

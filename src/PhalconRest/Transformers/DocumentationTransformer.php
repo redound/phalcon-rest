@@ -4,7 +4,7 @@ namespace PhalconRest\Transformers;
 
 use PhalconRest\Export\Documentation;
 
-class DocumentationTransformer extends \League\Fractal\TransformerAbstract
+class DocumentationTransformer extends Transformer
 {
     public $defaultIncludes = [
         'routes',

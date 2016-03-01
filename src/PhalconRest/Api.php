@@ -51,7 +51,7 @@ class Api extends \Phalcon\Mvc\Micro
      * @return static
      * @throws Exception
      */
-    public function resource(Resource $resource)
+    public function resource(\PhalconRest\Api\Resource $resource)
     {
         $this->mount($resource);
 
