@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Transformers\Postman;
 
-use League\Fractal;
+use PhalconRest\Transformers\Transformer;
 
-class CollectionTransformer extends Fractal\TransformerAbstract
+class CollectionTransformer extends Transformer
 {
     protected $defaultIncludes = [
         'requests',

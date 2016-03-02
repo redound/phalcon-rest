@@ -4,7 +4,6 @@ namespace PhalconRest\Transformers;
 
 use Phalcon\Db\Column;
 use Phalcon\Di;
-use PhalconRest\Constants\Services;
 
 class ModelTransformer extends Transformer
 {

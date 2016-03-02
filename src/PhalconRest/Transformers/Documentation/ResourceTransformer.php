@@ -2,7 +2,9 @@
 
 namespace PhalconRest\Transformers\Documentation;
 
-class ResourceTransformer extends \League\Fractal\TransformerAbstract
+use PhalconRest\Transformers\Transformer;
+
+class ResourceTransformer extends Transformer
 {
     public $defaultIncludes = [
         'endpoints'
