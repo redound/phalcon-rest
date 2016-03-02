@@ -20,6 +20,6 @@ class CollectionTransformer extends Fractal\TransformerAbstract
 
     public function includeRequests(\PhalconRest\Export\Postman\Collection $collection)
     {
-        return $this->collection($collection->getRequests(), new RequestTransformer, 'parent');
+        return $this->collection($collection->getRequests(), new RequestTransformer);
     }
 }

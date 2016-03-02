@@ -20,6 +20,6 @@ class ResourceTransformer extends \League\Fractal\TransformerAbstract
 
     public function includeEndpoints(\PhalconRest\Export\Documentation\Resource $resource)
     {
-        return $this->collection($resource->getEndpoints(), new EndpointTransformer, 'parent');
+        return $this->collection($resource->getEndpoints(), new EndpointTransformer);
     }
 }

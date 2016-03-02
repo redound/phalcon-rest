@@ -21,11 +21,11 @@ class DocumentationTransformer extends Transformer
 
     public function includeRoutes(Documentation $documentation)
     {
-        return $this->collection($documentation->getRoutes(), new \PhalconRest\Transformers\Documentation\RouteTransformer, 'parent');
+        return $this->collection($documentation->getRoutes(), new \PhalconRest\Transformers\Documentation\RouteTransformer);
     }
 
     public function includeResources(Documentation $documentation)
     {
-        return $this->collection($documentation->getResources(), new \PhalconRest\Transformers\Documentation\ResourceTransformer, 'parent');
+        return $this->collection($documentation->getResources(), new \PhalconRest\Transformers\Documentation\ResourceTransformer);
     }
 }
