@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Export\Documentation;
 
-class Resource
+class Collection
 {
     protected $name;
     protected $description;

@@ -17,6 +17,16 @@ class FractalController extends Controller
         $this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
     }
 
+    protected function getUser()
+    {
+        return $this->userService->getDetails();
+    }
+
+    protected function getUserId()
+    {
+        return (int)$this->userService->getIdentity();
+    }
+
     protected function createArrayResponse($array, $key)
     {
         $response = [$key => $array];

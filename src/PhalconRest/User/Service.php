@@ -28,6 +28,21 @@ class Service extends \PhalconRest\Mvc\Plugin
     }
 
     /**
+     * Returns the identity for the current user, e.g. the user ID
+     *
+     * @return mixed
+     */
+    public function getIdentity()
+    {
+        $session = $this->authManager->getSession();
+        if ($session) {
+            return $session->getIdentity();
+        }
+
+        return null;
+    }
+
+    /**
      * This method should return the role for the current user
      *
      * @return string Name of the role for the current user

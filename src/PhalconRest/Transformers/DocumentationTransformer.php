@@ -8,7 +8,7 @@ class DocumentationTransformer extends Transformer
 {
     public $defaultIncludes = [
         'routes',
-        'resources'
+        'collections'
     ];
 
     public function transform(Documentation $documentation)
@@ -24,8 +24,8 @@ class DocumentationTransformer extends Transformer
         return $this->collection($documentation->getRoutes(), new \PhalconRest\Transformers\Documentation\RouteTransformer);
     }
 
-    public function includeResources(Documentation $documentation)
+    public function includeCollections(Documentation $documentation)
     {
-        return $this->collection($documentation->getResources(), new \PhalconRest\Transformers\Documentation\ResourceTransformer);
+        return $this->collection($documentation->getCollections(), new \PhalconRest\Transformers\Documentation\CollectionTransformer);
     }
 }

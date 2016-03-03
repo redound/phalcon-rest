@@ -34,6 +34,10 @@ class Response extends \Phalcon\Http\Response
             'message' => $message ?: 'Unspecified error',
         ];
 
+        if($e instanceof \PhalconRest\Exception && $e->getUserInfo() != null){
+            $error['info'] = $e->getUserInfo();
+        }
+
         if ($developerInfo === true) {
 
             $developerResponse = [
@@ -42,8 +46,8 @@ class Response extends \Phalcon\Http\Response
                 'request' => $request->getMethod() . ' ' . $request->getURI()
             ];
 
-            if($e instanceof \PhalconRest\Exception && $e->getInfo() != null){
-                $developerResponse['info'] = $e->getInfo();
+            if($e instanceof \PhalconRest\Exception && $e->getDeveloperInfo() != null){
+                $developerResponse['info'] = $e->getDeveloperInfo();
             }
 
             $error['developer'] = $developerResponse;

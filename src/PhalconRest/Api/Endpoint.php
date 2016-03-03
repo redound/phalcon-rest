@@ -27,6 +27,7 @@ class Endpoint
     protected $allowedRoles = [];
     protected $deniedRoles = [];
 
+
     public function __construct($path, $httpMethod = HttpMethods::GET, $handlerMethod = null)
     {
         $this->path = $path;
@@ -127,7 +128,7 @@ class Endpoint
     }
 
     /**
-     * @return string Path of the endpoint, relative to the resource
+     * @return string Path of the endpoint, relative to the collection
      */
     public function getPath()
     {
