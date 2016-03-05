@@ -106,25 +106,25 @@ class ModelTransformer extends Transformer
 
             case self::TYPE_INTEGER: {
 
-                $typedValue = (int)$value;
+                $typedValue = $this->formatHelper->int($value);
                 break;
             }
 
             case self::TYPE_FLOAT: {
 
-                $typedValue = (float)$value;
+                $typedValue = $this->formatHelper->float($value);
                 break;
             }
 
             case self::TYPE_DOUBLE: {
 
-                $typedValue = (double)$value;
+                $typedValue = $this->formatHelper->double($value);
                 break;
             }
 
             case self::TYPE_BOOLEAN: {
 
-                $typedValue = (bool)$value;
+                $typedValue = $this->formatHelper->bool($value);
                 break;
             }
 
@@ -136,7 +136,7 @@ class ModelTransformer extends Transformer
 
             case self::TYPE_DATE: {
 
-                $typedValue = strtotime($value);
+                $typedValue = $this->formatHelper->date($value);
                 break;
             }
 

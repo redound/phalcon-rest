@@ -12,6 +12,8 @@ use PhalconRest\Exception;
  * @property \Phalcon\Acl\AdapterInterface $acl
  * @property \PhalconRest\Auth\Manager $authManager
  * @property \PhalconRest\User\Service $userService
+ * @property \PhalconRest\Helpers\ErrorHelper $errorHelper
+ * @property \PhalconRest\Helpers\FormatHelper $formatHelper
  * @property \PhalconRest\Auth\TokenParserInterface $tokenParser
  * @property \PhalconRest\Data\Query $query
  * @property \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser $phqlQueryParser
@@ -106,4 +108,30 @@ class Transformer extends \League\Fractal\TransformerAbstract
 	}
 
 
+	/* Format helper shortcuts */
+
+	public function int($value)
+	{
+		return $this->formatHelper->int($value);
+	}
+
+	public function float($value)
+	{
+		return $this->formatHelper->float($value);
+	}
+
+	public function double($value)
+	{
+		return $this->formatHelper->float($value);
+	}
+
+	public function bool($value)
+	{
+		return $this->formatHelper->bool($value);
+	}
+
+	public function date($value)
+	{
+		return $this->formatHelper->date($value);
+	}
 }

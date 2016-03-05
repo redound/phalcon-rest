@@ -60,5 +60,10 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 
             return new \PhalconRest\Helpers\ErrorHelper();
         });
+
+        $this->setShared(Services::FORMAT_HELPER, function(){
+
+            return new \PhalconRest\Helpers\FormatHelper();
+        });
     }
 }
