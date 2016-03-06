@@ -1,24 +1,27 @@
-#Phalcon REST#
+# Phalcon REST
+
 [![Latest Stable Version](https://poser.pugx.org/redound/phalcon-rest/v/stable)](https://packagist.org/packages/redound/phalcon-rest) 
-<a href="http://phalconist.com/redound/phalcon-rest" target="_blank">
-![Phalcon REST Library](http://phalconist.com/redound/phalcon-rest/default.svg)
-</a>
+[![Phalcon REST Library](http://phalconist.com/redound/phalcon-rest/default.svg)](http://phalconist.com/redound/phalcon-rest)
 
 *a library focused on simplifying the creation of RESTful API's*
 
-## Installing ##
+## Installing
+
 Install using Composer.
 ````
 composer install redound/phalcon-rest
 ````
 
-## Boilerplate ##
+## Boilerplate
+
 For a full implementation of the library, check out the [Boilerplate application](https://github.com/redound/phalcon-rest-boilerplate).
 
 ## Learn More
+
 - [Documentation](https://redound.gitbooks.io/phalcon-rest/content/index.html)
 
-## Contributing ##
+## Contributing
+
 Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
 
 ## Credits
