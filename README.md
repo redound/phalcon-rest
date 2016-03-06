@@ -16,8 +16,7 @@ composer install redound/phalcon-rest
 For a full implementation of the library, check out the [Boilerplate application](https://github.com/redound/phalcon-rest-boilerplate).
 
 ## Learn More
-- [Website](http://www.phalcon-rest.redound.org)
-- [Documentation](http://www.phalcon-rest.redound.org/docs/)
+- [Documentation](https://redound.gitbooks.io/phalcon-rest/content/index.html)
 
 ## Contributing ##
 Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
