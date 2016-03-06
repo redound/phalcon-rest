@@ -111,7 +111,7 @@ class JWTTokenParser implements \PhalconRest\Auth\TokenParserInterface
             number containing a NumericDate value.
             Use of this claim is OPTIONAL.
             ------------------------------------------------*/
-            "exp" => $iat + $exp,
+            "exp" => $exp,
         ];
     }
 }
