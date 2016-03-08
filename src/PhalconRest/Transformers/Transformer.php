@@ -35,6 +35,7 @@ use PhalconRest\Exception;
  * @property \Phalcon\Escaper|\Phalcon\EscaperInterface $escaper
  * @property \Phalcon\Annotations\Adapter\Memory|\Phalcon\Annotations\Adapter $annotations
  * @property \Phalcon\Mvc\Model\Manager|\Phalcon\Mvc\Model\ManagerInterface $modelsManager
+ * @property \Phalcon\Cache\BackendInterface $modelsCache
  * @property \Phalcon\Mvc\Model\MetaData\Memory|\Phalcon\Mvc\Model\MetadataInterface $modelsMetadata
  * @property \Phalcon\Mvc\Model\Transaction\Manager $transactionManager
  * @property \Phalcon\Assets\Manager $assets
