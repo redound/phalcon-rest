@@ -13,8 +13,8 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     protected $model;
     protected $transformer;
 
-    protected $singleKey = 'item';
-    protected $multipleKey = 'items';
+    protected $itemKey = 'item';
+    protected $collectionKey = 'items';
 
     protected $_modelPrimaryKey;
 
@@ -79,41 +79,85 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     }
 
     /**
-     * @param string $singleKey Response key for single item
+     * @param string $itemKey Response key for single item
      *
      * @return static
      */
-    public function singleKey($singleKey)
+    public function itemKey($itemKey)
     {
-        $this->singleKey = $singleKey;
+        $this->itemKey = $itemKey;
         return $this;
     }
 
     /**
      * @return string Response key for single item
      */
-    public function getSingleKey()
+    public function getItemKey()
     {
-        return $this->singleKey;
+        return $this->itemKey;
     }
 
     /**
-     * @param string $multipleKey Response key for multiple items
+     * @param string $collectionKey Response key for multiple items
      *
      * @return static
      */
-    public function multipleKey($multipleKey)
+    public function collectionKey($collectionKey)
     {
-        $this->multipleKey = $multipleKey;
+        $this->collectionKey = $collectionKey;
         return $this;
     }
 
     /**
      * @return string Response key for multiple items
      */
+    public function getCollectionKey()
+    {
+        return $this->collectionKey;
+    }
+
+    /**
+     * @param string $singleKey Response key for single item
+     *
+     * @return static
+     *
+     * @deprecated Use itemKey() instead
+     */
+    public function singleKey($singleKey)
+    {
+        return $this->itemKey($singleKey);
+    }
+
+    /**
+     * @return string Response key for single item
+     *
+     * @deprecated Use getItemKey() instead
+     */
+    public function getSingleKey()
+    {
+        return $this->getItemKey();
+    }
+
+    /**
+     * @param string $multipleKey Response key for multiple items
+     *
+     * @return static
+     *
+     * @deprecated Use collectionKey() instead
+     */
+    public function multipleKey($multipleKey)
+    {
+        return $this->collectionKey($multipleKey);
+    }
+
+    /**
+     * @return string Response key for multiple items
+     *
+     * @deprecated Use getCollectionKey() instead
+     */
     public function getMultipleKey()
     {
-        return $this->multipleKey;
+        return $this->getCollectionKey();
     }
 
     /**
@@ -129,8 +173,8 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
         $resource = new Resource($prefix);
 
         $resource
-            ->singleKey('item')
-            ->multipleKey('items')
+            ->itemKey('item')
+            ->collectionKey('items')
             ->transformer(ModelTransformer::class)
             ->setHandler(CrudResourceController::class, true);
 

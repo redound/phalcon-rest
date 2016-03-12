@@ -20,7 +20,7 @@ class ResourceController extends CollectionController
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
         return $this->createCollectionResponse($collection, $this->getTransformer(),
-            $this->getResource()->getMultipleKey(),
+            $this->getResource()->getCollectionKey(),
             $meta);
     }
 
@@ -38,11 +38,11 @@ class ResourceController extends CollectionController
 
     protected function createResourceResponse($item, $meta = null)
     {
-        return $this->createItemResponse($item, $this->getTransformer(), $this->getResource()->getSingleKey(), $meta);
+        return $this->createItemResponse($item, $this->getTransformer(), $this->getResource()->getItemKey(), $meta);
     }
 
     protected function createResourceOkResponse($item, $meta = null)
     {
-        return $this->createItemOkResponse($item, $this->getTransformer(), $this->getResource()->getSingleKey(), $meta);
+        return $this->createItemOkResponse($item, $this->getTransformer(), $this->getResource()->getItemKey(), $meta);
     }
 }
