@@ -170,13 +170,30 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
      */
     public static function factory($prefix, $name = null)
     {
-        $resource = new Resource($prefix);
+        /** @var Resource $calledClass */
+        $calledClass = get_called_class();
 
-        $resource
-            ->itemKey('item')
-            ->collectionKey('items')
-            ->transformer(ModelTransformer::class)
-            ->setHandler(CrudResourceController::class, true);
+        $resource = new $calledClass($prefix);
+
+        if (!$resource->getItemKey()) {
+            $resource->itemKey('items');
+        }
+
+        if (!$resource->getCollectionKey()) {
+            $resource->collectionKey('items');
+        }
+
+        if (!$resource->getTransformer()) {
+            $resource->transformer(ModelTransformer::class);
+        }
+
+        if (!$resource->getHandler()) {
+            $resource->setHandler(CrudResourceController::class, true);
+        }
+
+        if (!$resource->getName() && $name) {
+            $resource->name($name);
+        }
 
         if ($name) {
             $resource->name($name);
