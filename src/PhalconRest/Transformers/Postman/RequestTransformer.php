@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Transformers\Postman;
 
-use League\Fractal;
+use PhalconRest\Transformers\Transformer;
 
-class RequestTransformer extends Fractal\TransformerAbstract
+class RequestTransformer extends Transformer
 {
     public function transform(\PhalconRest\Export\Postman\Request $request)
     {

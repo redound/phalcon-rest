@@ -28,6 +28,21 @@ class Service extends \PhalconRest\Mvc\Plugin
     }
 
     /**
+     * Returns the identity for the current user, e.g. the user ID
+     *
+     * @return mixed
+     */
+    public function getIdentity()
+    {
+        $session = $this->authManager->getSession();
+        if ($session) {
+            return $session->getIdentity();
+        }
+
+        return null;
+    }
+
+    /**
      * This method should return the role for the current user
      *
      * @return string Name of the role for the current user
@@ -35,7 +50,7 @@ class Service extends \PhalconRest\Mvc\Plugin
      */
     public function getRole()
     {
-        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED,
+        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED, null,
             'Unable to get role for identity, method getRole in user service not implemented. ' .
             'Make a subclass of \PhalconRest\User\Service with an implementation for this method, and register it in your DI.');
     }
@@ -50,7 +65,7 @@ class Service extends \PhalconRest\Mvc\Plugin
      */
     protected function getDetailsForIdentity($identity)
     {
-        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED,
+        throw new Exception(ErrorCodes::GENERAL_NOT_IMPLEMENTED, null,
             'Unable to get details for identity, method getDetailsForIdentity in user service not implemented. ' .
             'Make a subclass of \PhalconRest\User\Service with an implementation for this method, and register it in your DI.');
     }

@@ -4,9 +4,8 @@ namespace PhalconRest\Transformers;
 
 use Phalcon\Db\Column;
 use Phalcon\Di;
-use PhalconRest\Constants\Services;
 
-class ModelTransformer extends \League\Fractal\TransformerAbstract
+class ModelTransformer extends Transformer
 {
     const TYPE_UNKNOWN = 0;
 
@@ -107,25 +106,25 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
             case self::TYPE_INTEGER: {
 
-                $typedValue = (int)$value;
+                $typedValue = $this->formatHelper->int($value);
                 break;
             }
 
             case self::TYPE_FLOAT: {
 
-                $typedValue = (float)$value;
+                $typedValue = $this->formatHelper->float($value);
                 break;
             }
 
             case self::TYPE_DOUBLE: {
 
-                $typedValue = (double)$value;
+                $typedValue = $this->formatHelper->double($value);
                 break;
             }
 
             case self::TYPE_BOOLEAN: {
 
-                $typedValue = (bool)$value;
+                $typedValue = $this->formatHelper->bool($value);
                 break;
             }
 
@@ -137,7 +136,7 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
 
             case self::TYPE_DATE: {
 
-                $typedValue = strtotime($value);
+                $typedValue = $this->formatHelper->date($value);
                 break;
             }
 
@@ -245,12 +244,9 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     {
         if (!$this->modelAttributes) {
 
-            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
-
             $modelClass = $this->getModelClass();
 
-            $this->modelAttributes = $modelsMetaData->getAttributes(new $modelClass);
+            $this->modelAttributes = $this->modelsMetadata->getAttributes(new $modelClass);
         }
 
         return $this->modelAttributes;
@@ -260,13 +256,10 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     {
         if (!$this->modelDataTypes) {
 
-            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
-
             $modelClass = $this->getModelClass();
             $columnMap = $this->getModelColumnMap();
 
-            $dataTypes = $modelsMetaData->getDataTypes(new $modelClass);
+            $dataTypes = $this->modelsMetadata->getDataTypes(new $modelClass);
 
             $mappedDataTypes = [];
 
@@ -293,11 +286,8 @@ class ModelTransformer extends \League\Fractal\TransformerAbstract
     {
         if (!$this->modelColumnMap) {
 
-            /** @var \Phalcon\Mvc\Model\MetaData $modelsMetaData */
-            $modelsMetaData = Di::getDefault()->get(Services::MODELS_METADATA);
-
             $modelClass = $this->getModelClass();
-            $metaDataColumnMap = $modelsMetaData->getColumnMap(new $modelClass);
+            $metaDataColumnMap = $this->modelsMetadata->getColumnMap(new $modelClass);
 
             $this->modelColumnMap = array_merge($metaDataColumnMap ? $metaDataColumnMap : [], $this->keyMap());
         }

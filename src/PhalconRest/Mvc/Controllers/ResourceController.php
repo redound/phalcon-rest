@@ -2,47 +2,25 @@
 
 namespace PhalconRest\Mvc\Controllers;
 
-class ResourceController extends FractalController
+class ResourceController extends CollectionController
 {
-    /** @var \PhalconRest\Api\Resource */
-    protected $_resource;
-
-    /** @var \PhalconRest\Api\Endpoint */
-    protected $_endpoint;
-
     /**
      * @return \PhalconRest\Api\Resource
      */
     public function getResource()
     {
-        if(!$this->_resource){
-            $this->_resource = $this->application->getMatchedResource();
+        $collection = $this->getCollection();
+        if ($collection instanceof \PhalconRest\Api\Resource) {
+            return $collection;
         }
 
-        return $this->_resource;
+        return null;
     }
-
-    /**
-     * @return \PhalconRest\Api\Endpoint
-     */
-    public function getEndpoint()
-    {
-        if(!$this->_endpoint){
-            $this->_endpoint = $this->application->getMatchedEndpoint();
-        }
-
-        return $this->_endpoint;
-    }
-
-    protected function getUser()
-    {
-        return $this->userService->getDetails();
-    }
-
 
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
-        return $this->createCollectionResponse($collection, $this->getTransformer(), $this->getResource()->getMultipleKey(),
+        return $this->createCollectionResponse($collection, $this->getTransformer(),
+            $this->getResource()->getCollectionKey(),
             $meta);
     }
 
@@ -60,11 +38,11 @@ class ResourceController extends FractalController
 
     protected function createResourceResponse($item, $meta = null)
     {
-        return $this->createItemResponse($item, $this->getTransformer(), $this->getResource()->getSingleKey(), $meta);
+        return $this->createItemResponse($item, $this->getTransformer(), $this->getResource()->getItemKey(), $meta);
     }
 
     protected function createResourceOkResponse($item, $meta = null)
     {
-        return $this->createItemOkResponse($item, $this->getTransformer(), $this->getResource()->getSingleKey(), $meta);
+        return $this->createItemOkResponse($item, $this->getTransformer(), $this->getResource()->getItemKey(), $meta);
     }
 }

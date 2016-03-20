@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Transformers\Documentation;
 
-use PhalconRest\Api\Endpoint;
+use PhalconRest\Transformers\Transformer;
 
-class EndpointTransformer extends \League\Fractal\TransformerAbstract
+class EndpointTransformer extends Transformer
 {
     public function transform(\PhalconRest\Export\Documentation\Endpoint $endpoint)
     {

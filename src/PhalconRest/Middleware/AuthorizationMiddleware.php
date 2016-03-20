@@ -12,14 +12,14 @@ class AuthorizationMiddleware extends \PhalconRest\Mvc\Plugin
 {
     public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
     {
-        $resource = $api->getMatchedResource();
+        $collection = $api->getMatchedCollection();
         $endpoint = $api->getMatchedEndpoint();
 
-        if (!$resource || !$endpoint) {
+        if (!$collection || !$endpoint) {
             return;
         }
 
-        $allowed = $this->acl->isAllowed($this->userService->getRole(), $resource->getIdentifier(),
+        $allowed = $this->acl->isAllowed($this->userService->getRole(), $collection->getIdentifier(),
             $endpoint->getIdentifier());
 
         if (!$allowed) {

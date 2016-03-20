@@ -22,7 +22,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             $className = '\League\Fractal\Manager';
 
             if (!class_exists($className)) {
-                throw new Exception(ErrorCodes::GENERAL_SYSTEM,
+                throw new Exception(ErrorCodes::GENERAL_SYSTEM, null,
                     '\League\Fractal\Manager was requested, but class could not be found');
             }
 
@@ -33,7 +33,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 
         $this->setShared(Services::TOKEN_PARSER, function () {
 
-            return new \PhalconRest\Auth\TokenParsers\JWT('this_should_be_changed');
+            return new \PhalconRest\Auth\TokenParsers\JWTTokenParser('this_should_be_changed');
         });
 
         $this->setShared(Services::QUERY, function () {
@@ -51,6 +51,19 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
             return new \PhalconRest\Data\Query\QueryParsers\UrlQueryParser();
         });
 
-        $this->setShared(Services::ACL, new \PhalconRest\Acl\Adapter\Memory());
+        $this->setShared(Services::ACL, function(){
+
+            return new \PhalconRest\Acl\Adapter\Memory();
+        });
+
+        $this->setShared(Services::ERROR_HELPER, function(){
+
+            return new \PhalconRest\Helpers\ErrorHelper();
+        });
+
+        $this->setShared(Services::FORMAT_HELPER, function(){
+
+            return new \PhalconRest\Helpers\FormatHelper();
+        });
     }
 }

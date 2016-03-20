@@ -2,9 +2,9 @@
 
 namespace PhalconRest\Transformers\Postman;
 
-use League\Fractal;
+use PhalconRest\Transformers\Transformer;
 
-class CollectionTransformer extends Fractal\TransformerAbstract
+class CollectionTransformer extends Transformer
 {
     protected $defaultIncludes = [
         'requests',
@@ -20,6 +20,6 @@ class CollectionTransformer extends Fractal\TransformerAbstract
 
     public function includeRequests(\PhalconRest\Export\Postman\Collection $collection)
     {
-        return $this->collection($collection->getRequests(), new RequestTransformer, 'parent');
+        return $this->collection($collection->getRequests(), new RequestTransformer);
     }
 }

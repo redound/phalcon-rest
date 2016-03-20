@@ -3,8 +3,9 @@
 namespace PhalconRest\Transformers\Documentation;
 
 use Phalcon\Mvc\Router\Route;
+use PhalconRest\Transformers\Transformer;
 
-class RouteTransformer extends \League\Fractal\TransformerAbstract
+class RouteTransformer extends Transformer
 {
     public function transform(Route $route)
     {

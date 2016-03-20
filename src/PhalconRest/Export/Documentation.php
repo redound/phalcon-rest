@@ -10,7 +10,7 @@ class Documentation extends \PhalconRest\Mvc\Plugin
     public $name;
     public $basePath;
     protected $routes = [];
-    protected $resources = [];
+    protected $collections = [];
 
     public function __construct($name, $basePath)
     {
@@ -35,51 +35,55 @@ class Documentation extends \PhalconRest\Mvc\Plugin
         $this->routes[] = $route;
     }
 
-    public function addManyResources(array $resources)
+    public function addManyCollections(array $collections)
     {
-        /** @var \PhalconRest\Api\Resource $resource */
-        foreach ($resources as $resource) {
-            $this->addResource($resource);
+        /** @var \PhalconRest\Api\Collection $collection */
+        foreach ($collections as $collection) {
+            $this->addCollection($collection);
         }
     }
 
-    public function addResource(\PhalconRest\Api\Resource $apiResource)
+    public function addCollection(\PhalconRest\Api\Collection $apiCollection)
     {
         $aclRoles = $this->acl->getRoles();
 
-        $resource = new \PhalconRest\Export\Documentation\Resource();
-        $resource->setName($apiResource->getName());
-        $resource->setDescription($apiResource->getDescription());
-        $resource->setPath($apiResource->getPrefix());
+        $collection = new \PhalconRest\Export\Documentation\Collection();
+        $collection->setName($apiCollection->getName());
+        $collection->setDescription($apiCollection->getDescription());
+        $collection->setPath($apiCollection->getPrefix());
 
         // Set fields
-        if ($modelClass = $apiResource->getModel()) {
+        if($apiCollection instanceof \PhalconRest\Api\Resource) {
 
-            if ($transformerClass = $apiResource->getTransformer()) {
+            if ($modelClass = $apiCollection->getModel()) {
 
-                /** @var \PhalconRest\Transformers\ModelTransformer $transformer */
-                $transformer = new $transformerClass;
+                if ($transformerClass = $apiCollection->getTransformer()) {
 
-                if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
+                    /** @var \PhalconRest\Transformers\ModelTransformer $transformer */
+                    $transformer = new $transformerClass;
 
-                    $transformer->setModelClass($modelClass);
+                    if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
 
-                    $responseFields = $transformer->getResponseProperties();
-                    $dataTypes = $transformer->getModelDataTypes();
+                        $transformer->setModelClass($modelClass);
 
-                    $fields = [];
+                        $responseFields = $transformer->getResponseProperties();
+                        $dataTypes = $transformer->getModelDataTypes();
 
-                    foreach($responseFields as $field){
-                        $fields[$field] = array_key_exists($field, $dataTypes) ? $dataTypes[$field] : ModelTransformer::TYPE_UNKNOWN;
+                        $fields = [];
+
+                        foreach ($responseFields as $field) {
+                            $fields[$field] = array_key_exists($field,
+                                $dataTypes) ? $dataTypes[$field] : ModelTransformer::TYPE_UNKNOWN;
+                        }
+
+                        $collection->setFields($fields);
                     }
-
-                    $resource->setFields($fields);
                 }
             }
         }
 
         // Add endpoints
-        foreach($apiResource->getEndpoints() as $apiEndpoint)
+        foreach($apiCollection->getEndpoints() as $apiEndpoint)
         {
             $endpoint = new \PhalconRest\Export\Documentation\Endpoint();
             $endpoint->setName($apiEndpoint->getName());
@@ -93,17 +97,17 @@ class Documentation extends \PhalconRest\Mvc\Plugin
             /** @var \Phalcon\Acl\Role $role */
             foreach($aclRoles as $role){
 
-                if($this->acl->isAllowed($role->getName(), $apiResource->getIdentifier(), $apiEndpoint->getIdentifier())){
+                if($this->acl->isAllowed($role->getName(), $apiCollection->getIdentifier(), $apiEndpoint->getIdentifier())){
                     $allowedRoleNames[] = $role->getName();
                 }
             }
 
             $endpoint->setAllowedRoles($allowedRoleNames);
 
-            $resource->addEndpoint($endpoint);
+            $collection->addEndpoint($endpoint);
         }
 
-        $this->resources[] = $resource;
+        $this->collections[] = $collection;
     }
 
     public function getRoutes()
@@ -111,8 +115,8 @@ class Documentation extends \PhalconRest\Mvc\Plugin
         return $this->routes;
     }
 
-    public function getResources()
+    public function getCollections()
     {
-        return $this->resources;
+        return $this->collections;
     }
 }
