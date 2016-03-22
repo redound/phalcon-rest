@@ -2,10 +2,12 @@
 
 namespace PhalconRest\Middleware;
 
-use Phalcon\Events\Event;
+use Phalcon\Mvc\Micro;
+use Phalcon\Mvc\Micro\MiddlewareInterface;
 use PhalconRest\Constants\Services;
+use PhalconRest\Mvc\Plugin;
 
-class FractalMiddleware extends \PhalconRest\Mvc\Plugin
+class FractalMiddleware extends Plugin implements MiddlewareInterface
 {
     public $parseIncludes;
 
@@ -14,7 +16,7 @@ class FractalMiddleware extends \PhalconRest\Mvc\Plugin
         $this->parseIncludes = $parseIncludes;
     }
 
-    public function beforeExecuteRoute(Event $event, \PhalconRest\Api $api)
+    public function beforeExecuteRoute()
     {
         /** @var \League\Fractal\Manager $fractal */
         $fractal = $this->di->get(Services::FRACTAL_MANAGER);
@@ -27,5 +29,11 @@ class FractalMiddleware extends \PhalconRest\Mvc\Plugin
                 $fractal->parseIncludes($include);
             }
         }
+    }
+
+    public function call(Micro $api)
+    {
+
+        return true;
     }
 }

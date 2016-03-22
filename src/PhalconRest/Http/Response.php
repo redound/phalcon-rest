@@ -3,6 +3,7 @@
 namespace PhalconRest\Http;
 
 use PhalconRest\Constants\Services;
+use PhalconRest\Exception;
 
 class Response extends \Phalcon\Http\Response
 {
@@ -24,7 +25,7 @@ class Response extends \Phalcon\Http\Response
 
             $statusCode = $defaultMessage['statusCode'];
 
-            if(!$message) {
+            if (!$message) {
                 $message = $defaultMessage['message'];
             }
         }
@@ -34,7 +35,7 @@ class Response extends \Phalcon\Http\Response
             'message' => $message ?: 'Unspecified error',
         ];
 
-        if($e instanceof \PhalconRest\Exception && $e->getUserInfo() != null){
+        if ($e instanceof Exception && $e->getUserInfo() != null) {
             $error['info'] = $e->getUserInfo();
         }
 
@@ -46,7 +47,7 @@ class Response extends \Phalcon\Http\Response
                 'request' => $request->getMethod() . ' ' . $request->getURI()
             ];
 
-            if($e instanceof \PhalconRest\Exception && $e->getDeveloperInfo() != null){
+            if ($e instanceof Exception && $e->getDeveloperInfo() != null) {
                 $developerResponse['info'] = $e->getDeveloperInfo();
             }
 

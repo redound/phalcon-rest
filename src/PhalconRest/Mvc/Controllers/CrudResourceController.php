@@ -2,6 +2,7 @@
 namespace PhalconRest\Mvc\Controllers;
 
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Query\Builder as QueryBuilder;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\PostedDataMethods;
 use PhalconRest\Exception;
@@ -31,15 +32,15 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $response;
     }
 
+    protected function beforeHandle()
+    {
+    }
+
+    protected function beforeHandleRead()
+    {
+    }
+
     protected function beforeHandleAll()
-    {
-    }
-
-    protected function afterHandleAll($data, $response)
-    {
-    }
-
-    protected function modifyAllQuery(\Phalcon\Mvc\Model\Query\Builder $query)
     {
     }
 
@@ -54,14 +55,39 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $phqlBuilder->getQuery()->execute();
     }
 
+    protected function modifyReadQuery(QueryBuilder $query)
+    {
+    }
+
+    protected function modifyAllQuery(QueryBuilder $query)
+    {
+    }
+
     protected function allAllowed($data)
     {
         return true;
     }
 
+    protected function onNotAllowed()
+    {
+        throw new Exception(ErrorCodes::ACCESS_DENIED, 'Operation is not allowed');
+    }
+
     protected function getAllResponse($data)
     {
         return $this->createResourceCollectionResponse($data);
+    }
+
+    protected function afterHandleAll($data, $response)
+    {
+    }
+
+    protected function afterHandleRead()
+    {
+    }
+
+    protected function afterHandle()
+    {
     }
 
     /*** FIND ***/
@@ -95,21 +121,14 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
-    protected function afterHandleFind($item, $response)
-    {
-    }
-
-    protected function modifyFindQuery(\Phalcon\Mvc\Model\Query\Builder $query, $id)
-    {
-    }
-
     protected function getFindData($id)
     {
         $phqlBuilder = $this->phqlQueryParser->fromQuery($this->query);
 
         $phqlBuilder
             ->from($this->getResource()->getModel())
-            ->andWhere('[' . $this->getResource()->getModel() . '].' . $this->getModelPrimaryKey() . ' = :id:', ['id' => $id])
+            ->andWhere('[' . $this->getResource()->getModel() . '].' . $this->getModelPrimaryKey() . ' = :id:',
+                ['id' => $id])
             ->limit(1);
 
         $this->modifyReadQuery($phqlBuilder);
@@ -118,6 +137,22 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $results = $phqlBuilder->getQuery()->execute();
 
         return count($results) >= 1 ? $results->getFirst() : null;
+    }
+
+    protected function getModelPrimaryKey()
+    {
+        return $this->getResource()->getModelPrimaryKey();
+    }
+
+    protected function modifyFindQuery(QueryBuilder $query, $id)
+    {
+    }
+
+    /*** ERROR HOOKS ***/
+
+    protected function onItemNotFound($id)
+    {
+        throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found', ['id' => $id]);
     }
 
     protected function findAllowed($id, $item)
@@ -130,7 +165,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceResponse($item);
     }
 
-    protected function modifyReadQuery(\Phalcon\Mvc\Model\Query\Builder $query)
+    protected function afterHandleFind($item, $response)
     {
     }
 
@@ -148,7 +183,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onNoDataProvided();
         }
 
-        if(!$this->postDataValid($data, false)){
+        if (!$this->postDataValid($data, false)) {
             return $this->onDataInvalid($data);
         }
 
@@ -178,17 +213,98 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $response;
     }
 
+    protected function beforeHandleWrite()
+    {
+    }
+
     protected function beforeHandleCreate()
     {
     }
 
-    protected function afterHandleCreate(Model $createdItem, $data, $response)
+    /*** GENERAL HOOKS ***/
+
+    protected function getPostedData()
     {
+        $resourcePostedDataMode = $this->getResource()->getPostedDataMethod();
+        $endpointPostedDataMode = $this->getEndpoint()->getPostedDataMethod();
+
+        $postedDataMode = $resourcePostedDataMode;
+        if ($endpointPostedDataMode != PostedDataMethods::AUTO) {
+            $postedDataMode = $endpointPostedDataMode;
+        }
+
+        $postedData = null;
+
+        switch ($postedDataMode) {
+
+            case PostedDataMethods::POST:
+                $postedData = $this->request->getPost();
+                break;
+
+            case PostedDataMethods::JSON_BODY:
+                $postedData = $this->request->getJsonRawBody(true);
+                break;
+
+            case PostedDataMethods::AUTO:
+            default:
+                $postedData = $this->request->getPostedData();
+        }
+
+        return $postedData;
+    }
+
+    protected function onNoDataProvided()
+    {
+        throw new Exception(ErrorCodes::POST_DATA_NOT_PROVIDED, 'No post-data provided');
+    }
+
+    protected function postDataValid($data, $isUpdate)
+    {
+        return true;
+    }
+
+    protected function onDataInvalid($data)
+    {
+        throw new Exception(ErrorCodes::POST_DATA_INVALID, 'Post-data is invalid', ['data' => $data]);
+    }
+
+    protected function saveAllowed($data)
+    {
+        return true;
     }
 
     protected function createAllowed($data)
     {
         return true;
+    }
+
+    protected function transformPostData($data)
+    {
+        $result = [];
+
+        foreach ($data as $key => $value) {
+            $result[$key] = $this->transformPostDataValue($key, $value, $data);
+        }
+
+        return $result;
+    }
+
+    protected function transformPostDataValue($key, $value, $data)
+    {
+        return $value;
+    }
+
+    /**
+     * @return Model
+     */
+    protected function createModelInstance()
+    {
+        $modelClass = $this->getResource()->getModel();
+
+        /** @var Model $item */
+        $item = new $modelClass();
+
+        return $item;
     }
 
     /**
@@ -217,9 +333,16 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $success ? $item : null;
     }
 
-    protected function getCreateResponse($createdItem, $data)
+    protected function beforeAssignData(Model $item, $data)
     {
-        return $this->createResourceOkResponse($createdItem);
+    }
+
+    protected function afterAssignData(Model $item, $data)
+    {
+    }
+
+    protected function beforeSave(Model $item)
+    {
     }
 
     protected function beforeCreate(Model $item)
@@ -227,6 +350,41 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     }
 
     protected function afterCreate(Model $item)
+    {
+    }
+
+    protected function afterSave(Model $item)
+    {
+    }
+
+    protected function onCreateFailed(Model $item, $data)
+    {
+        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to create item', [
+            'messages' => $this->_getMessages($item->getMessages()),
+            'data' => $data,
+            'item' => $item->toArray()
+        ]);
+    }
+
+    private function _getMessages($messages)
+    {
+        $messages = isset($messages) ? $messages : [];
+
+        return array_map(function (Model\Message $message) {
+            return $message->getMessage();
+        }, $messages);
+    }
+
+    protected function getCreateResponse($createdItem, $data)
+    {
+        return $this->createResourceOkResponse($createdItem);
+    }
+
+    protected function afterHandleCreate(Model $createdItem, $data, $response)
+    {
+    }
+
+    protected function afterHandleWrite()
     {
     }
 
@@ -249,7 +407,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
             return $this->onNoDataProvided();
         }
 
-        if(!$this->postDataValid($data, true)){
+        if (!$this->postDataValid($data, true)) {
             return $this->onDataInvalid($data);
         }
 
@@ -281,8 +439,15 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
-    protected function afterHandleUpdate(Model $updatedItem, $data, $response)
+    /**
+     * @param $id
+     *
+     * @return Model
+     */
+    protected function getItem($id)
     {
+        $modelClass = $this->getResource()->getModel();
+        return $modelClass::findFirst($id);
     }
 
     protected function updateAllowed(Model $item, $data)
@@ -316,16 +481,29 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $success ? $item : null;
     }
 
-    protected function getUpdateResponse($updatedItem, $data)
-    {
-        return $this->createResourceOkResponse($updatedItem);
-    }
-
     protected function beforeUpdate(Model $item)
     {
     }
 
     protected function afterUpdate(Model $item)
+    {
+    }
+
+    protected function onUpdateFailed(Model $item, $data)
+    {
+        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to update item', [
+            'messages' => $this->_getMessages($item->getMessages()),
+            'data' => $data,
+            'item' => $item->toArray()
+        ]);
+    }
+
+    protected function getUpdateResponse($updatedItem, $data)
+    {
+        return $this->createResourceOkResponse($updatedItem);
+    }
+
+    protected function afterHandleUpdate(Model $updatedItem, $data, $response)
     {
     }
 
@@ -366,10 +544,6 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
     }
 
-    protected function afterHandleRemove(Model $removedItem, $response)
-    {
-    }
-
     protected function removeAllowed(Model $item)
     {
         return true;
@@ -393,184 +567,12 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $success;
     }
 
-    protected function getRemoveResponse(Model $removedItem)
-    {
-        return $this->createOkResponse();
-    }
-
     protected function beforeRemove(Model $item)
     {
     }
 
     protected function afterRemove(Model $item)
     {
-    }
-
-    /*** GENERAL HOOKS ***/
-
-    protected function getPostedData()
-    {
-        $resourcePostedDataMode = $this->getResource()->getPostedDataMethod();
-        $endpointPostedDataMode = $this->getEndpoint()->getPostedDataMethod();
-
-        $postedDataMode = $resourcePostedDataMode;
-        if ($endpointPostedDataMode != PostedDataMethods::AUTO) {
-            $postedDataMode = $endpointPostedDataMode;
-        }
-
-        $postedData = null;
-
-        switch ($postedDataMode) {
-
-            case PostedDataMethods::POST:
-                $postedData = $this->request->getPost();
-                break;
-
-            case PostedDataMethods::JSON_BODY:
-                $postedData = $this->request->getJsonRawBody(true);
-                break;
-
-            case PostedDataMethods::AUTO:
-            default:
-                $postedData = $this->request->getPostedData();
-        }
-
-        return $postedData;
-    }
-
-    /**
-     * @param $id
-     *
-     * @return Model
-     */
-    protected function getItem($id)
-    {
-        $modelClass = $this->getResource()->getModel();
-        return $modelClass::findFirst($id);
-    }
-
-    /**
-     * @return Model
-     */
-    protected function createModelInstance()
-    {
-        $modelClass = $this->getResource()->getModel();
-
-        /** @var Model $item */
-        $item = new $modelClass();
-
-        return $item;
-    }
-
-    protected function getModelPrimaryKey()
-    {
-        return $this->getResource()->getModelPrimaryKey();
-    }
-
-    protected function beforeHandle()
-    {
-    }
-
-    protected function afterHandle()
-    {
-    }
-
-    protected function beforeHandleRead()
-    {
-    }
-
-    protected function afterHandleRead()
-    {
-    }
-
-    protected function beforeHandleWrite()
-    {
-    }
-
-    protected function afterHandleWrite()
-    {
-    }
-
-    protected function postDataValid($data, $isUpdate)
-    {
-        return true;
-    }
-
-    protected function beforeAssignData(Model $item, $data)
-    {
-    }
-
-    protected function afterAssignData(Model $item, $data)
-    {
-    }
-
-    protected function transformPostData($data)
-    {
-        $result = [];
-
-        foreach($data as $key => $value){
-            $result[$key] = $this->transformPostDataValue($key, $value, $data);
-        }
-
-        return $result;
-    }
-
-    protected function transformPostDataValue($key, $value, $data)
-    {
-        return $value;
-    }
-
-    protected function beforeSave(Model $item)
-    {
-    }
-
-    protected function afterSave(Model $item)
-    {
-    }
-
-    protected function saveAllowed($data)
-    {
-        return true;
-    }
-
-    /*** ERROR HOOKS ***/
-
-    protected function onItemNotFound($id)
-    {
-        throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found', ['id' => $id]);
-    }
-
-    protected function onNoDataProvided()
-    {
-        throw new Exception(ErrorCodes::POST_DATA_NOT_PROVIDED, 'No post-data provided');
-    }
-
-    protected function onDataInvalid($data)
-    {
-        throw new Exception(ErrorCodes::POST_DATA_INVALID, 'Post-data is invalid', ['data' => $data]);
-    }
-
-    protected function onNotAllowed()
-    {
-        throw new Exception(ErrorCodes::ACCESS_DENIED, 'Operation is not allowed');
-    }
-
-    protected function onCreateFailed(Model $item, $data)
-    {
-        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to create item', [
-            'messages' => $this->_getMessages($item->getMessages()),
-            'data' => $data,
-            'item' => $item->toArray()
-        ]);
-    }
-
-    protected function onUpdateFailed(Model $item, $data)
-    {
-        throw new Exception(ErrorCodes::DATA_FAILED, 'Unable to update item', [
-            'messages' => $this->_getMessages($item->getMessages()),
-            'data' => $data,
-            'item' => $item->toArray()
-        ]);
     }
 
     protected function onRemoveFailed(Model $item)
@@ -581,12 +583,12 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         ]);
     }
 
-    private function _getMessages($messages)
+    protected function getRemoveResponse(Model $removedItem)
     {
-        $messages = isset($messages) ? $messages : [];
+        return $this->createOkResponse();
+    }
 
-        return array_map(function(Model\Message $message){
-            return $message->getMessage();
-        }, $messages);
+    protected function afterHandleRemove(Model $removedItem, $response)
+    {
     }
 }

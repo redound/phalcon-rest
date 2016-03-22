@@ -46,23 +46,6 @@ class JWTTokenParser implements \PhalconRest\Auth\TokenParserInterface
         return $this->encode($tokenData);
     }
 
-    public function getSession($token)
-    {
-        $tokenData = $this->decode($token);
-
-        return new Session($tokenData->iss, $tokenData->sub, $tokenData->iat, $tokenData->exp, $token);
-    }
-
-    public function decode($token)
-    {
-        return \Firebase\JWT\JWT::decode($token, $this->secret, [$this->algorithm]);
-    }
-
-    public function encode($token)
-    {
-        return \Firebase\JWT\JWT::encode($token, $this->secret, $this->algorithm);
-    }
-
     protected function create($issuer, $user, $iat, $exp)
     {
 
@@ -113,5 +96,22 @@ class JWTTokenParser implements \PhalconRest\Auth\TokenParserInterface
             ------------------------------------------------*/
             "exp" => $exp,
         ];
+    }
+
+    public function encode($token)
+    {
+        return \Firebase\JWT\JWT::encode($token, $this->secret, $this->algorithm);
+    }
+
+    public function getSession($token)
+    {
+        $tokenData = $this->decode($token);
+
+        return new Session($tokenData->iss, $tokenData->sub, $tokenData->iat, $tokenData->exp, $token);
+    }
+
+    public function decode($token)
+    {
+        return \Firebase\JWT\JWT::decode($token, $this->secret, [$this->algorithm]);
     }
 }

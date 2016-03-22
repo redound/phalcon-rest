@@ -36,49 +36,15 @@ class Endpoint
     }
 
     /**
-     * @return string Unique identifier for this endpoint (returns a combination of the HTTP method and the path)
-     */
-    public function getIdentifier()
-    {
-        return $this->getHttpMethod() . ' ' . $this->getPath();
-    }
-
-    /**
-     * @param string $handlerMethod Name of controller-method to be called for the endpoint
+     * Returns pre-configured all endpoint
      *
      * @return static
      */
-    public function handlerMethod($handlerMethod)
+    public static function all()
     {
-        $this->handlerMethod = $handlerMethod;
-        return $this;
-    }
-
-    /**
-     * @return string Name of controller-method to be called for the endpoint
-     */
-    public function getHandlerMethod()
-    {
-        return $this->handlerMethod;
-    }
-
-    /**
-     * @param string $name Name for the endpoint
-     *
-     * @return static
-     */
-    public function name($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return string|null Name of the endpoint
-     */
-    public function getName()
-    {
-        return $this->name;
+        return self::factory('/', HttpMethods::GET, 'all')
+            ->name(self::ALL)
+            ->description('Returns all items');
     }
 
     /**
@@ -93,147 +59,14 @@ class Endpoint
     }
 
     /**
-     * @return string Description for the endpoint
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return string HTTP method of the endpoint
-     */
-    public function getHttpMethod()
-    {
-        return $this->httpMethod;
-    }
-
-    /**
-     * @param string $exampleResponse Example of the response of the endpoint
-     *
-     * @return $this
-     */
-    public function exampleResponse($exampleResponse)
-    {
-        $this->exampleResponse = $exampleResponse;
-        return $this;
-    }
-
-    /**
-     * @return string Example of the response of the endpoint
-     */
-    public function getExampleResponse()
-    {
-        return $this->exampleResponse;
-    }
-
-    /**
-     * @return string Path of the endpoint, relative to the collection
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $method One of the method constants defined in PostedDataMethods
+     * @param string $name Name for the endpoint
      *
      * @return static
      */
-    public function postedDataMethod($method)
+    public function name($name)
     {
-        $this->postedDataMethod = $method;
+        $this->name = $name;
         return $this;
-    }
-
-    /**
-     * @return string $method One of the method constants defined in PostedDataMethods
-     */
-    public function getPostedDataMethod()
-    {
-        return $this->postedDataMethod;
-    }
-
-    /**
-     * Sets the posted data method to POST
-     *
-     * @return static
-     */
-    public function expectsPostData()
-    {
-        $this->postedDataMethod(PostedDataMethods::POST);
-        return $this;
-    }
-
-    /**
-     * Sets the posted data method to JSON_BODY
-     *
-     * @return static
-     */
-    public function expectsJsonData()
-    {
-        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
-        return $this;
-    }
-
-    /**
-     * Allows access to this endpoint for role with the given names.
-     *
-     * @param array ...$roleNames Names of the roles to allow
-     *
-     * @return static
-     */
-    public function allow(...$roleNames)
-    {
-        // Flatten array to allow array inputs
-        $roleNames = Core::array_flatten($roleNames);
-
-        foreach ($roleNames as $role) {
-
-            if (!in_array($role, $this->allowedRoles)) {
-                $this->allowedRoles[] = $role;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return string[] Array of allowed role-names
-     */
-    public function getAllowedRoles()
-    {
-        return $this->allowedRoles;
-    }
-
-    /**
-     * Denies access to this endpoint for role with the given names.
-     *
-     * @param array ...$roleNames Names of the roles to allow
-     *
-     * @return static
-     */
-    public function deny(...$roleNames)
-    {
-        // Flatten array to allow array inputs
-        $roleNames = Core::array_flatten($roleNames);
-
-        foreach ($roleNames as $role) {
-
-            if (!in_array($role, $this->deniedRoles)) {
-                $this->deniedRoles[] = $role;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return string[] Array of denied role-names
-     */
-    public function getDeniedRoles()
-    {
-        return $this->deniedRoles;
     }
 
     /**
@@ -248,18 +81,6 @@ class Endpoint
     public static function factory($path, $httpMethod = HttpMethods::GET, $handlerMethod = null)
     {
         return new Endpoint($path, $httpMethod, $handlerMethod);
-    }
-
-    /**
-     * Returns pre-configured all endpoint
-     *
-     * @return static
-     */
-    public static function all()
-    {
-        return self::factory('/', HttpMethods::GET, 'all')
-            ->name(self::ALL)
-            ->description('Returns all items');
     }
 
     /**
@@ -399,5 +220,184 @@ class Endpoint
     public static function patch($path, $handlerMethod = null)
     {
         return self::factory($path, HttpMethods::PATCH, $handlerMethod);
+    }
+
+    /**
+     * @return string Unique identifier for this endpoint (returns a combination of the HTTP method and the path)
+     */
+    public function getIdentifier()
+    {
+        return $this->getHttpMethod() . ' ' . $this->getPath();
+    }
+
+    /**
+     * @return string HTTP method of the endpoint
+     */
+    public function getHttpMethod()
+    {
+        return $this->httpMethod;
+    }
+
+    /**
+     * @return string Path of the endpoint, relative to the collection
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $handlerMethod Name of controller-method to be called for the endpoint
+     *
+     * @return static
+     */
+    public function handlerMethod($handlerMethod)
+    {
+        $this->handlerMethod = $handlerMethod;
+        return $this;
+    }
+
+    /**
+     * @return string Name of controller-method to be called for the endpoint
+     */
+    public function getHandlerMethod()
+    {
+        return $this->handlerMethod;
+    }
+
+    /**
+     * @return string|null Name of the endpoint
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string Description for the endpoint
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $exampleResponse Example of the response of the endpoint
+     *
+     * @return $this
+     */
+    public function exampleResponse($exampleResponse)
+    {
+        $this->exampleResponse = $exampleResponse;
+        return $this;
+    }
+
+    /**
+     * @return string Example of the response of the endpoint
+     */
+    public function getExampleResponse()
+    {
+        return $this->exampleResponse;
+    }
+
+    /**
+     * @return string $method One of the method constants defined in PostedDataMethods
+     */
+    public function getPostedDataMethod()
+    {
+        return $this->postedDataMethod;
+    }
+
+    /**
+     * Sets the posted data method to POST
+     *
+     * @return static
+     */
+    public function expectsPostData()
+    {
+        $this->postedDataMethod(PostedDataMethods::POST);
+        return $this;
+    }
+
+    /**
+     * @param string $method One of the method constants defined in PostedDataMethods
+     *
+     * @return static
+     */
+    public function postedDataMethod($method)
+    {
+        $this->postedDataMethod = $method;
+        return $this;
+    }
+
+    /**
+     * Sets the posted data method to JSON_BODY
+     *
+     * @return static
+     */
+    public function expectsJsonData()
+    {
+        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
+        return $this;
+    }
+
+    /**
+     * Allows access to this endpoint for role with the given names.
+     *
+     * @param array ...$roleNames Names of the roles to allow
+     *
+     * @return static
+     */
+    public function allow(...$roleNames)
+    {
+        // Flatten array to allow array inputs
+        $roleNames = Core::array_flatten($roleNames);
+
+        foreach ($roleNames as $role) {
+
+            if (!in_array($role, $this->allowedRoles)) {
+                $this->allowedRoles[] = $role;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string[] Array of allowed role-names
+     */
+    public function getAllowedRoles()
+    {
+        return $this->allowedRoles;
+    }
+
+    /**
+     * Denies access to this endpoint for role with the given names.
+     *
+     * @param array ...$roleNames Names of the roles to allow
+     *
+     * @return static
+     */
+    public function deny(...$roleNames)
+    {
+        // Flatten array to allow array inputs
+        $roleNames = Core::array_flatten($roleNames);
+
+        foreach ($roleNames as $role) {
+
+            if (!in_array($role, $this->deniedRoles)) {
+                $this->deniedRoles[] = $role;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string[] Array of denied role-names
+     */
+    public function getDeniedRoles()
+    {
+        return $this->deniedRoles;
     }
 }

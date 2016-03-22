@@ -45,6 +45,11 @@ class Collection
         ));
     }
 
+    public function addRequest(Request $request)
+    {
+        $this->requests[] = $request;
+    }
+
     public function addManyCollections(array $collections)
     {
         /** @var \PhalconRest\Api\Collection $collection */
@@ -74,10 +79,5 @@ class Collection
     public function getRequests()
     {
         return $this->requests;
-    }
-
-    public function addRequest(Request $request)
-    {
-        $this->requests[] = $request;
     }
 }

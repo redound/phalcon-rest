@@ -4,13 +4,15 @@ namespace PhalconRest\Api;
 
 use Phalcon\Acl;
 use Phalcon\Di;
+use Phalcon\Mvc\Micro\CollectionInterface;
+use PhalconRest\Acl\MountableInterface;
 use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\HttpMethods;
 use PhalconRest\Constants\PostedDataMethods;
 use PhalconRest\Core;
 use PhalconRest\Exception;
 
-class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\Acl\MountableInterface
+class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInterface, CollectionInterface
 {
     protected $name;
     protected $description;
@@ -38,11 +40,22 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
     }
 
     /**
-     * @return string Unique identifier for this collection (returns the prefix)
+     * Returns collection with default values
+     *
+     * @param string $prefix Prefix for the collection (e.g. /auth)
+     * @param string $name Name for the collection (e.g. authentication) (optional)
+     *
+     * @return static
      */
-    public function getIdentifier()
+    public static function factory($prefix, $name = null)
     {
-        return $this->getPrefix();
+        $collection = new Collection($prefix);
+
+        if ($name) {
+            $collection->name($name);
+        }
+
+        return $collection;
     }
 
     /**
@@ -54,14 +67,6 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
     {
         $this->name = $name;
         return $this;
-    }
-
-    /**
-     * @return string|null Name of the collection
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -91,6 +96,19 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
     public function handler($handler, $lazy = true)
     {
         $this->setHandler($handler, $lazy);
+        return $this;
+    }
+
+    /**
+     * Mounts endpoint to the collection
+     *
+     * @param \PhalconRest\Api\Endpoint $endpoint Endpoint to mount (shortcut for endpoint function)
+     *
+     * @return static
+     */
+    public function mount(Endpoint $endpoint)
+    {
+        $this->endpoint($endpoint);
         return $this;
     }
 
@@ -131,17 +149,20 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
         return $this;
     }
 
-    /**
-     * Mounts endpoint to the collection
-     *
-     * @param \PhalconRest\Api\Endpoint $endpoint Endpoint to mount (shortcut for endpoint function)
-     *
-     * @return static
-     */
-    public function mount(Endpoint $endpoint)
+    protected function createRouteName(Endpoint $endpoint)
     {
-        $this->endpoint($endpoint);
-        return $this;
+        return serialize([
+            'collection' => $this->getIdentifier(),
+            'endpoint' => $endpoint->getIdentifier()
+        ]);
+    }
+
+    /**
+     * @return string Unique identifier for this collection (returns the prefix)
+     */
+    public function getIdentifier()
+    {
+        return $this->getPrefix();
     }
 
     /**
@@ -163,17 +184,6 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
     }
 
     /**
-     * @param string $method One of the method constants defined in PostedDataMethods
-     *
-     * @return static
-     */
-    public function postedDataMethod($method)
-    {
-        $this->postedDataMethod = $method;
-        return $this;
-    }
-
-    /**
      * @return string $method One of the method constants defined in PostedDataMethods
      */
     public function getPostedDataMethod()
@@ -189,6 +199,17 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
     public function expectsPostData()
     {
         $this->postedDataMethod(PostedDataMethods::POST);
+        return $this;
+    }
+
+    /**
+     * @param string $method One of the method constants defined in PostedDataMethods
+     *
+     * @return static
+     */
+    public function postedDataMethod($method)
+    {
+        $this->postedDataMethod = $method;
         return $this;
     }
 
@@ -274,6 +295,14 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
         ];
     }
 
+    /**
+     * @return string|null Name of the collection
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
     public function getAclRules(array $roles)
     {
         $allowedResponse = [];
@@ -319,32 +348,5 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements \PhalconRest\A
             Acl::ALLOW => $allowedResponse,
             Acl::DENY => $deniedResponse
         ];
-    }
-
-    protected function createRouteName(Endpoint $endpoint)
-    {
-        return serialize([
-            'collection' => $this->getIdentifier(),
-            'endpoint' => $endpoint->getIdentifier()
-        ]);
-    }
-
-    /**
-     * Returns collection with default values
-     *
-     * @param string $prefix Prefix for the collection (e.g. /auth)
-     * @param string $name Name for the collection (e.g. authentication) (optional)
-     *
-     * @return static
-     */
-    public static function factory($prefix, $name = null)
-    {
-        $collection = new Collection($prefix);
-
-        if ($name) {
-            $collection->name($name);
-        }
-
-        return $collection;
     }
 }

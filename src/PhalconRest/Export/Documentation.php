@@ -3,9 +3,14 @@
 namespace PhalconRest\Export;
 
 use Phalcon\Acl;
+use PhalconRest\Api\Collection;
+use PhalconRest\Api\Resource;
+use PhalconRest\Export\Documentation\Collection as DocumentationCollection;
+use PhalconRest\Export\Documentation\Endpoint as DocumentationEndpoint;
+use PhalconRest\Mvc\Plugin;
 use PhalconRest\Transformers\ModelTransformer;
 
-class Documentation extends \PhalconRest\Mvc\Plugin
+class Documentation extends Plugin
 {
     public $name;
     public $basePath;
@@ -37,32 +42,32 @@ class Documentation extends \PhalconRest\Mvc\Plugin
 
     public function addManyCollections(array $collections)
     {
-        /** @var \PhalconRest\Api\Collection $collection */
+        /** @var Collection $collection */
         foreach ($collections as $collection) {
             $this->addCollection($collection);
         }
     }
 
-    public function addCollection(\PhalconRest\Api\Collection $apiCollection)
+    public function addCollection(Collection $apiCollection)
     {
         $aclRoles = $this->acl->getRoles();
 
-        $collection = new \PhalconRest\Export\Documentation\Collection();
+        $collection = new DocumentationCollection();
         $collection->setName($apiCollection->getName());
         $collection->setDescription($apiCollection->getDescription());
         $collection->setPath($apiCollection->getPrefix());
 
         // Set fields
-        if($apiCollection instanceof \PhalconRest\Api\Resource) {
+        if ($apiCollection instanceof Resource) {
 
             if ($modelClass = $apiCollection->getModel()) {
 
                 if ($transformerClass = $apiCollection->getTransformer()) {
 
-                    /** @var \PhalconRest\Transformers\ModelTransformer $transformer */
+                    /** @var ModelTransformer $transformer */
                     $transformer = new $transformerClass;
 
-                    if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
+                    if ($transformer instanceof ModelTransformer) {
 
                         $transformer->setModelClass($modelClass);
 
@@ -83,9 +88,8 @@ class Documentation extends \PhalconRest\Mvc\Plugin
         }
 
         // Add endpoints
-        foreach($apiCollection->getEndpoints() as $apiEndpoint)
-        {
-            $endpoint = new \PhalconRest\Export\Documentation\Endpoint();
+        foreach ($apiCollection->getEndpoints() as $apiEndpoint) {
+            $endpoint = new DocumentationEndpoint();
             $endpoint->setName($apiEndpoint->getName());
             $endpoint->setDescription($apiEndpoint->getDescription());
             $endpoint->setHttpMethod($apiEndpoint->getHttpMethod());
@@ -95,9 +99,11 @@ class Documentation extends \PhalconRest\Mvc\Plugin
             $allowedRoleNames = [];
 
             /** @var \Phalcon\Acl\Role $role */
-            foreach($aclRoles as $role){
+            foreach ($aclRoles as $role) {
 
-                if($this->acl->isAllowed($role->getName(), $apiCollection->getIdentifier(), $apiEndpoint->getIdentifier())){
+                if ($this->acl->isAllowed($role->getName(), $apiCollection->getIdentifier(),
+                    $apiEndpoint->getIdentifier())
+                ) {
                     $allowedRoleNames[] = $role->getName();
                 }
             }

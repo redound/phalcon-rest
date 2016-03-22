@@ -2,6 +2,8 @@
 
 namespace PhalconRest;
 
+use Phalcon\Mvc\Micro;
+use Phalcon\Mvc\Micro\CollectionInterface;
 use PhalconRest\Api\Collection;
 use PhalconRest\Api\Endpoint;
 use PhalconRest\Api\Resource;
@@ -22,7 +24,7 @@ use PhalconRest\Constants\Services;
  * @property \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser $phqlQueryParser
  * @property \PhalconRest\Data\Query\QueryParsers\UrlQueryParser $urlQueryParser
  */
-class Api extends \Phalcon\Mvc\Micro
+class Api extends Micro
 {
     protected $matchedRouteNameParts = null;
     protected $collectionsByIdentifier = [];
@@ -48,32 +50,19 @@ class Api extends \Phalcon\Mvc\Micro
     }
 
     /**
-     * @param \PhalconRest\Api\Resource $resource
+     * @param Resource $resource
      *
      * @return static
      * @throws Exception
      */
-    public function resource(\PhalconRest\Api\Resource $resource)
+    public function resource(Resource $resource)
     {
         $this->mount($resource);
 
         return $this;
     }
 
-    /**
-     * @param \PhalconRest\Api\Collection $collection
-     *
-     * @return static
-     * @throws Exception
-     */
-    public function collection(\PhalconRest\Api\Collection $collection)
-    {
-        $this->mount($collection);
-
-        return $this;
-    }
-
-    public function mount(\Phalcon\Mvc\Micro\CollectionInterface $collection)
+    public function mount(CollectionInterface $collection)
     {
         if ($collection instanceof Collection) {
 
@@ -93,6 +82,19 @@ class Api extends \Phalcon\Mvc\Micro
         }
 
         return parent::mount($collection);
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return static
+     * @throws Exception
+     */
+    public function collection(Collection $collection)
+    {
+        $this->mount($collection);
+
+        return $this;
     }
 
     /**
@@ -128,24 +130,6 @@ class Api extends \Phalcon\Mvc\Micro
             $this->collectionsByIdentifier) ? $this->collectionsByIdentifier[$collectionIdentifier] : null;
     }
 
-    /**
-     * @return \PhalconRest\Api\Endpoint|null  The matched endpoint
-     */
-    public function getMatchedEndpoint()
-    {
-        $collectionIdentifier = $this->getMatchedRouteNamePart('collection');
-        $endpointIdentifier = $this->getMatchedRouteNamePart('endpoint');
-
-        if (!$endpointIdentifier) {
-            return null;
-        }
-
-        $fullIdentifier = $collectionIdentifier . ' ' . $endpointIdentifier;
-
-        return array_key_exists($fullIdentifier,
-            $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$fullIdentifier] : null;
-    }
-
     protected function getMatchedRouteNamePart($key)
     {
         if (is_null($this->matchedRouteNameParts)) {
@@ -164,5 +148,23 @@ class Api extends \Phalcon\Mvc\Micro
         }
 
         return null;
+    }
+
+    /**
+     * @return \PhalconRest\Api\Endpoint|null  The matched endpoint
+     */
+    public function getMatchedEndpoint()
+    {
+        $collectionIdentifier = $this->getMatchedRouteNamePart('collection');
+        $endpointIdentifier = $this->getMatchedRouteNamePart('endpoint');
+
+        if (!$endpointIdentifier) {
+            return null;
+        }
+
+        $fullIdentifier = $collectionIdentifier . ' ' . $endpointIdentifier;
+
+        return array_key_exists($fullIdentifier,
+            $this->endpointsByIdentifier) ? $this->endpointsByIdentifier[$fullIdentifier] : null;
     }
 }

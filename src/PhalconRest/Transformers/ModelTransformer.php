@@ -23,47 +23,24 @@ class ModelTransformer extends Transformer
     protected $modelColumnMap;
     protected $modelAttributes;
 
-
-    public function getModelClass()
+    public function transform($item)
     {
-        return $this->modelClass;
-    }
-
-    public function setModelClass($modelClass)
-    {
-        $this->modelClass = $modelClass;
-    }
-
-    /**
-     * @return array Properties to be included in the response
-     */
-    protected function includedProperties()
-    {
-        $attributes =  $this->getModelAttributes();
-        $columnMap = $this->getModelColumnMap();
-
-        if(!is_array($columnMap)){
-            return $attributes;
+        if ($item == null) {
+            return null;
         }
 
-        return array_map(function($attribute) use ($columnMap){
+        $result = [];
+        $keyMap = $this->keyMap();
 
-            return array_key_exists($attribute, $columnMap) ? $columnMap[$attribute] : $attribute;
+        foreach ($this->getResponseProperties() as $property) {
 
-        }, $attributes);
-    }
+            $fieldName = array_key_exists($property, $keyMap) ? $keyMap[$property] : $property;
+            $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
+        }
 
-    /**
-     * @return array Properties to be excluded in the response
-     */
-    protected function excludedProperties()
-    {
-        return [];
-    }
+        $combinedResult = array_merge($result, $this->additionalFields($item));
 
-    protected function additionalFields($item)
-    {
-        return [];
+        return $combinedResult;
     }
 
     /**
@@ -77,15 +54,71 @@ class ModelTransformer extends Transformer
         return [];
     }
 
-    protected function typeMap()
+    public function getResponseProperties()
     {
-        return [];
+        return array_diff($this->includedProperties(), $this->excludedProperties());
     }
 
-
-    protected function getModel($item)
+    /**
+     * @return array Properties to be included in the response
+     */
+    protected function includedProperties()
     {
-        return $item;
+        $attributes = $this->getModelAttributes();
+        $columnMap = $this->getModelColumnMap();
+
+        if (!is_array($columnMap)) {
+            return $attributes;
+        }
+
+        return array_map(function ($attribute) use ($columnMap) {
+
+            return array_key_exists($attribute, $columnMap) ? $columnMap[$attribute] : $attribute;
+
+        }, $attributes);
+    }
+
+    protected function getModelAttributes()
+    {
+        if (!$this->modelAttributes) {
+
+            $modelClass = $this->getModelClass();
+
+            $this->modelAttributes = $this->modelsMetadata->getAttributes(new $modelClass);
+        }
+
+        return $this->modelAttributes;
+    }
+
+    public function getModelClass()
+    {
+        return $this->modelClass;
+    }
+
+    public function setModelClass($modelClass)
+    {
+        $this->modelClass = $modelClass;
+    }
+
+    protected function getModelColumnMap()
+    {
+        if (!$this->modelColumnMap) {
+
+            $modelClass = $this->getModelClass();
+            $metaDataColumnMap = $this->modelsMetadata->getColumnMap(new $modelClass);
+
+            $this->modelColumnMap = array_merge($metaDataColumnMap ? $metaDataColumnMap : [], $this->keyMap());
+        }
+
+        return $this->modelColumnMap;
+    }
+
+    /**
+     * @return array Properties to be excluded in the response
+     */
+    protected function excludedProperties()
+    {
+        return [];
     }
 
     protected function getFieldValue($item, $propertyName, $fieldName)
@@ -96,7 +129,7 @@ class ModelTransformer extends Transformer
         $model = $this->getModel($item);
         $value = $model->$propertyName;
 
-        if($value === null){
+        if ($value === null) {
             return null;
         }
 
@@ -150,30 +183,34 @@ class ModelTransformer extends Transformer
         return $typedValue;
     }
 
-
-    public function transform($item)
+    public function getModelDataTypes()
     {
-        if($item == null){
-            return null;
+        if (!$this->modelDataTypes) {
+
+            $modelClass = $this->getModelClass();
+            $columnMap = $this->getModelColumnMap();
+
+            $dataTypes = $this->modelsMetadata->getDataTypes(new $modelClass);
+
+            $mappedDataTypes = [];
+
+            if (is_array($columnMap)) {
+
+                foreach ($dataTypes as $attributeName => $dataType) {
+
+                    $mappedAttributeName = array_key_exists($attributeName,
+                        $columnMap) ? $columnMap[$attributeName] : $attributeName;
+                    $mappedDataTypes[$mappedAttributeName] = $this->getMappedDatabaseType($dataType);
+                }
+            } else {
+
+                $mappedDataTypes = $dataTypes;
+            }
+
+            $this->modelDataTypes = array_merge($mappedDataTypes, $this->typeMap());
         }
 
-        $result = [];
-        $keyMap = $this->keyMap();
-
-        foreach ($this->getResponseProperties() as $property) {
-
-            $fieldName = array_key_exists($property, $keyMap) ? $keyMap[$property] : $property;
-            $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
-        }
-
-        $combinedResult = array_merge($result, $this->additionalFields($item));
-
-        return $combinedResult;
-    }
-
-    public function getResponseProperties()
-    {
-        return array_diff($this->includedProperties(), $this->excludedProperties());
+        return $this->modelDataTypes;
     }
 
     protected function getMappedDatabaseType($type)
@@ -240,58 +277,18 @@ class ModelTransformer extends Transformer
         return $responseType;
     }
 
-    protected function getModelAttributes()
+    protected function typeMap()
     {
-        if (!$this->modelAttributes) {
-
-            $modelClass = $this->getModelClass();
-
-            $this->modelAttributes = $this->modelsMetadata->getAttributes(new $modelClass);
-        }
-
-        return $this->modelAttributes;
+        return [];
     }
 
-    public function getModelDataTypes()
+    protected function getModel($item)
     {
-        if (!$this->modelDataTypes) {
-
-            $modelClass = $this->getModelClass();
-            $columnMap = $this->getModelColumnMap();
-
-            $dataTypes = $this->modelsMetadata->getDataTypes(new $modelClass);
-
-            $mappedDataTypes = [];
-
-            if(is_array($columnMap)) {
-
-                foreach ($dataTypes as $attributeName => $dataType) {
-
-                    $mappedAttributeName = array_key_exists($attributeName, $columnMap) ? $columnMap[$attributeName] : $attributeName;
-                    $mappedDataTypes[$mappedAttributeName] = $this->getMappedDatabaseType($dataType);
-                }
-            }
-            else {
-
-                $mappedDataTypes = $dataTypes;
-            }
-
-            $this->modelDataTypes = array_merge($mappedDataTypes, $this->typeMap());
-        }
-
-        return $this->modelDataTypes;
+        return $item;
     }
 
-    protected function getModelColumnMap()
+    protected function additionalFields($item)
     {
-        if (!$this->modelColumnMap) {
-
-            $modelClass = $this->getModelClass();
-            $metaDataColumnMap = $this->modelsMetadata->getColumnMap(new $modelClass);
-
-            $this->modelColumnMap = array_merge($metaDataColumnMap ? $metaDataColumnMap : [], $this->keyMap());
-        }
-
-        return $this->modelColumnMap;
+        return [];
     }
 }

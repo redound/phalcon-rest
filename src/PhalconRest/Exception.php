@@ -7,7 +7,7 @@ class Exception extends \Exception
     protected $developerInfo;
     protected $userInfo;
 
-    public function __construct($code, $message = null, $developerInfo = null, $userInfo=null)
+    public function __construct($code, $message = null, $developerInfo = null, $userInfo = null)
     {
         parent::__construct($message, $code);
 

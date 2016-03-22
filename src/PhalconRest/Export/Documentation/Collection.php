@@ -41,19 +41,19 @@ class Collection
         $this->path = $path;
     }
 
-    public function setFields($fields)
-    {
-        $this->fields = $fields;
-    }
-
     public function getFields()
     {
         return $this->fields;
     }
 
+    public function setFields($fields)
+    {
+        $this->fields = $fields;
+    }
+
     public function addManyEndpoints(array $endpoints)
     {
-        foreach($endpoints as $endpoint) {
+        foreach ($endpoints as $endpoint) {
             $this->addEndpoint($endpoint);
         }
     }

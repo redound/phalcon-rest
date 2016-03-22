@@ -53,86 +53,86 @@ class Transformer extends \League\Fractal\TransformerAbstract
     protected $_dependencyInjector;
 
     public function setDI(\Phalcon\DiInterface $dependencyInjector)
-	{
-		$this->_dependencyInjector = $dependencyInjector;
-	}
+    {
+        $this->_dependencyInjector = $dependencyInjector;
+    }
 
     public function getDI()
-	{
+    {
         $dependencyInjector = $this->_dependencyInjector;
 
-		if(!$dependencyInjector) {
+        if (!$dependencyInjector) {
             $dependencyInjector = Di::getDefault();
-		}
+        }
 
-		return $dependencyInjector;
-	}
+        return $dependencyInjector;
+    }
 
-	public function __get($propertyName)
-	{
+    public function __get($propertyName)
+    {
         $dependencyInjector = null;
         $service = null;
         $persistent = null;
 
         $dependencyInjector = $this->_dependencyInjector;
 
-        if(!$dependencyInjector) {
+        if (!$dependencyInjector) {
             $dependencyInjector = Di::getDefault();
         }
 
-        if(!$dependencyInjector) {
+        if (!$dependencyInjector) {
             throw new Exception("A dependency injection object is required to access the application services");
         }
 
-		/**
+        /**
          * Fallback to the PHP userland if the cache is not available
          */
-		if($dependencyInjector->has($propertyName)) {
+        if ($dependencyInjector->has($propertyName)) {
 
             $service = $dependencyInjector->getShared($propertyName);
-			$this->{$propertyName} = $service;
+            $this->{$propertyName} = $service;
 
-			return $service;
-		}
+            return $service;
+        }
 
-		if ($propertyName == "di") {
+        if ($propertyName == "di") {
 
             $this->{"di"} = $dependencyInjector;
-			return $dependencyInjector;
-		}
+            return $dependencyInjector;
+        }
 
-		/**
+        /**
          * A notice is shown if the property is not defined and isn't a valid service
          */
-		trigger_error("Access to undefined property " . $propertyName);
-		return null;
-	}
+        trigger_error("Access to undefined property " . $propertyName);
+        return null;
+    }
 
 
-	/* Format helper shortcuts */
+    /* Format helper shortcuts */
 
-	public function int($value)
-	{
-		return $this->formatHelper->int($value);
-	}
+    public function int($value)
+    {
+        return $this->formatHelper->int($value);
+    }
 
-	public function float($value)
-	{
-		return $this->formatHelper->float($value);
-	}
+    public function float($value)
+    {
+        return $this->formatHelper->float($value);
+    }
 
-	public function double($value)
-	{
-		return $this->formatHelper->float($value);
-	}
+    public function double($value)
+    {
+        return $this->formatHelper->float($value);
+    }
 
-	public function bool($value)
-	{
-		return $this->formatHelper->bool($value);
-	}
+    public function bool($value)
+    {
+        return $this->formatHelper->bool($value);
+    }
 
-	public function date($value)
-	{
-		return $this->formatHelper->date($value);
-	}
+    public function date($value)
+    {
+        return $this->formatHelper->date($value);
+    }
 }

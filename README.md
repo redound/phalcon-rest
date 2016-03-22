@@ -9,7 +9,7 @@
 
 Install using Composer.
 ````
-composer install redound/phalcon-rest
+composer require redound/phalcon-rest
 ````
 
 ## Boilerplate
@@ -23,11 +23,6 @@ For a full implementation of the library, check out the [Boilerplate application
 ## Contributing
 
 Please file issues under GitHub, or submit a pull request if you'd like to directly contribute.
-
-## Credits
-
-- [Bart Blok](https://github.com/bblok11)
-- [Olivier Andriessen](https://github.com/olivierandriessen)
 
 ## License
 

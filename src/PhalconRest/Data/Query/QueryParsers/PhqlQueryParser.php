@@ -5,8 +5,9 @@ namespace PhalconRest\Data\Query\QueryParsers;
 use PhalconRest\Data\Query;
 use PhalconRest\Data\Query\Condition;
 use PhalconRest\Data\Query\Sorter;
+use PhalconRest\Mvc\Plugin;
 
-class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
+class PhqlQueryParser extends Plugin
 {
     const OPERATOR_IS_EQUAL = '=';
     const OPERATOR_IS_GREATER_THAN = '>';
@@ -102,6 +103,17 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
         return $builder;
     }
 
+    private function getOperator($operator)
+    {
+        $operatorMap = $this->operatorMap();
+
+        if (array_key_exists($operator, $operatorMap)) {
+            return $operatorMap[$operator];
+        }
+
+        return null;
+    }
+
     private function operatorMap()
     {
         return [
@@ -116,15 +128,35 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
         ];
     }
 
-    private function getOperator($operator)
+    private function parseValues($operator, $values)
     {
-        $operatorMap = $this->operatorMap();
+        $self = $this;
 
-        if (array_key_exists($operator, $operatorMap)) {
-            return $operatorMap[$operator];
+        if (is_array($values)) {
+
+            return array_map(function ($value) use ($self, $operator) {
+                return $self->parseValue($operator, $value);
+            }, $values);
         }
 
-        return null;
+        return $this->parseValue($operator, $values);
+    }
+
+    private function parseValue($operator, $value)
+    {
+        $parsed = null;
+
+        switch ($operator) {
+
+            case self::OPERATOR_IS_LIKE:
+                $parsed = '%' . $value . '%';
+                break;
+            default:
+                $parsed = $value;
+                break;
+        }
+
+        return $parsed;
     }
 
     private function getConditionFormat($operator)
@@ -184,36 +216,5 @@ class PhqlQueryParser extends \Phalcon\Mvc\User\Plugin
         }
 
         return [$key => $values];
-    }
-
-    private function parseValues($operator, $values)
-    {
-        $self = $this;
-
-        if (is_array($values)) {
-
-            return array_map(function ($value) use ($self, $operator) {
-                return $self->parseValue($operator, $value);
-            }, $values);
-        }
-
-        return $this->parseValue($operator, $values);
-    }
-
-    private function parseValue($operator, $value)
-    {
-        $parsed = null;
-
-        switch ($operator) {
-
-            case self::OPERATOR_IS_LIKE:
-                $parsed = '%' . $value . '%';
-                break;
-            default:
-                $parsed = $value;
-                break;
-        }
-
-        return $parsed;
     }
 }

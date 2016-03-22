@@ -3,6 +3,8 @@
 namespace PhalconRest\Transformers;
 
 use PhalconRest\Export\Documentation;
+use PhalconRest\Transformers\Documentation\CollectionTransformer;
+use PhalconRest\Transformers\Documentation\RouteTransformer;
 
 class DocumentationTransformer extends Transformer
 {
@@ -21,11 +23,11 @@ class DocumentationTransformer extends Transformer
 
     public function includeRoutes(Documentation $documentation)
     {
-        return $this->collection($documentation->getRoutes(), new \PhalconRest\Transformers\Documentation\RouteTransformer);
+        return $this->collection($documentation->getRoutes(), new RouteTransformer);
     }
 
     public function includeCollections(Documentation $documentation)
     {
-        return $this->collection($documentation->getCollections(), new \PhalconRest\Transformers\Documentation\CollectionTransformer);
+        return $this->collection($documentation->getCollections(), new CollectionTransformer);
     }
 }

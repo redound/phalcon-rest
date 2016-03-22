@@ -53,11 +53,11 @@ class FormatHelper
      */
     public function date($value)
     {
-        if($value === null){
+        if ($value === null) {
             return null;
         }
 
-        $date = new \DateTime(is_numeric($value) ? '@'.$value : $value);
+        $date = new \DateTime(is_numeric($value) ? '@' . $value : $value);
         return $date->format(self::DEFAULT_DATE_FORMAT);
     }
 }

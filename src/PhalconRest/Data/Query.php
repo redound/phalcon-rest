@@ -27,59 +27,10 @@ class Query
 
     }
 
-
     public function addField($field)
     {
         $this->fields[] = $field;
         return $this;
-    }
-
-    public function addManyFields($fields)
-    {
-        $this->fields = array_merge($this->fields, $fields);
-        return $this;
-    }
-
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    public function hasFields()
-    {
-        return !empty($this->fields);
-    }
-
-    public function setOffset($offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    public function getOffset()
-    {
-        return $this->offset;
-    }
-
-    public function hasOffset()
-    {
-        return !is_null($this->offset);
-    }
-
-    public function setLimit($limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    public function hasLimit()
-    {
-        return !is_null($this->limit);
     }
 
     public function addCondition(Condition $condition)
@@ -88,42 +39,10 @@ class Query
         return $this;
     }
 
-    public function addManyConditions($conditions)
-    {
-        $this->conditions = array_merge($this->conditions, $conditions);
-        return $this;
-    }
-
-    public function getConditions()
-    {
-        return $this->conditions;
-    }
-
-    public function hasConditions()
-    {
-        return !empty($this->conditions);
-    }
-
     public function addSorter(Sorter $sorter)
     {
         $this->sorters[] = $sorter;
         return $this;
-    }
-
-    public function addManySorters($sorters)
-    {
-        $this->sorters = array_merge($this->sorters, $sorters);
-        return $this;
-    }
-
-    public function getSorters()
-    {
-        return $this->sorters;
-    }
-
-    public function hasSorters()
-    {
-        return !empty($this->sorters);
     }
 
     public function merge(Query $query)
@@ -149,5 +68,85 @@ class Query
         }
 
         return $this;
+    }
+
+    public function hasFields()
+    {
+        return !empty($this->fields);
+    }
+
+    public function addManyFields($fields)
+    {
+        $this->fields = array_merge($this->fields, $fields);
+        return $this;
+    }
+
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    public function hasOffset()
+    {
+        return !is_null($this->offset);
+    }
+
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    public function hasLimit()
+    {
+        return !is_null($this->limit);
+    }
+
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    public function hasConditions()
+    {
+        return !empty($this->conditions);
+    }
+
+    public function addManyConditions($conditions)
+    {
+        $this->conditions = array_merge($this->conditions, $conditions);
+        return $this;
+    }
+
+    public function getConditions()
+    {
+        return $this->conditions;
+    }
+
+    public function hasSorters()
+    {
+        return !empty($this->sorters);
+    }
+
+    public function addManySorters($sorters)
+    {
+        $this->sorters = array_merge($this->sorters, $sorters);
+        return $this;
+    }
+
+    public function getSorters()
+    {
+        return $this->sorters;
     }
 }

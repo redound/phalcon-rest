@@ -2,6 +2,7 @@
 
 namespace PhalconRest\Transformers\Postman;
 
+use PhalconRest\Export\Postman\Collection as PostmanCollection;
 use PhalconRest\Transformers\Transformer;
 
 class CollectionTransformer extends Transformer
@@ -10,7 +11,7 @@ class CollectionTransformer extends Transformer
         'requests',
     ];
 
-    public function transform(\PhalconRest\Export\Postman\Collection $collection)
+    public function transform(PostmanCollection $collection)
     {
         return [
             'id' => $collection->id,
@@ -18,7 +19,7 @@ class CollectionTransformer extends Transformer
         ];
     }
 
-    public function includeRequests(\PhalconRest\Export\Postman\Collection $collection)
+    public function includeRequests(PostmanCollection $collection)
     {
         return $this->collection($collection->getRequests(), new RequestTransformer);
     }

@@ -2,6 +2,7 @@
 
 namespace PhalconRest\Transformers\Documentation;
 
+use PhalconRest\Export\Documentation\Collection as DocumentationCollection;
 use PhalconRest\Transformers\Transformer;
 
 class CollectionTransformer extends Transformer
@@ -10,7 +11,7 @@ class CollectionTransformer extends Transformer
         'endpoints'
     ];
 
-    public function transform(\PhalconRest\Export\Documentation\Collection $collection)
+    public function transform(DocumentationCollection $collection)
     {
         return [
             'name' => $collection->getName(),
@@ -20,7 +21,7 @@ class CollectionTransformer extends Transformer
         ];
     }
 
-    public function includeEndpoints(\PhalconRest\Export\Documentation\Collection $collection)
+    public function includeEndpoints(DocumentationCollection $collection)
     {
         return $this->collection($collection->getEndpoints(), new EndpointTransformer);
     }

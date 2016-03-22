@@ -3,9 +3,12 @@
 namespace PhalconRest\Middleware;
 
 use Phalcon\Events\Event;
+use Phalcon\Mvc\Micro;
+use Phalcon\Mvc\Micro\MiddlewareInterface;
 use PhalconRest\Constants\HttpMethods;
+use PhalconRest\Mvc\Plugin;
 
-class CorsMiddleware extends \PhalconRest\Mvc\Plugin
+class CorsMiddleware extends Plugin implements MiddlewareInterface
 {
     const ALL_ORIGINS = ['*'];
     const DEFAULT_HEADERS = ['Content-Type', 'X-Requested-With', 'Authorization'];
@@ -161,5 +164,10 @@ class CorsMiddleware extends \PhalconRest\Mvc\Plugin
                 $this->response->setHeader('Access-Control-Allow-Headers', implode(',', $this->_allowedHeaders));
             }
         }
+    }
+
+    public function call(Micro $api)
+    {
+        return true;
     }
 }

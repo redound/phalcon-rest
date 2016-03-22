@@ -2,11 +2,12 @@
 
 namespace PhalconRest\Transformers\Postman;
 
+use PhalconRest\Export\Postman\Request as PostmanRequest;
 use PhalconRest\Transformers\Transformer;
 
 class RequestTransformer extends Transformer
 {
-    public function transform(\PhalconRest\Export\Postman\Request $request)
+    public function transform(PostmanRequest $request)
     {
         return [
             'collectionId' => $request->collectionId,

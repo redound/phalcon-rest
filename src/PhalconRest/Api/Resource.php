@@ -4,11 +4,13 @@ namespace PhalconRest\Api;
 
 use Phalcon\Acl;
 use Phalcon\Di;
+use Phalcon\Mvc\Micro\CollectionInterface;
+use PhalconRest\Acl\MountableInterface;
 use PhalconRest\Constants\Services;
-use PhalconRest\Transformers\ModelTransformer;
 use PhalconRest\Mvc\Controllers\CrudResourceController;
+use PhalconRest\Transformers\ModelTransformer;
 
-class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
+class Resource extends Collection implements MountableInterface, CollectionInterface
 {
     protected $model;
     protected $transformer;
@@ -17,6 +19,66 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     protected $collectionKey = 'items';
 
     protected $_modelPrimaryKey;
+
+    /**
+     * Returns resource with default values & all, find, create, update and delete endpoints pre-configured
+     *
+     * @param string $prefix Prefix for the resource (e.g. /user)
+     * @param string $name Name for the resource (e.g. users) (optional)
+     *
+     * @return static
+     */
+    public static function crud($prefix, $name = null)
+    {
+        return self::factory($prefix, $name)
+            ->endpoint(Endpoint::all())
+            ->endpoint(Endpoint::find())
+            ->endpoint(Endpoint::create())
+            ->endpoint(Endpoint::update())
+            ->endpoint(Endpoint::remove());
+    }
+
+    /**
+     * Returns resource with default values
+     *
+     * @param string $prefix Prefix for the resource (e.g. /user)
+     * @param string $name Name for the resource (e.g. users) (optional)
+     *
+     * @return static
+     */
+    public static function factory($prefix, $name = null)
+    {
+        /** @var Resource $calledClass */
+        $calledClass = get_called_class();
+
+        $resource = new $calledClass($prefix);
+
+        if (!$resource->getItemKey()) {
+            $resource->itemKey('items');
+        }
+
+        if (!$resource->getCollectionKey()) {
+            $resource->collectionKey('items');
+        }
+
+        if (!$resource->getTransformer()) {
+            $resource->transformer(ModelTransformer::class);
+        }
+
+        if (!$resource->getHandler()) {
+            $resource->setHandler(CrudResourceController::class, true);
+        }
+
+        if (!$resource->getName() && $name) {
+            $resource->name($name);
+        }
+
+        if ($name) {
+            $resource->name($name);
+        }
+
+        return $resource;
+    }
 
     /**
      * @param string $model Classname of the model
@@ -79,44 +141,6 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     }
 
     /**
-     * @param string $itemKey Response key for single item
-     *
-     * @return static
-     */
-    public function itemKey($itemKey)
-    {
-        $this->itemKey = $itemKey;
-        return $this;
-    }
-
-    /**
-     * @return string Response key for single item
-     */
-    public function getItemKey()
-    {
-        return $this->itemKey;
-    }
-
-    /**
-     * @param string $collectionKey Response key for multiple items
-     *
-     * @return static
-     */
-    public function collectionKey($collectionKey)
-    {
-        $this->collectionKey = $collectionKey;
-        return $this;
-    }
-
-    /**
-     * @return string Response key for multiple items
-     */
-    public function getCollectionKey()
-    {
-        return $this->collectionKey;
-    }
-
-    /**
      * @param string $singleKey Response key for single item
      *
      * @return static
@@ -129,6 +153,17 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     }
 
     /**
+     * @param string $itemKey Response key for single item
+     *
+     * @return static
+     */
+    public function itemKey($itemKey)
+    {
+        $this->itemKey = $itemKey;
+        return $this;
+    }
+
+    /**
      * @return string Response key for single item
      *
      * @deprecated Use getItemKey() instead
@@ -136,6 +171,14 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     public function getSingleKey()
     {
         return $this->getItemKey();
+    }
+
+    /**
+     * @return string Response key for single item
+     */
+    public function getItemKey()
+    {
+        return $this->itemKey;
     }
 
     /**
@@ -151,6 +194,17 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     }
 
     /**
+     * @param string $collectionKey Response key for multiple items
+     *
+     * @return static
+     */
+    public function collectionKey($collectionKey)
+    {
+        $this->collectionKey = $collectionKey;
+        return $this;
+    }
+
+    /**
      * @return string Response key for multiple items
      *
      * @deprecated Use getCollectionKey() instead
@@ -161,62 +215,10 @@ class Resource extends Collection implements \PhalconRest\Acl\MountableInterface
     }
 
     /**
-     * Returns resource with default values
-     *
-     * @param string $prefix Prefix for the resource (e.g. /user)
-     * @param string $name Name for the resource (e.g. users) (optional)
-     *
-     * @return static
+     * @return string Response key for multiple items
      */
-    public static function factory($prefix, $name = null)
+    public function getCollectionKey()
     {
-        /** @var Resource $calledClass */
-        $calledClass = get_called_class();
-
-        $resource = new $calledClass($prefix);
-
-        if (!$resource->getItemKey()) {
-            $resource->itemKey('items');
-        }
-
-        if (!$resource->getCollectionKey()) {
-            $resource->collectionKey('items');
-        }
-
-        if (!$resource->getTransformer()) {
-            $resource->transformer(ModelTransformer::class);
-        }
-
-        if (!$resource->getHandler()) {
-            $resource->setHandler(CrudResourceController::class, true);
-        }
-
-        if (!$resource->getName() && $name) {
-            $resource->name($name);
-        }
-
-        if ($name) {
-            $resource->name($name);
-        }
-
-        return $resource;
-    }
-
-    /**
-     * Returns resource with default values & all, find, create, update and delete endpoints pre-configured
-     *
-     * @param string $prefix Prefix for the resource (e.g. /user)
-     * @param string $name Name for the resource (e.g. users) (optional)
-     *
-     * @return static
-     */
-    public static function crud($prefix, $name = null)
-    {
-        return self::factory($prefix, $name)
-            ->endpoint(Endpoint::all())
-            ->endpoint(Endpoint::find())
-            ->endpoint(Endpoint::create())
-            ->endpoint(Endpoint::update())
-            ->endpoint(Endpoint::remove());
+        return $this->collectionKey;
     }
 }

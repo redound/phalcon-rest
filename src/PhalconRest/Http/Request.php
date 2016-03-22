@@ -20,17 +20,6 @@ class Request extends \Phalcon\Http\Request
     }
 
     /**
-     * Sets the posted data method to JSON_BODY
-     *
-     * @return static
-     */
-    public function expectsJsonData()
-    {
-        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
-        return $this;
-    }
-
-    /**
      * @param string $method One of the method constants defined in PostedDataMethods
      *
      * @return static
@@ -38,6 +27,17 @@ class Request extends \Phalcon\Http\Request
     public function postedDataMethod($method)
     {
         $this->postedDataMethod = $method;
+        return $this;
+    }
+
+    /**
+     * Sets the posted data method to JSON_BODY
+     *
+     * @return static
+     */
+    public function expectsJsonData()
+    {
+        $this->postedDataMethod(PostedDataMethods::JSON_BODY);
         return $this;
     }
 

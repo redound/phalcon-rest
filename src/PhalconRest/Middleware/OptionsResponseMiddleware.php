@@ -2,12 +2,14 @@
 
 namespace PhalconRest\Middleware;
 
-use Phalcon\Events\Event;
+use Phalcon\Mvc\Micro;
+use Phalcon\Mvc\Micro\MiddlewareInterface;
 use PhalconRest\Constants\HttpMethods;
+use PhalconRest\Mvc\Plugin;
 
-class OptionsResponseMiddleware extends \PhalconRest\Mvc\Plugin
+class OptionsResponseMiddleware extends Plugin implements MiddlewareInterface
 {
-    public function beforeHandleRoute(Event $event, \PhalconRest\Api $api)
+    public function beforeHandleRoute()
     {
         // OPTIONS request, just send the headers and respond OK
         if ($this->request->getMethod() == HttpMethods::OPTIONS) {
@@ -18,5 +20,10 @@ class OptionsResponseMiddleware extends \PhalconRest\Mvc\Plugin
 
             return false;
         }
+    }
+
+    public function call(Micro $api)
+    {
+        return true;
     }
 }

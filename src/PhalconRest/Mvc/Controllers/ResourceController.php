@@ -2,21 +2,11 @@
 
 namespace PhalconRest\Mvc\Controllers;
 
+use PhalconRest\Api\Resource;
+use PhalconRest\Transformers\ModelTransformer;
+
 class ResourceController extends CollectionController
 {
-    /**
-     * @return \PhalconRest\Api\Resource
-     */
-    public function getResource()
-    {
-        $collection = $this->getCollection();
-        if ($collection instanceof \PhalconRest\Api\Resource) {
-            return $collection;
-        }
-
-        return null;
-    }
-
     protected function createResourceCollectionResponse($collection, $meta = null)
     {
         return $this->createCollectionResponse($collection, $this->getTransformer(),
@@ -29,11 +19,24 @@ class ResourceController extends CollectionController
         $transformerClass = $this->getResource()->getTransformer();
         $transformer = new $transformerClass();
 
-        if ($transformer instanceof \PhalconRest\Transformers\ModelTransformer) {
+        if ($transformer instanceof ModelTransformer) {
             $transformer->setModelClass($this->getResource()->getModel());
         }
 
         return $transformer;
+    }
+
+    /**
+     * @return Resource
+     */
+    public function getResource()
+    {
+        $collection = $this->getCollection();
+        if ($collection instanceof Resource) {
+            return $collection;
+        }
+
+        return null;
     }
 
     protected function createResourceResponse($item, $meta = null)

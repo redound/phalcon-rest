@@ -125,11 +125,6 @@ class UrlQueryParser
         return $query;
     }
 
-    private function getValue($data, $field)
-    {
-        return array_key_exists($field, $data) ? $data[$field] : null;
-    }
-
     private function extractCommaSeparatedValues($data, $field)
     {
         if (!$fields = $this->getValue($data, $field)) {
@@ -137,6 +132,11 @@ class UrlQueryParser
         }
 
         return explode(',', $fields);
+    }
+
+    private function getValue($data, $field)
+    {
+        return array_key_exists($field, $data) ? $data[$field] : null;
     }
 
     private function extractInt($data, $field)
@@ -161,6 +161,17 @@ class UrlQueryParser
         return $result;
     }
 
+    private function extractOperator($operator)
+    {
+        $operatorMap = $this->operatorMap();
+
+        if (array_key_exists($operator, $operatorMap)) {
+            return $operatorMap[$operator];
+        }
+
+        return null;
+    }
+
     private function operatorMap()
     {
         return [
@@ -172,16 +183,5 @@ class UrlQueryParser
             self::OPERATOR_IS_LIKE => Query::OPERATOR_IS_LIKE,
             self::OPERATOR_IS_NOT_EQUAL => Query::OPERATOR_IS_NOT_EQUAL,
         ];
-    }
-
-    private function extractOperator($operator)
-    {
-        $operatorMap = $this->operatorMap();
-
-        if (array_key_exists($operator, $operatorMap)) {
-            return $operatorMap[$operator];
-        }
-
-        return null;
     }
 }
