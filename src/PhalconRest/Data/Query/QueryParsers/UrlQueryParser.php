@@ -8,6 +8,13 @@ use PhalconRest\Data\Query\Sorter;
 
 class UrlQueryParser
 {
+    const FIELDS = 'fields';
+    const OFFSET = 'offset';
+    const LIMIT = 'limit';
+    const HAVING = 'having';
+    const WHERE = 'where';
+    const SORT = 'sort';
+
     const OPERATOR_IS_EQUAL = 'e';
     const OPERATOR_IS_GREATER_THAN = 'gt';
     const OPERATOR_IS_GREATER_THAN_OR_EQUAL = 'gte';
@@ -19,18 +26,21 @@ class UrlQueryParser
     const SORT_ASCENDING = 1;
     const SORT_DESCENDING = -1;
 
+    protected $enabledFeatures = [ self::FIELDS, self::OFFSET, self::LIMIT, self::HAVING, self::WHERE, self::SORT ];
+
+
     public function createQuery($params)
     {
         $query = new Query;
 
-        $fields = $this->extractCommaSeparatedValues($params, 'fields');
-        $offset = $this->extractInt($params, 'offset');
-        $limit = $this->extractInt($params, 'limit');
-        $having = $this->extractArray($params, 'having');
-        $where = $this->extractArray($params, 'where');
-        $or = $this->extractArray($params, 'or');
-        $in = $this->extractArray($params, 'in');
-        $sort = $this->extractArray($params, 'sort');
+        $fields = $this->isEnabled(self::FIELDS) ? $this->extractCommaSeparatedValues($params, 'fields') : null;
+        $offset = $this->isEnabled(self::OFFSET) ? $this->extractInt($params, 'offset') : null;
+        $limit = $this->isEnabled(self::LIMIT) ? $this->extractInt($params, 'limit') : null;
+        $having = $this->isEnabled(self::HAVING) ? $this->extractArray($params, 'having') : null;
+        $where = $this->isEnabled(self::WHERE) ? $this->extractArray($params, 'where') : null;
+        $or = $this->isEnabled(self::WHERE) ? $this->extractArray($params, 'or') : null;
+        $in = $this->isEnabled(self::WHERE) ? $this->extractArray($params, 'in') : null;
+        $sort = $this->isEnabled(self::SORT) ? $this->extractArray($params, 'sort') : null;
 
         if ($fields) {
 
@@ -125,6 +135,47 @@ class UrlQueryParser
         return $query;
     }
 
+    /**
+     * @param $feature
+     *
+     * @return static
+     */
+    public function enable($feature)
+    {
+        if(!in_array($feature, $this->enabledFeatures)){
+            $this->enabledFeatures[] = $feature;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $feature
+     *
+     * @return static
+     */
+    public function disable($feature)
+    {
+        $index = array_search($feature, $this->enabledFeatures);
+
+        if($index !== false){
+            unset($this->enabledFeatures[$index]);
+        }
+
+        return $this;
+    }
+
+    private function isEnabled($feature)
+    {
+        return in_array($feature, $this->enabledFeatures);
+    }
+
+
+    private function getValue($data, $field)
+    {
+        return array_key_exists($field, $data) ? $data[$field] : null;
+    }
+
     private function extractCommaSeparatedValues($data, $field)
     {
         if (!$fields = $this->getValue($data, $field)) {
@@ -132,11 +183,6 @@ class UrlQueryParser
         }
 
         return explode(',', $fields);
-    }
-
-    private function getValue($data, $field)
-    {
-        return array_key_exists($field, $data) ? $data[$field] : null;
     }
 
     private function extractInt($data, $field)
@@ -161,17 +207,6 @@ class UrlQueryParser
         return $result;
     }
 
-    private function extractOperator($operator)
-    {
-        $operatorMap = $this->operatorMap();
-
-        if (array_key_exists($operator, $operatorMap)) {
-            return $operatorMap[$operator];
-        }
-
-        return null;
-    }
-
     private function operatorMap()
     {
         return [
@@ -183,5 +218,16 @@ class UrlQueryParser
             self::OPERATOR_IS_LIKE => Query::OPERATOR_IS_LIKE,
             self::OPERATOR_IS_NOT_EQUAL => Query::OPERATOR_IS_NOT_EQUAL,
         ];
+    }
+
+    private function extractOperator($operator)
+    {
+        $operatorMap = $this->operatorMap();
+
+        if (array_key_exists($operator, $operatorMap)) {
+            return $operatorMap[$operator];
+        }
+
+        return null;
     }
 }
