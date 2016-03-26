@@ -6,7 +6,7 @@ use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\CollectionInterface;
 use PhalconRest\Api\Collection;
 use PhalconRest\Api\Endpoint;
-use PhalconRest\Api\Resource;
+use PhalconRest\Api\Resource as ApiResource;
 use PhalconRest\Constants\Services;
 
 /**
@@ -50,12 +50,12 @@ class Api extends Micro
     }
 
     /**
-     * @param Resource $resource
+     * @param ApiResource $resource
      *
      * @return static
      * @throws Exception
      */
-    public function resource(Resource $resource)
+    public function resource(ApiResource $resource)
     {
         $this->mount($resource);
 
