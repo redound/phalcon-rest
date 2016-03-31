@@ -48,9 +48,9 @@ class Resource extends Collection implements MountableInterface, CollectionInter
      */
     public static function factory($prefix, $name = null)
     {
-        /** @var Resource $calledClass */
         $calledClass = get_called_class();
 
+        /** @var \PhalconRest\Api\Resource $resource */
         $resource = new $calledClass($prefix);
 
         if (!$resource->getItemKey()) {

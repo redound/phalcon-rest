@@ -49,7 +49,10 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
      */
     public static function factory($prefix, $name = null)
     {
-        $collection = new Collection($prefix);
+        $calledClass = get_called_class();
+
+        /** @var \PhalconRest\Api\Collection $collection */
+        $collection = new $calledClass($prefix);
 
         if ($name) {
             $collection->name($name);
