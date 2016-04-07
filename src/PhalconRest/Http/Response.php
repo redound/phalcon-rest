@@ -13,13 +13,13 @@ class Response extends \Phalcon\Http\Response
         $request = $this->getDI()->get(Services::REQUEST);
 
         /** @var \PhalconRest\Helpers\ErrorHelper $errorHelper */
-        $errorHelper = $this->getDI()->get(Services::ERROR_HELPER);
+        $errorHelper = $this->getDI()->has(Services::ERROR_HELPER) ? $this->getDI()->get(Services::ERROR_HELPER) : null;
 
         $errorCode = $e->getCode();
         $statusCode = 500;
         $message = $e->getMessage();
 
-        if ($errorHelper->has($errorCode)) {
+        if ($errorHelper && $errorHelper->has($errorCode)) {
 
             $defaultMessage = $errorHelper->get($errorCode);
 
