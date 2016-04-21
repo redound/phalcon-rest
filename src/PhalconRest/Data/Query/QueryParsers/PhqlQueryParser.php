@@ -28,10 +28,15 @@ class PhqlQueryParser extends Plugin
     public function fromQuery(Query $query)
     {
         $modelsManager = $this->di->getShared('modelsManager');
-
-        /** @var \Phalcon\Mvc\Model\Query\Builder $builder */
         $builder = $modelsManager->createBuilder();
 
+        $this->applyQuery($builder, $query);
+
+        return $builder;
+    }
+
+    public function applyQuery(\Phalcon\Mvc\Model\Query\Builder $builder, Query $query)
+    {
         if ($query->hasOffset()) {
 
             $builder->offset($query->getOffset());
@@ -99,8 +104,6 @@ class PhqlQueryParser extends Plugin
                 $builder->orderBy($sorter->getField() . ' ' . $direction);
             }
         }
-
-        return $builder;
     }
 
     private function getOperator($operator)
