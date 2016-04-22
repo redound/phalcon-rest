@@ -55,12 +55,33 @@ class PhqlQueryParser extends Plugin
         if ($query->hasConditions()) {
 
             $conditions = $query->getConditions();
-            $firstWhere = true;
+            $operatorMap = $this->operatorMap();
+
+            $andConditions = [];
+            $orConditions = [];
 
             /** @var Condition $condition */
             foreach ($conditions as $conditionIndex => $condition) {
 
+                if($condition->getType() == Condition::TYPE_AND){
+                    $andConditions[] = $condition;
+                }
+                else if($condition->getType() == Condition::TYPE_OR){
+                    $orConditions[] = $condition;
+                }
+            }
+
+            $allConditions = $andConditions + $orConditions;
+
+            /** @var Condition $condition */
+            foreach ($allConditions as $conditionIndex => $condition) {
+
                 $operator = $this->getOperator($condition->getOperator());
+
+                if(!array_key_exists($operator, $operatorMap)){
+                    continue;
+                }
+
                 $parsedValues = $this->parseValues($operator, $condition->getValue());
 
                 $format = $this->getConditionFormat($operator);
@@ -68,12 +89,6 @@ class PhqlQueryParser extends Plugin
                 $conditionString = sprintf($format, $condition->getField(), $operator, $valuesReplacementString);
 
                 $bindValues = $this->getBindValues($parsedValues, $conditionIndex);
-
-                if ($firstWhere) {
-                    $builder->where($conditionString, $bindValues);
-                    $firstWhere = false;
-                    continue;
-                }
 
                 switch ($condition->getType()) {
 
@@ -85,6 +100,8 @@ class PhqlQueryParser extends Plugin
                         $builder->andWhere($conditionString, $bindValues);
                         break;
                 }
+
+                // TODO: In formt "cond AND cond AND (cond OR cond OR cond)"
             }
         }
 
