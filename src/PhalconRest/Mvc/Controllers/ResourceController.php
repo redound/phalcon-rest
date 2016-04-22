@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Mvc\Controllers;
 
-use PhalconRest\Api\Resource;
+use PhalconRest\Api\Resource as ApiResource;
 use PhalconRest\Transformers\ModelTransformer;
 
 class ResourceController extends CollectionController
@@ -27,12 +27,12 @@ class ResourceController extends CollectionController
     }
 
     /**
-     * @return Resource
+     * @return ApiResource
      */
     public function getResource()
     {
         $collection = $this->getCollection();
-        if ($collection instanceof Resource) {
+        if ($collection instanceof ApiResource) {
             return $collection;
         }
 

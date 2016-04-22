@@ -14,6 +14,7 @@ class UrlQueryParser
     const HAVING = 'having';
     const WHERE = 'where';
     const SORT = 'sort';
+    const EXCLUDES = 'excludes';
 
     const OPERATOR_IS_EQUAL = 'e';
     const OPERATOR_IS_GREATER_THAN = 'gt';
@@ -26,7 +27,7 @@ class UrlQueryParser
     const SORT_ASCENDING = 1;
     const SORT_DESCENDING = -1;
 
-    protected $enabledFeatures = [ self::FIELDS, self::OFFSET, self::LIMIT, self::HAVING, self::WHERE, self::SORT ];
+    protected $enabledFeatures = [ self::FIELDS, self::OFFSET, self::LIMIT, self::HAVING, self::WHERE, self::SORT, self::EXCLUDES ];
 
 
     public function createQuery($params)
@@ -41,20 +42,22 @@ class UrlQueryParser
         $or = $this->isEnabled(self::WHERE) ? $this->extractArray($params, 'or') : null;
         $in = $this->isEnabled(self::WHERE) ? $this->extractArray($params, 'in') : null;
         $sort = $this->isEnabled(self::SORT) ? $this->extractArray($params, 'sort') : null;
-
+        $excludes = $this->isEnabled(self::EXCLUDES) ? $this->extractCommaSeparatedValues($params, 'exclude') : null;
+        
         if ($fields) {
-
             $query->addManyFields($fields);
         }
 
         if ($offset) {
-
             $query->setOffset($offset);
         }
 
         if ($limit) {
-
             $query->setLimit($limit);
+        }
+
+        if ($excludes) {
+            $query->addManyExcludes($excludes);
         }
 
         if ($having) {

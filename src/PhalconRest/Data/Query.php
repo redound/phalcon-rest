@@ -21,6 +21,7 @@ class Query
     protected $fields = [];
     protected $conditions = [];
     protected $sorters = [];
+    protected $excludes = [];
 
     public function __construct()
     {
@@ -65,6 +66,10 @@ class Query
 
         if ($query->hasSorters()) {
             $this->addManySorters($query->getSorters());
+        }
+
+        if ($query->hasExcludes()) {
+            $this->addManyExcludes($query->getExcludes());
         }
 
         return $this;
@@ -148,5 +153,21 @@ class Query
     public function getSorters()
     {
         return $this->sorters;
+    }
+
+    public function hasExcludes()
+    {
+        return !empty($this->excludes);
+    }
+
+    public function addManyExcludes($excludes)
+    {
+        $this->excludes = array_merge($this->excludes, $excludes);
+        return $this;
+    }
+
+    public function getExcludes()
+    {
+        return $this->excludes;
     }
 }

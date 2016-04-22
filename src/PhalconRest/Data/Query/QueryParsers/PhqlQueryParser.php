@@ -2,6 +2,7 @@
 
 namespace PhalconRest\Data\Query\QueryParsers;
 
+use PhalconRest\Api\Resource as ApiResource;
 use PhalconRest\Data\Query;
 use PhalconRest\Data\Query\Condition;
 use PhalconRest\Data\Query\Sorter;
@@ -22,20 +23,24 @@ class PhqlQueryParser extends Plugin
 
     /**
      * @param Query $query
+     * @param ApiResource $resource
      *
      * @return \Phalcon\Mvc\Model\Query\Builder
      */
-    public function fromQuery(Query $query)
+    public function fromQuery(Query $query, ApiResource $resource)
     {
+        /** @var \Phalcon\Mvc\Model\Manager $modelsManager */
         $modelsManager = $this->di->getShared('modelsManager');
-        $builder = $modelsManager->createBuilder();
 
-        $this->applyQuery($builder, $query);
+        /** @var \Phalcon\Mvc\Model\Query\Builder $builder */
+        $builder = $modelsManager->createBuilder()->from($resource->getModel());
+
+        $this->applyQuery($builder, $query, $resource);
 
         return $builder;
     }
 
-    public function applyQuery(\Phalcon\Mvc\Model\Query\Builder $builder, Query $query)
+    public function applyQuery(\Phalcon\Mvc\Model\Query\Builder $builder, Query $query, ApiResource $resource)
     {
         if ($query->hasOffset()) {
 
@@ -81,6 +86,14 @@ class PhqlQueryParser extends Plugin
                         break;
                 }
             }
+        }
+
+        if($query->hasExcludes()){
+
+            $from = $builder->getFrom();
+            $fromString = is_array($from) ? array_keys($from)[0] : $from;
+
+            $builder->notInWhere($fromString . '.' . $resource->getModelPrimaryKey(), $query->getExcludes());
         }
 
         if ($query->hasSorters()) {
