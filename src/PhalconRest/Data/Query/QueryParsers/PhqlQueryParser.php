@@ -32,6 +32,11 @@ class PhqlQueryParser extends Plugin
         /** @var \Phalcon\Mvc\Model\Query\Builder $builder */
         $builder = $modelsManager->createBuilder();
 
+        if ($query->hasFields()) {
+        
+            $builder->columns($query->getFields());
+        }
+
         if ($query->hasOffset()) {
 
             $builder->offset($query->getOffset());
