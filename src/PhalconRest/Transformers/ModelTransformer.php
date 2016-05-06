@@ -32,7 +32,10 @@ class ModelTransformer extends Transformer
         $result = [];
         $keyMap = $this->keyMap();
 
-        foreach ($this->getResponseProperties() as $property) {
+        $itemProperties = array_keys(get_object_vars($item));
+        $filterResponseProperties = array_intersect($this->getResponseProperties(), $itemProperties);
+
+        foreach ($filterResponseProperties as $property) {
 
             $fieldName = array_key_exists($property, $keyMap) ? $keyMap[$property] : $property;
             $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
