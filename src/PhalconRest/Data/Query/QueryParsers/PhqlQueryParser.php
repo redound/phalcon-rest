@@ -55,7 +55,6 @@ class PhqlQueryParser extends Plugin
         if ($query->hasConditions()) {
 
             $conditions = $query->getConditions();
-            $operatorMap = $this->operatorMap();
 
             $andConditions = [];
             $orConditions = [];
@@ -71,14 +70,14 @@ class PhqlQueryParser extends Plugin
                 }
             }
 
-            $allConditions = $andConditions + $orConditions;
+            $allConditions = $orConditions + $andConditions;
 
             /** @var Condition $condition */
             foreach ($allConditions as $conditionIndex => $condition) {
 
                 $operator = $this->getOperator($condition->getOperator());
 
-                if(!array_key_exists($operator, $operatorMap)){
+                if(!$operator){
                     continue;
                 }
 
@@ -100,8 +99,6 @@ class PhqlQueryParser extends Plugin
                         $builder->andWhere($conditionString, $bindValues);
                         break;
                 }
-
-                // TODO: In formt "cond AND cond AND (cond OR cond OR cond)"
             }
         }
 
@@ -177,19 +174,7 @@ class PhqlQueryParser extends Plugin
 
     private function parseValue($operator, $value)
     {
-        $parsed = null;
-
-        switch ($operator) {
-
-            case self::OPERATOR_IS_LIKE:
-                $parsed = '%' . $value . '%';
-                break;
-            default:
-                $parsed = $value;
-                break;
-        }
-
-        return $parsed;
+        return $value;
     }
 
     private function getConditionFormat($operator)
