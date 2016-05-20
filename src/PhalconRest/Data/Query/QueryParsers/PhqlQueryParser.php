@@ -42,6 +42,9 @@ class PhqlQueryParser extends Plugin
 
     public function applyQuery(\Phalcon\Mvc\Model\Query\Builder $builder, Query $query, ApiResource $resource)
     {
+        $from = $builder->getFrom();
+        $fromString = is_array($from) ? array_keys($from)[0] : $from;
+
         if ($query->hasOffset()) {
 
             $builder->offset($query->getOffset());
@@ -85,7 +88,9 @@ class PhqlQueryParser extends Plugin
 
                 $format = $this->getConditionFormat($operator);
                 $valuesReplacementString = $this->getValuesReplacementString($parsedValues, $conditionIndex);
-                $conditionString = sprintf($format, $condition->getField(), $operator, $valuesReplacementString);
+                $fieldString = sprintf('[%s].[%s]', $fromString, $condition->getField());
+
+                $conditionString = sprintf($format, $fieldString, $operator, $valuesReplacementString);
 
                 $bindValues = $this->getBindValues($parsedValues, $conditionIndex);
 
@@ -103,9 +108,6 @@ class PhqlQueryParser extends Plugin
         }
 
         if($query->hasExcludes()){
-
-            $from = $builder->getFrom();
-            $fromString = is_array($from) ? array_keys($from)[0] : $from;
 
             $builder->notInWhere($fromString . '.' . $resource->getModelPrimaryKey(), $query->getExcludes());
         }
@@ -128,7 +130,8 @@ class PhqlQueryParser extends Plugin
                         break;
                 }
 
-                $builder->orderBy($sorter->getField() . ' ' . $direction);
+                $fieldString = sprintf('[%s].[%s]', $fromString, $sorter->getField());
+                $builder->orderBy($fieldString . ' ' . $direction);
             }
         }
     }

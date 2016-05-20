@@ -43,7 +43,7 @@ class FormatHelper
      */
     public function bool($value)
     {
-        return (bool)$value;
+        return $value !== null ? (bool)$value : null;
     }
 
     /**
