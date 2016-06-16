@@ -15,8 +15,8 @@ class Resource extends Collection implements MountableInterface, CollectionInter
     protected $model;
     protected $transformer;
 
-    protected $itemKey = 'item';
-    protected $collectionKey = 'items';
+    protected $itemKey;
+    protected $collectionKey;
 
     protected $_modelPrimaryKey;
 
@@ -178,7 +178,7 @@ class Resource extends Collection implements MountableInterface, CollectionInter
      */
     public function getItemKey()
     {
-        return $this->itemKey;
+        return ($this->itemKey ?: $this->name) ?: 'item';
     }
 
     /**
@@ -219,6 +219,6 @@ class Resource extends Collection implements MountableInterface, CollectionInter
      */
     public function getCollectionKey()
     {
-        return $this->collectionKey;
+        return ($this->collectionKey ?: $this->name) ?: 'items';
     }
 }
