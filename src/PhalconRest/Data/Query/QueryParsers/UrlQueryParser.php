@@ -66,7 +66,7 @@ class UrlQueryParser
 
             foreach ($having as $field => $value) {
 
-                $query->addCondition(new Condition(Condition::TYPE_OR, $field, Query::OPERATOR_IS_EQUAL, $value));
+                $query->addCondition(new Condition(Condition::TYPE_AND, $field, Query::OPERATOR_IS_EQUAL, $value));
             }
         }
 
