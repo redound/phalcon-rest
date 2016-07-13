@@ -124,7 +124,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
      */
     public function endpoint(Endpoint $endpoint)
     {
-        $this->endpoints[] = $endpoint;
+        $this->endpoints[$endpoint->getName()] = $endpoint;
 
         switch ($endpoint->getHttpMethod()) {
 
