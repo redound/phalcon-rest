@@ -22,7 +22,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
 
     protected $postedDataMethod = PostedDataMethods::AUTO;
 
-    protected $endpoints = [];
+    protected $endpointsByName = [];
 
 
     public function __construct($prefix)
@@ -124,7 +124,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
      */
     public function endpoint(Endpoint $endpoint)
     {
-        $this->endpoints[$endpoint->getName()] = $endpoint;
+        $this->endpointsByName[$endpoint->getName()] = $endpoint;
 
         switch ($endpoint->getHttpMethod()) {
 
@@ -173,7 +173,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
      */
     public function getEndpoints()
     {
-        return $this->endpoints;
+        return array_values($this->endpointsByName);
     }
 
     /**
@@ -183,7 +183,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
      */
     public function getEndpoint($name)
     {
-        return array_key_exists($name, $this->endpoints) ? $this->endpoints[$name] : null;
+        return array_key_exists($name, $this->endpointsByName) ? $this->endpointsByName[$name] : null;
     }
 
     /**
@@ -291,7 +291,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
     {
         $apiEndpointIdentifiers = array_map(function (Endpoint $apiEndpoint) {
             return $apiEndpoint->getIdentifier();
-        }, $this->endpoints);
+        }, $this->endpointsByName);
 
         return [
             [new \Phalcon\Acl\Resource($this->getIdentifier(), $this->getName()), $apiEndpointIdentifiers]
@@ -317,7 +317,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
         foreach ($roles as $role) {
 
             /** @var Endpoint $apiEndpoint */
-            foreach ($this->endpoints as $apiEndpoint) {
+            foreach ($this->endpointsByName as $apiEndpoint) {
 
                 $rule = null;
 
