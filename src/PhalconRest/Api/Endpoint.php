@@ -344,11 +344,11 @@ class Endpoint
     /**
      * Allows access to this endpoint for role with the given names.
      *
-     * @param array ...$roleNames Names of the roles to allow
+     * @param array $roleNames Names of the roles to allow
      *
      * @return static
      */
-    public function allow(...$roleNames)
+    public function allow($roleNames)
     {
         // Flatten array to allow array inputs
         $roleNames = Core::array_flatten($roleNames);
@@ -374,11 +374,11 @@ class Endpoint
     /**
      * Denies access to this endpoint for role with the given names.
      *
-     * @param array ...$roleNames Names of the roles to allow
+     * @param array $roleNames Names of the roles to allow
      *
      * @return static
      */
-    public function deny(...$roleNames)
+    public function deny($roleNames)
     {
         // Flatten array to allow array inputs
         $roleNames = Core::array_flatten($roleNames);
