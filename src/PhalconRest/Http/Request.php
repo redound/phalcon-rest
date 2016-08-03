@@ -57,18 +57,19 @@ class Request extends \Phalcon\Http\Request
      */
     public function getPostedData($httpMethod = HttpMethods::POST)
     {
-      if (PostedDataMethods::JSON_BODY == $this->postedDataMethod) {
-        return $this->getJsonRawBody(true);
-      }
+        if (PostedDataMethods::JSON_BODY == $this->postedDataMethod) {
+            return $this->getJsonRawBody(true);
+        }
       
-      switch ($httpMethod) {
-        case HttpMethods::PUT:
-          return $this->getPut();
-          break;
-        case HttpMethods::POST:
-          return $this->getPost();
-          break;
-      }
+        switch ($httpMethod) {
+            case HttpMethods::PUT:
+                return $this->getPut();
+                break;
+            default:
+            case HttpMethods::POST:
+                return $this->getPost();
+                break;
+        }
     }
 
     /**
