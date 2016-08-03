@@ -2,6 +2,7 @@
 
 namespace PhalconRest\Http;
 
+use PhalconRest\Constants\HttpMethods;
 use PhalconRest\Constants\PostedDataMethods;
 
 class Request extends \Phalcon\Http\Request
@@ -54,9 +55,20 @@ class Request extends \Phalcon\Http\Request
      *
      * @return mixed
      */
-    public function getPostedData()
+    public function getPostedData($httpMethod = HttpMethods::POST)
     {
-        return $this->postedDataMethod == PostedDataMethods::JSON_BODY ? $this->getJsonRawBody(true) : $this->getPost();
+      if (PostedDataMethods::JSON_BODY == $this->postedDataMethod) {
+        return $this->getJsonRawBody(true);
+      }
+      
+      switch ($httpMethod) {
+        case HttpMethods::PUT:
+          return $this->getPut();
+          break;
+        case HttpMethods::POST:
+          return $this->getPost();
+          break;
+      }
     }
 
     /**
