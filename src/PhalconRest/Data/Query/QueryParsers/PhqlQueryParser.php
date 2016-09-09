@@ -45,6 +45,10 @@ class PhqlQueryParser extends Plugin
         $from = $builder->getFrom();
         $fromString = is_array($from) ? array_keys($from)[0] : $from;
 
+        if ($query->hasFields()) {
+            $builder->columns($query->getFields());
+        }
+
         if ($query->hasOffset()) {
 
             $builder->offset($query->getOffset());
