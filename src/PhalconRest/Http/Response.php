@@ -7,7 +7,7 @@ use PhalconRest\Exception;
 
 class Response extends \Phalcon\Http\Response
 {
-    public function setErrorContent(\Exception $e, $developerInfo = false)
+    public function setErrorContent(\Throwable $e, $developerInfo = false)
     {
         /** @var Request $request */
         $request = $this->getDI()->get(Services::REQUEST);
@@ -35,7 +35,7 @@ class Response extends \Phalcon\Http\Response
             'message' => $message ?: 'Unspecified error',
         ];
 
-        if ($e instanceof Exception && $e->getUserInfo() != null) {
+        if ($e instanceof Throwable && $e->getUserInfo() != null) {
             $error['info'] = $e->getUserInfo();
         }
 

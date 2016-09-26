@@ -17,6 +17,7 @@ class PhqlQueryParser extends Plugin
     const OPERATOR_IS_LESS_THAN = '<';
     const OPERATOR_IS_LESS_THAN_OR_EQUAL = '<=';
     const OPERATOR_IS_LIKE = 'LIKE';
+    const OPERATOR_IS_JSON_CONTAINS = 'JSON_CONTAINS';
     const OPERATOR_IS_NOT_EQUAL = '!=';
 
     const DEFAULT_KEY = 'value';
@@ -161,6 +162,7 @@ class PhqlQueryParser extends Plugin
             Query::OPERATOR_IS_LESS_THAN => self::OPERATOR_IS_LESS_THAN,
             Query::OPERATOR_IS_LESS_THAN_OR_EQUAL => self::OPERATOR_IS_LESS_THAN_OR_EQUAL,
             Query::OPERATOR_IS_LIKE => self::OPERATOR_IS_LIKE,
+            Query::OPERATOR_IS_JSON_CONTAINS => self::OPERATOR_IS_JSON_CONTAINS,
             Query::OPERATOR_IS_NOT_EQUAL => self::OPERATOR_IS_NOT_EQUAL,
         ];
     }
@@ -192,6 +194,9 @@ class PhqlQueryParser extends Plugin
 
             case self::OPERATOR_IS_IN:
                 $format = '%s %s (%s)';
+                break;
+            case self::OPERATOR_IS_JSON_CONTAINS:
+                $format = '%1$s %2$s (%1$s, %3$s)';
                 break;
             default:
                 $format = '%s %s %s';

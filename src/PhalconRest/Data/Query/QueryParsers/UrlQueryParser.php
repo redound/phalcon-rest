@@ -22,6 +22,7 @@ class UrlQueryParser
     const OPERATOR_IS_LESS_THAN = 'lt';
     const OPERATOR_IS_LESS_THAN_OR_EQUAL = 'lte';
     const OPERATOR_IS_LIKE = 'l';
+    const OPERATOR_IS_JSON_CONTAINS = 'jc';
     const OPERATOR_IS_NOT_EQUAL = 'ne';
     const OPERATOR_CONTAINS = 'c';
     const OPERATOR_NOT_CONTAINS = 'nc';
@@ -221,6 +222,7 @@ class UrlQueryParser
             self::OPERATOR_IS_LESS_THAN => Query::OPERATOR_IS_LESS_THAN,
             self::OPERATOR_IS_LESS_THAN_OR_EQUAL => Query::OPERATOR_IS_LESS_THAN_OR_EQUAL,
             self::OPERATOR_IS_LIKE => Query::OPERATOR_IS_LIKE,
+            self::OPERATOR_IS_JSON_CONTAINS => Query::OPERATOR_IS_JSON_CONTAINS,
             self::OPERATOR_IS_NOT_EQUAL => Query::OPERATOR_IS_NOT_EQUAL,
             self::OPERATOR_CONTAINS => Query::OPERATOR_CONTAINS,
             self::OPERATOR_NOT_CONTAINS => Query::OPERATOR_NOT_CONTAINS

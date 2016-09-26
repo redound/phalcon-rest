@@ -14,9 +14,10 @@ class Query
     const OPERATOR_IS_LESS_THAN = 4;
     const OPERATOR_IS_LESS_THAN_OR_EQUAL = 5;
     const OPERATOR_IS_LIKE = 6;
-    const OPERATOR_IS_NOT_EQUAL = 7;
-    const OPERATOR_CONTAINS = 8;
-    const OPERATOR_NOT_CONTAINS = 9;
+    const OPERATOR_IS_JSON_CONTAINS = 7;
+    const OPERATOR_IS_NOT_EQUAL = 8;
+    const OPERATOR_CONTAINS = 9;
+    const OPERATOR_NOT_CONTAINS = 10;
 
     protected $offset = null;
     protected $limit = null;
