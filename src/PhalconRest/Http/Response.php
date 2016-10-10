@@ -7,7 +7,7 @@ use PhalconRest\Exception;
 
 class Response extends \Phalcon\Http\Response
 {
-    public function setErrorContent(\Throwable $e, $developerInfo = false)
+    public function setErrorContent(\Exception $e, $developerInfo = false)
     {
         /** @var Request $request */
         $request = $this->getDI()->get(Services::REQUEST);

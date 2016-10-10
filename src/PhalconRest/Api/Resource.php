@@ -66,7 +66,7 @@ class Resource extends Collection implements MountableInterface, CollectionInter
         }
 
         if (!$resource->getHandler()) {
-            $resource->setHandler(CrudResourceController::class, true);
+            $resource->setHandler(CrudResourceController::class);
         }
 
         if (!$resource->getName() && $name) {
