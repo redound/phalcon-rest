@@ -245,7 +245,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
 
             case PostedDataMethods::AUTO:
             default:
-                $postedData = $this->request->getPostedData();
+                $postedData = $this->request->getPostedData($this->getEndpoint()->getHttpMethod());
         }
 
         return $postedData;
