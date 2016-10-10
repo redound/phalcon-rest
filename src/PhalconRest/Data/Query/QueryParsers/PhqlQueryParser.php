@@ -50,6 +50,11 @@ class PhqlQueryParser extends Plugin
             $builder->columns($query->getFields());
         }
 
+        if ($query->hasFields()) {
+        
+            $builder->columns($query->getFields());
+        }
+
         if ($query->hasOffset()) {
 
             $builder->offset($query->getOffset());
