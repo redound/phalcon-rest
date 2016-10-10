@@ -12,5 +12,5 @@ class HttpMethods
     const OPTIONS = "OPTIONS";
     const PATCH = "PATCH";
 
-    const ALL_METHODS = [self::GET, self::POST, self::PUT, self::DELETE, self::HEAD, self::OPTIONS, self::PATCH];
+    static $ALL_METHODS = [self::GET, self::POST, self::PUT, self::DELETE, self::HEAD, self::OPTIONS, self::PATCH];
 }
