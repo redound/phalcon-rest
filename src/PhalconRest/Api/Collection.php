@@ -230,7 +230,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
     /**
      * Allows access to this collection for role with the given names. This can be overwritten on the Endpoint level.
      *
-     * @arguments $roleNames Names of the roles to allow
+     * @param ...array $roleNames Names of the roles to allow
      *
      * @return static
      */
@@ -262,7 +262,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
     /***
      * Denies access to this collection for role with the given names. This can be overwritten on the Endpoint level.
      *
-     * @argumemts $roleNames Names of the roles to deny
+     * @param ...array $roleNames Names of the roles to deny
      *
      * @return $this
      */

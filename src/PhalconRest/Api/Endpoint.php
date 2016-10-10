@@ -344,7 +344,7 @@ class Endpoint
     /**
      * Allows access to this endpoint for role with the given names.
      *
-     * @arguments $roleNames Names of the roles to allow
+     * @param ...array $roleNames Names of the roles to allow
      *
      * @return static
      */
@@ -376,7 +376,7 @@ class Endpoint
     /**
      * Denies access to this endpoint for role with the given names.
      *
-     * @arguments $roleNames Names of the roles to allow
+     * @param ...array $roleNames Names of the roles to allow
      *
      * @return static
      */
