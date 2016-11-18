@@ -3,21 +3,21 @@
 namespace PhalconRest\Transformers;
 
 use Phalcon\Di;
-use PhalconRest\Exception;
+use PhalconApi\Exception;
 
 /**
  * @property \PhalconRest\Api $application
- * @property \PhalconRest\Http\Request $request
- * @property \PhalconRest\Http\Response $response
+ * @property \PhalconApi\Http\Request $request
+ * @property \PhalconApi\Http\Response $response
  * @property \Phalcon\Acl\AdapterInterface $acl
- * @property \PhalconRest\Auth\Manager $authManager
- * @property \PhalconRest\User\Service $userService
- * @property \PhalconRest\Helpers\ErrorHelper $errorHelper
- * @property \PhalconRest\Helpers\FormatHelper $formatHelper
- * @property \PhalconRest\Auth\TokenParserInterface $tokenParser
- * @property \PhalconRest\Data\Query $query
- * @property \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser $phqlQueryParser
- * @property \PhalconRest\Data\Query\QueryParsers\UrlQueryParser $urlQueryParser
+ * @property \PhalconApi\Auth\Manager $authManager
+ * @property \PhalconApi\User\Service $userService
+ * @property \PhalconApi\Helpers\ErrorHelper $errorHelper
+ * @property \PhalconApi\Helpers\FormatHelper $formatHelper
+ * @property \PhalconApi\Auth\TokenParserInterface $tokenParser
+ * @property \PhalconApi\Data\Query $query
+ * @property \PhalconRest\QueryParsers\PhqlQueryParser $phqlQueryParser
+ * @property \PhalconApi\Data\Query\QueryParsers\UrlQueryParser $urlQueryParser
  *
  * @property \Phalcon\Mvc\Dispatcher|\Phalcon\Mvc\DispatcherInterface $dispatcher;
  * @property \Phalcon\Mvc\Router|\Phalcon\Mvc\RouterInterface $router

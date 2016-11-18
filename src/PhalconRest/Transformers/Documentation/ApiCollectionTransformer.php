@@ -2,10 +2,10 @@
 
 namespace PhalconRest\Transformers\Documentation;
 
-use PhalconRest\Export\Documentation\Collection as DocumentationCollection;
+use PhalconRest\Export\Documentation\ApiCollection as DocumentationCollection;
 use PhalconRest\Transformers\Transformer;
 
-class CollectionTransformer extends Transformer
+class ApiCollectionTransformer extends Transformer
 {
     public $defaultIncludes = [
         'endpoints'
@@ -23,6 +23,6 @@ class CollectionTransformer extends Transformer
 
     public function includeEndpoints(DocumentationCollection $collection)
     {
-        return $this->collection($collection->getEndpoints(), new EndpointTransformer);
+        return $this->collection($collection->getEndpoints(), new ApiEndpointTransformer);
     }
 }

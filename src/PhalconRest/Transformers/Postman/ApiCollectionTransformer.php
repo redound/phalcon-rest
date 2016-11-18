@@ -2,10 +2,10 @@
 
 namespace PhalconRest\Transformers\Postman;
 
-use PhalconRest\Export\Postman\Collection as PostmanCollection;
+use PhalconRest\Export\Postman\ApiCollection as PostmanCollection;
 use PhalconRest\Transformers\Transformer;
 
-class CollectionTransformer extends Transformer
+class ApiCollectionTransformer extends Transformer
 {
     protected $defaultIncludes = [
         'requests',

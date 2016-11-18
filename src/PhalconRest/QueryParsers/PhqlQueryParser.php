@@ -1,11 +1,11 @@
 <?php
 
-namespace PhalconRest\Data\Query\QueryParsers;
+namespace PhalconRest\QueryParsers;
 
-use PhalconRest\Api\Resource as ApiResource;
-use PhalconRest\Data\Query;
-use PhalconRest\Data\Query\Condition;
-use PhalconRest\Data\Query\Sorter;
+use PhalconRest\Api\ApiResource as ApiResource;
+use PhalconApi\Data\Query;
+use PhalconApi\Data\Query\Condition;
+use PhalconApi\Data\Query\Sorter;
 use PhalconRest\Mvc\Plugin;
 
 class PhqlQueryParser extends Plugin

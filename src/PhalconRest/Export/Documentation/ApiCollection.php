@@ -2,14 +2,14 @@
 
 namespace PhalconRest\Export\Documentation;
 
-class Endpoint
+class ApiCollection
 {
     protected $name;
     protected $description;
-    protected $httpMethod;
     protected $path;
-    protected $exampleResponse;
-    protected $allowedRoles = [];
+
+    protected $endpoints = [];
+    protected $fields;
 
     public function getName()
     {
@@ -31,16 +31,6 @@ class Endpoint
         $this->description = $description;
     }
 
-    public function getHttpMethod()
-    {
-        return $this->httpMethod;
-    }
-
-    public function setHttpMethod($httpMethod)
-    {
-        $this->httpMethod = $httpMethod;
-    }
-
     public function getPath()
     {
         return $this->path;
@@ -51,23 +41,30 @@ class Endpoint
         $this->path = $path;
     }
 
-    public function getExampleResponse()
+    public function getFields()
     {
-        return $this->exampleResponse;
+        return $this->fields;
     }
 
-    public function setExampleResponse($exampleResponse)
+    public function setFields($fields)
     {
-        $this->exampleResponse = $exampleResponse;
+        $this->fields = $fields;
     }
 
-    public function getAllowedRoles()
+    public function addManyEndpoints(array $endpoints)
     {
-        return $this->allowedRoles;
+        foreach ($endpoints as $endpoint) {
+            $this->addEndpoint($endpoint);
+        }
     }
 
-    public function setAllowedRoles($allowedRoles)
+    public function addEndpoint(ApiEndpoint $endpoint)
     {
-        $this->allowedRoles = $allowedRoles;
+        $this->endpoints[] = $endpoint;
+    }
+
+    public function getEndpoints()
+    {
+        return $this->endpoints;
     }
 }

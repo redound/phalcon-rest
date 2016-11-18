@@ -3,7 +3,7 @@
 namespace PhalconRest\Transformers;
 
 use PhalconRest\Export\Documentation;
-use PhalconRest\Transformers\Documentation\CollectionTransformer;
+use PhalconRest\Transformers\Documentation\ApiCollectionTransformer;
 use PhalconRest\Transformers\Documentation\RouteTransformer;
 
 class DocumentationTransformer extends Transformer
@@ -28,6 +28,6 @@ class DocumentationTransformer extends Transformer
 
     public function includeCollections(Documentation $documentation)
     {
-        return $this->collection($documentation->getCollections(), new CollectionTransformer);
+        return $this->collection($documentation->getCollections(), new ApiCollectionTransformer);
     }
 }

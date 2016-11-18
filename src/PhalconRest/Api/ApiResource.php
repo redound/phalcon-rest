@@ -2,15 +2,14 @@
 
 namespace PhalconRest\Api;
 
-use Phalcon\Acl;
 use Phalcon\Di;
 use Phalcon\Mvc\Micro\CollectionInterface;
-use PhalconRest\Acl\MountableInterface;
+use PhalconApi\Acl\MountableInterface;
 use PhalconRest\Constants\Services;
 use PhalconRest\Mvc\Controllers\CrudResourceController;
 use PhalconRest\Transformers\ModelTransformer;
 
-class Resource extends Collection implements MountableInterface, CollectionInterface
+class ApiResource extends ApiCollection implements MountableInterface, CollectionInterface
 {
     protected $model;
     protected $transformer;
@@ -31,11 +30,11 @@ class Resource extends Collection implements MountableInterface, CollectionInter
     public static function crud($prefix, $name = null)
     {
         return self::factory($prefix, $name)
-            ->endpoint(Endpoint::all())
-            ->endpoint(Endpoint::find())
-            ->endpoint(Endpoint::create())
-            ->endpoint(Endpoint::update())
-            ->endpoint(Endpoint::remove());
+            ->endpoint(ApiEndpoint::all())
+            ->endpoint(ApiEndpoint::find())
+            ->endpoint(ApiEndpoint::create())
+            ->endpoint(ApiEndpoint::update())
+            ->endpoint(ApiEndpoint::remove());
     }
 
     /**
@@ -50,7 +49,7 @@ class Resource extends Collection implements MountableInterface, CollectionInter
     {
         $calledClass = get_called_class();
 
-        /** @var \PhalconRest\Api\Resource $resource */
+        /** @var \PhalconRest\Api\ApiResource $resource */
         $resource = new $calledClass($prefix);
 
         if (!$resource->getItemKey()) {

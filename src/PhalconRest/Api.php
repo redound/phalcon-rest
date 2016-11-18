@@ -2,29 +2,19 @@
 
 namespace PhalconRest;
 
-use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\CollectionInterface;
-use PhalconRest\Api\Collection;
-use PhalconRest\Api\Endpoint;
-use PhalconRest\Api\Resource as ApiResource;
-use PhalconRest\Constants\Services;
+use PhalconApi\Exception;
+use PhalconRest\Api\ApiCollection;
+use PhalconRest\Api\ApiEndpoint;
+use PhalconRest\Api\ApiResource;
 
 /**
  * Class Api
  * @package PhalconRest
  *
- * @property \PhalconRest\Api $application
- * @property \PhalconRest\Http\Request $request
- * @property \PhalconRest\Http\Response $response
- * @property \Phalcon\Acl\AdapterInterface $acl
- * @property \PhalconRest\Auth\Manager $authManager
- * @property \PhalconRest\User\Service $userService
- * @property \PhalconRest\Auth\TokenParserInterface $tokenParser
- * @property \PhalconRest\Data\Query $query
- * @property \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser $phqlQueryParser
- * @property \PhalconRest\Data\Query\QueryParsers\UrlQueryParser $urlQueryParser
+ * @property \PhalconRest\QueryParsers\PhqlQueryParser $phqlQueryParser
  */
-class Api extends Micro
+class Api extends \PhalconApi\Api
 {
     protected $matchedRouteNameParts = null;
     protected $collectionsByIdentifier = [];
@@ -32,7 +22,7 @@ class Api extends Micro
     protected $endpointsByIdentifier = [];
 
     /**
-     * @return Collection[]
+     * @return ApiCollection[]
      */
     public function getCollections()
     {
@@ -42,7 +32,7 @@ class Api extends Micro
     /**
      * @param $name
      *
-     * @return Collection|null
+     * @return ApiCollection|null
      */
     public function getCollection($name)
     {
@@ -64,7 +54,7 @@ class Api extends Micro
 
     public function mount(CollectionInterface $collection)
     {
-        if ($collection instanceof Collection) {
+        if ($collection instanceof ApiCollection) {
 
             $collectionName = $collection->getName();
             if (!is_null($collectionName)) {
@@ -73,7 +63,7 @@ class Api extends Micro
 
             $this->collectionsByIdentifier[$collection->getIdentifier()] = $collection;
 
-            /** @var Endpoint $endpoint */
+            /** @var ApiEndpoint $endpoint */
             foreach ($collection->getEndpoints() as $endpoint) {
 
                 $fullIdentifier = $collection->getIdentifier() . ' ' . $endpoint->getIdentifier();
@@ -85,12 +75,12 @@ class Api extends Micro
     }
 
     /**
-     * @param Collection $collection
+     * @param ApiCollection $collection
      *
      * @return static
      * @throws Exception
      */
-    public function collection(Collection $collection)
+    public function collection(ApiCollection $collection)
     {
         $this->mount($collection);
 
@@ -98,25 +88,7 @@ class Api extends Micro
     }
 
     /**
-     * Attaches middleware to the API
-     *
-     * @param $middleware
-     *
-     * @return static
-     */
-    public function attach($middleware)
-    {
-        if (!$this->getEventsManager()) {
-            $this->setEventsManager($this->getDI()->get(Services::EVENTS_MANAGER));
-        }
-
-        $this->getEventsManager()->attach('micro', $middleware);
-
-        return $this;
-    }
-
-    /**
-     * @return \PhalconRest\Api\Collection|null  The matched collection
+     * @return \PhalconRest\Api\ApiCollection|null  The matched collection
      */
     public function getMatchedCollection()
     {
@@ -151,7 +123,7 @@ class Api extends Micro
     }
 
     /**
-     * @return \PhalconRest\Api\Endpoint|null  The matched endpoint
+     * @return \PhalconRest\Api\ApiEndpoint|null  The matched endpoint
      */
     public function getMatchedEndpoint()
     {

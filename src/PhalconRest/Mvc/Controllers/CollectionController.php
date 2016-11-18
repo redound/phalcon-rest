@@ -4,14 +4,14 @@ namespace PhalconRest\Mvc\Controllers;
 
 class CollectionController extends FractalController
 {
-    /** @var \PhalconRest\Api\Collection */
+    /** @var \PhalconRest\Api\ApiCollection */
     protected $_collection;
 
-    /** @var \PhalconRest\Api\Endpoint */
+    /** @var \PhalconRest\Api\ApiEndpoint */
     protected $_endpoint;
 
     /**
-     * @return \PhalconRest\Api\Resource
+     * @return \PhalconRest\Api\ApiCollection
      */
     public function getCollection()
     {
@@ -23,7 +23,7 @@ class CollectionController extends FractalController
     }
 
     /**
-     * @return \PhalconRest\Api\Endpoint
+     * @return \PhalconRest\Api\ApiEndpoint
      */
     public function getEndpoint()
     {

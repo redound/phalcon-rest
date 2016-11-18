@@ -2,11 +2,11 @@
 
 namespace PhalconRest\Api;
 
-use PhalconRest\Constants\HttpMethods;
-use PhalconRest\Constants\PostedDataMethods;
-use PhalconRest\Core;
+use PhalconApi\Constants\HttpMethods;
+use PhalconApi\Constants\PostedDataMethods;
+use PhalconApi\Core;
 
-class Endpoint
+class ApiEndpoint
 {
     const ALL = 'all';
     const FIND = 'find';
@@ -80,7 +80,7 @@ class Endpoint
      */
     public static function factory($path, $httpMethod = HttpMethods::GET, $handlerMethod = null)
     {
-        return new Endpoint($path, $httpMethod, $handlerMethod);
+        return new ApiEndpoint($path, $httpMethod, $handlerMethod);
     }
 
     /**
@@ -137,7 +137,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function get($path, $handlerMethod = null)
     {
@@ -150,7 +150,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function post($path, $handlerMethod = null)
     {
@@ -163,7 +163,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function put($path, $handlerMethod = null)
     {
@@ -176,7 +176,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function delete($path, $handlerMethod = null)
     {
@@ -189,7 +189,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function head($path, $handlerMethod = null)
     {
@@ -202,7 +202,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function options($path, $handlerMethod = null)
     {
@@ -215,7 +215,7 @@ class Endpoint
      * @param $path
      * @param string $handlerMethod
      *
-     * @return Endpoint
+     * @return ApiEndpoint
      */
     public static function patch($path, $handlerMethod = null)
     {

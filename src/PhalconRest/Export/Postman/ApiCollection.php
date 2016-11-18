@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Export\Postman;
 
-class Collection
+class ApiCollection
 {
     public $id;
     public $name;
@@ -52,13 +52,13 @@ class Collection
 
     public function addManyCollections(array $collections)
     {
-        /** @var \PhalconRest\Api\Collection $collection */
+        /** @var \PhalconRest\Api\ApiCollection $collection */
         foreach ($collections as $collection) {
             $this->addCollection($collection);
         }
     }
 
-    public function addCollection(\PhalconRest\Api\Collection $collection)
+    public function addCollection(\PhalconRest\Api\ApiCollection $collection)
     {
         foreach ($collection->getEndpoints() as $endpoint) {
 

@@ -2,8 +2,9 @@
     "name": "redound/phalcon-rest",
     "description": "Phalcon REST Library",
     "require": {
-        "php": ">=5.5",
-        "ext-phalcon": ">=1.3.2"
+        "php": ">=5.4",
+        "ext-phalcon": ">=1.3.2",
+        "redound/phalcon-api": "^1.0"
     },
     "suggest": {
         "league/fractal": "^0.13.0",

@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Mvc\Controllers;
 
-use PhalconRest\Api\Resource as ApiResource;
+use PhalconRest\Api\ApiResource as ApiResource;
 use PhalconRest\Transformers\ModelTransformer;
 
 class ResourceController extends CollectionController

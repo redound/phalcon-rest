@@ -2,14 +2,13 @@
 
 namespace PhalconRest\Middleware;
 
-use Phalcon\Acl;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\MiddlewareInterface;
-use Phalcon\Mvc\User\Plugin;
+use PhalconRest\Mvc\Plugin;
 use PhalconRest\Api;
-use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Exception;
+use PhalconApi\Constants\ErrorCodes;
+use PhalconApi\Exception;
 
 class AuthorizationMiddleware extends Plugin implements MiddlewareInterface
 {

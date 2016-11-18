@@ -2,11 +2,10 @@
 
 namespace PhalconRest\Export;
 
-use Phalcon\Acl;
-use PhalconRest\Api\Collection;
-use PhalconRest\Api\Resource;
-use PhalconRest\Export\Documentation\Collection as DocumentationCollection;
-use PhalconRest\Export\Documentation\Endpoint as DocumentationEndpoint;
+use PhalconRest\Api\ApiCollection;
+use PhalconRest\Api\ApiResource;
+use PhalconRest\Export\Documentation\ApiCollection as DocumentationCollection;
+use PhalconRest\Export\Documentation\ApiEndpoint as DocumentationEndpoint;
 use PhalconRest\Mvc\Plugin;
 use PhalconRest\Transformers\ModelTransformer;
 
@@ -42,13 +41,13 @@ class Documentation extends Plugin
 
     public function addManyCollections(array $collections)
     {
-        /** @var Collection $collection */
+        /** @var ApiCollection $collection */
         foreach ($collections as $collection) {
             $this->addCollection($collection);
         }
     }
 
-    public function addCollection(Collection $apiCollection)
+    public function addCollection(ApiCollection $apiCollection)
     {
         $aclRoles = $this->acl->getRoles();
 
@@ -58,7 +57,7 @@ class Documentation extends Plugin
         $collection->setPath($apiCollection->getPrefix());
 
         // Set fields
-        if ($apiCollection instanceof Resource) {
+        if ($apiCollection instanceof ApiResource) {
 
             if ($modelClass = $apiCollection->getModel()) {
 
