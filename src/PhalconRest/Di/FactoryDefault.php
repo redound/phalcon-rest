@@ -4,8 +4,7 @@ namespace PhalconRest\Di;
 
 use PhalconApi\Constants\ErrorCodes;
 use PhalconRest\Constants\Services;
-use PhalconRest\Data\Query;
-use PhalconRest\Data\Query\QueryParsers\PhqlQueryParser;
+use PhalconRest\QueryParsers\PhqlQueryParser;
 use PhalconApi\Exception;
 
 class FactoryDefault extends \PhalconApi\Di\FactoryDefault
