@@ -3,15 +3,11 @@
 namespace PhalconRest\Mvc;
 
 /**
- * @property \PhalconRest\Http\Request $request
- * @property \PhalconRest\Http\Response $response
- * @property \PhalconRest\Auth\Manager $authManager
- * @property \PhalconRest\Auth\TokenParser $tokenParser
- * @property \PhalconRest\Data\Query $query
- * @property \PhalconRest\Data\Query\Parser\Phql $phqlQueryParser
- * @property \PhalconRest\Data\Query\Parser\Url $urlQueryParser
+ * @property \PhalconRest\Api $application
+ * @property \PhalconRest\QueryParsers\PhqlQueryParser $phqlQueryParser
  */
-class Controller extends \Phalcon\Mvc\Controller
+
+class Controller extends \PhalconApi\Mvc\Controller
 {
 
 }

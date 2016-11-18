@@ -3,20 +3,11 @@
 namespace PhalconRest\Mvc;
 
 /**
- * PhalconRest\Mvc\Plugin
- * This class allows to access services in the services container by just only accessing a public property
- * with the same name of a registered service
- *
- * @property \PhalconRest\Http\Request $request
- * @property \PhalconRest\Http\Response $response
- * @property \PhalconRest\Auth\Manager $authManager
- * @property \PhalconRest\Auth\TokenParser $tokenParser
- * @property \PhalconRest\Data\Query $query
- * @property \PhalconRest\Data\Query\Parser\Phql $phqlQueryParser
- * @property \PhalconRest\Data\Query\Parser\Url $urlQueryParser
-*/
+ * @property \PhalconRest\Api $application
+ * @property \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser $phqlQueryParser
+ */
 
-class Plugin extends \Phalcon\Mvc\User\Plugin
+class Plugin extends \PhalconApi\Mvc\Plugin
 {
 
 }
