@@ -4,7 +4,7 @@
     "require": {
         "php": ">=5.4",
         "ext-phalcon": ">=1.3.2",
-        "redound/phalcon-api": "^1.0"
+        "redound/phalcon-api": "^1.0.2"
     },
     "suggest": {
         "league/fractal": "^0.13.0",
@@ -23,9 +23,6 @@
     "autoload": {
         "psr-4": {
             "PhalconRest\\": "src/PhalconRest"
-        },
-        "psr-0": {
-            "AclAdapterMountTrait": "src/PhalconRest/Acl"
         }
     }
 }
