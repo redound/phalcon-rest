@@ -31,11 +31,6 @@ class FractalController extends Controller
     {
         $response = [$key => $array];
 
-        return $this->createResponse($response);
-    }
-
-    protected function createResponse($response)
-    {
         return $response;
     }
 
@@ -43,32 +38,32 @@ class FractalController extends Controller
     {
         $response = ['result' => 'OK'];
 
-        return $this->createResponse($response);
+        return $response;
     }
 
-    protected function createItemOkResponse($item, $transformer, $resourceKey = null, $meta = null)
+    protected function createItemOkResponse($item, $transformer, $resourceKey = null, $meta = [])
     {
         $response = ['result' => 'OK'];
         $response += $this->createItemResponse($item, $transformer, $resourceKey, $meta);
 
-        return $this->createResponse($response);
+        return $response;
     }
 
-    protected function createItemResponse($item, $transformer, $resourceKey = null, $meta = null)
+    protected function createItemResponse($item, $transformer, $resourceKey = null, $meta = [])
     {
         $resource = new Item($item, $transformer, $resourceKey);
         $data = $this->fractal->createData($resource)->toArray();
-        $response = array_merge($data, $meta ? $meta : []);
+        $response = array_merge($data, $meta);
 
-        return $this->createResponse($response);
+        return $response;
     }
 
-    protected function createCollectionResponse($collection, $transformer, $resourceKey = null, $meta = null)
+    protected function createCollectionResponse($collection, $transformer, $resourceKey = null, $meta = [])
     {
         $resource = new Collection($collection, $transformer, $resourceKey);
         $data = $this->fractal->createData($resource)->toArray();
-        $response = array_merge($data, $meta ? $meta : []);
+        $response = array_merge($data, $meta);
 
-        return $this->createResponse($response);
+        return $response;
     }
 }
