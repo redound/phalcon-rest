@@ -34,6 +34,11 @@ class ModelTransformer extends Transformer
         foreach ($this->getResponseProperties() as $property) {
 
             $fieldName = array_key_exists($property, $keyMap) ? $keyMap[$property] : $property;
+            
+            if( !property_exists($item,$fieldName) ) {
+                continue;
+            }
+            
             $result[$fieldName] = $this->getFieldValue($item, $property, $fieldName);
         }
 
