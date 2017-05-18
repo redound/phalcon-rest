@@ -78,7 +78,7 @@ class PhqlQueryParser extends Plugin
                 }
             }
 
-            $allConditions = $orConditions + $andConditions;
+            $allConditions = array_merge($orConditions, $andConditions);
 
             /** @var Condition $condition */
             foreach ($allConditions as $conditionIndex => $condition) {
