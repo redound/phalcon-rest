@@ -100,6 +100,17 @@ class Resource extends Collection implements MountableInterface, CollectionInter
     }
 
     /**
+     * @param mixed $modelPrimaryKey
+     *
+     * @return static
+     */
+    public function primaryKey($modelPrimaryKey)
+    {
+        $this->_modelPrimaryKey = $modelPrimaryKey;
+        return $this;
+    }
+
+    /**
      * @return string|null Primary key of the model
      */
     public function getModelPrimaryKey()
