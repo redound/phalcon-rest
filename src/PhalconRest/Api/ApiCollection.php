@@ -146,6 +146,16 @@ class ApiCollection extends \Phalcon\Mvc\Micro\Collection implements MountableIn
 
                 $this->delete($endpoint->getPath(), $endpoint->getHandlerMethod(), $this->createRouteName($endpoint));
                 break;
+                
+            case HttpMethods::PATCH:
+                
+                $this->patch($endpoint->getPath(), $endpoint->getHandlerMethod(),$this->createRouteName($endpoint));
+                break;
+            
+            case HttpMethods::OPTIONS:
+                
+                $this->options($endpoint->getPath(), $endpoint->getHandlerMethod(),$this->createRouteName($endpoint));
+                break;
         }
 
         return $this;
