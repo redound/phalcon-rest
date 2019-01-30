@@ -126,7 +126,9 @@ class ModelTransformer extends Transformer
             $this->getModelDataTypes()) ? $this->getModelDataTypes()[$propertyName] : null;
 
         $model = $this->getModel($item);
-        $value = $model->$propertyName;
+        $value = property_exists($model, $propertyName)
+            ? $model->$propertyName
+            : null;
 
         if ($value === null) {
             return null;
