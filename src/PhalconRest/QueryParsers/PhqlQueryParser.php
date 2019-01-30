@@ -117,6 +117,10 @@ class PhqlQueryParser extends Plugin
             $builder->notInWhere($fromString . '.' . $resource->getModelPrimaryKey(), $query->getExcludes());
         }
 
+        if ($query->hasGroups()) {
+            $builder->groupBy($query->getGroups());
+        }
+
         if ($query->hasSorters()) {
 
             $sorters = $query->getSorters();
