@@ -16,7 +16,7 @@ use PhalconRest\Constants\Services;
  * @property \PhalconRest\Api $application
  * @property \PhalconRest\Http\Request $request
  * @property \PhalconRest\Http\Response $response
- * @property \Phalcon\Acl\AdapterInterface $acl
+ * @property \Phalcon\Acl\Adapter\AdapterInterface $acl
  * @property \PhalconRest\Auth\Manager $authManager
  * @property \PhalconRest\User\Service $userService
  * @property \PhalconRest\Auth\TokenParserInterface $tokenParser
@@ -62,7 +62,7 @@ class Api extends Micro
         return $this;
     }
 
-    public function mount(CollectionInterface $collection)
+    public function mount(Micro\CollectionInterface $collection): Micro
     {
         if ($collection instanceof Collection) {
 

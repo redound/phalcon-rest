@@ -176,6 +176,8 @@ class CorsMiddleware extends Plugin implements MiddlewareInterface
                 $this->response->setHeader('Access-Control-Allow-Headers', implode(',', $this->_allowedHeaders));
             }
         }
+
+        return true;
     }
 
     public function call(Micro $api)

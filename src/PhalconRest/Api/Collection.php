@@ -25,7 +25,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
     protected $endpoints = [];
 
 
-    public function __construct($prefix)
+    public function __construct(string $prefix)
     {
         parent::setPrefix($prefix);
 
@@ -91,7 +91,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
         return $this->description;
     }
 
-    public function setPrefix($prefix)
+    public function setPrefix(string $prefix): CollectionInterface
     {
         throw new Exception(ErrorCodes::GENERAL_SYSTEM, null, 'Setting prefix after initialization is prohibited.');
     }
@@ -298,7 +298,7 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
         }, $this->endpoints);
 
         return [
-            [new \Phalcon\Acl\Resource($this->getIdentifier(), $this->getName()), $apiEndpointIdentifiers]
+            [new \Phalcon\Acl\Component($this->getIdentifier(), $this->getName()), $apiEndpointIdentifiers]
         ];
     }
 
@@ -352,8 +352,8 @@ class Collection extends \Phalcon\Mvc\Micro\Collection implements MountableInter
         }
 
         return [
-            Acl::ALLOW => $allowedResponse,
-            Acl::DENY => $deniedResponse
+            Acl\Enum::ALLOW => $allowedResponse,
+            Acl\Enum::DENY => $deniedResponse
         ];
     }
 }

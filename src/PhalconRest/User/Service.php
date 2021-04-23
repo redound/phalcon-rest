@@ -20,7 +20,7 @@ class Service extends Plugin
 
         $session = $this->authManager->getSession();
         if ($session) {
-
+            
             $identity = $session->getIdentity();
             $details = $this->getDetailsForIdentity($identity);
         }

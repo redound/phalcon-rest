@@ -6,7 +6,7 @@ namespace PhalconRest\Mvc;
  * @property \PhalconRest\Api $application
  * @property \PhalconRest\Http\Request $request
  * @property \PhalconRest\Http\Response $response
- * @property \Phalcon\Acl\AdapterInterface $acl
+ * @property \Phalcon\Acl\Adapter\AdapterInterface $acl
  * @property \PhalconRest\Auth\Manager $authManager
  * @property \PhalconRest\User\Service $userService
  * @property \PhalconRest\Helpers\ErrorHelper $errorHelper
