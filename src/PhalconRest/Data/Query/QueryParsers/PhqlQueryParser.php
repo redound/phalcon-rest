@@ -88,7 +88,7 @@ class PhqlQueryParser extends Plugin
 
                 $format = $this->getConditionFormat($operator);
                 $valuesReplacementString = $this->getValuesReplacementString($parsedValues, $conditionIndex);
-                $fieldString = sprintf('[%s].[%s]', $fromString, $condition->getField());
+                $fieldString = sprintf('[%s].[%s]', $fromString, $this->safe($condition->getField()));
 
                 $conditionString = sprintf($format, $fieldString, $operator, $valuesReplacementString);
 
@@ -130,7 +130,7 @@ class PhqlQueryParser extends Plugin
                         break;
                 }
 
-                $fieldString = sprintf('[%s].[%s]', $fromString, $sorter->getField());
+                $fieldString = sprintf('[%s].[%s]', $fromString, $this->safe($sorter->getField()));
                 $builder->orderBy($fieldString . ' ' . $direction);
             }
         }
@@ -159,6 +159,11 @@ class PhqlQueryParser extends Plugin
             Query::OPERATOR_IS_LIKE => self::OPERATOR_IS_LIKE,
             Query::OPERATOR_IS_NOT_EQUAL => self::OPERATOR_IS_NOT_EQUAL,
         ];
+    }
+
+    private function safe($input){
+
+        return str_replace('[', '', str_replace(']', '', $input));
     }
 
     private function parseValues($operator, $values)
