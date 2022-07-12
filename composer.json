@@ -1,5 +1,5 @@
 {
-    "name": "redound/phalcon-rest",
+    "name": "phalcon-rest/phalcon-rest",
     "description": "Phalcon REST Library",
     "require": {
         "php": ">=5.4",
