@@ -3,7 +3,7 @@
     "description": "Phalcon REST Library",
     "require": {
         "php": ">=8.1",
-        "ext-phalcon": ">=5.0.0RC3",
+        "ext-phalcon": ">=v5.0.0RC3",
         "redound/phalcon-api": "^1.0.2"
     },
     "suggest": {
