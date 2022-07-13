@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "themrdanielvp/phalcon-api": "dev-master",
+        "phalcon-api/phalcon-api": "dev-master",
         "php": ">=8.1",
         "ext-phalcon": "^5.0.0RC3"
     },
