@@ -1,10 +1,16 @@
 {
     "name": "phalcon-rest/phalcon-rest",
     "description": "Phalcon REST Library",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/themrdanielvp/phalcon-api.git"
+        }
+    ],
     "require": {
         "php": ">=8.1",
         "ext-phalcon": "^5.0.0RC3",
-        "redound/phalcon-api": "^1.0.2"
+        "phalcon-api/phalcon-api": "dev-master"
     },
     "suggest": {
         "league/fractal": "^0.13.0",
