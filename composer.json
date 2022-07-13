@@ -10,7 +10,7 @@
     "require": {
         "php": ">=8.1",
         "ext-phalcon": "^5.0.0RC3",
-        "phalcon-api/phalcon-api": "^4.0.0"
+        "phalcon-api/phalcon-api": "dev-master"
     },
     "suggest": {
         "league/fractal": "^0.13.0",
