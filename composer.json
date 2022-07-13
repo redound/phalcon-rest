@@ -26,6 +26,7 @@
             "email": "bart@wittig.nl"
         }
     ],
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "PhalconRest\\": "src/PhalconRest"
