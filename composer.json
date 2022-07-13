@@ -1,12 +1,6 @@
 {
     "name": "phalcon-rest/phalcon-rest",
     "description": "Phalcon REST Library",
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/themrdanielvp/phalcon-api.git"
-        }
-    ],
     "require": {
         "phalcon-api/phalcon-api": "dev-master",
         "php": ">=8.1",
