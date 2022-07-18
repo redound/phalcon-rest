@@ -2,7 +2,7 @@
 
 namespace PhalconRest;
 
-use Phalcon\Mvc\Micro\CollectionInterface;
+use \Phalcon\Mvc\Micro\CollectionInterface;
 use PhalconApi\Exception;
 use PhalconRest\Api\ApiCollection;
 use PhalconRest\Api\ApiEndpoint;
@@ -52,7 +52,7 @@ class Api extends \PhalconApi\Api
         return $this;
     }
 
-    public function mount(CollectionInterface $collection)
+    public function mount(CollectionInterface $collection): \Phalcon\Mvc\Micro
     {
         if ($collection instanceof ApiCollection) {
 

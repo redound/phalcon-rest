@@ -7,7 +7,7 @@ namespace PhalconRest\Mvc;
  * @property \PhalconRest\Data\Query\QueryParsers\PhqlQueryParser $phqlQueryParser
  */
 
-class Plugin extends \PhalconApi\Mvc\Plugin
+class Plugin extends \PhalconApi\Mvc\DiInjectable
 {
 
 }

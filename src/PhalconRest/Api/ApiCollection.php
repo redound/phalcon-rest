@@ -2,14 +2,15 @@
 
 namespace PhalconRest\Api;
 
-use Phalcon\Acl;
-use Phalcon\Mvc\Micro\CollectionInterface;
+use \Phalcon\Acl;
+use \Phalcon\Mvc\Micro\CollectionInterface;
 use PhalconApi\Acl\MountableInterface;
 use PhalconApi\Constants\ErrorCodes;
 use PhalconApi\Constants\HttpMethods;
 use PhalconApi\Constants\PostedDataMethods;
 use PhalconApi\Core;
 use PhalconApi\Exception;
+use \Phalcon\Acl\Enum;
 
 class ApiCollection extends \Phalcon\Mvc\Micro\Collection implements MountableInterface, CollectionInterface
 {
@@ -90,7 +91,7 @@ class ApiCollection extends \Phalcon\Mvc\Micro\Collection implements MountableIn
         return $this->description;
     }
 
-    public function setPrefix($prefix)
+    public function setPrefix($prefix): \Phalcon\Mvc\Micro\CollectionInterface
     {
         throw new Exception(ErrorCodes::GENERAL_SYSTEM, null, 'Setting prefix after initialization is prohibited.');
     }
@@ -297,7 +298,7 @@ class ApiCollection extends \Phalcon\Mvc\Micro\Collection implements MountableIn
         }, $this->endpointsByName);
 
         return [
-            [new \Phalcon\Acl\Resource($this->getIdentifier(), $this->getName()), $apiEndpointIdentifiers]
+            [new \Phalcon\Acl\Component($this->getIdentifier(), $this->getName()), $apiEndpointIdentifiers]
         ];
     }
 
@@ -351,8 +352,8 @@ class ApiCollection extends \Phalcon\Mvc\Micro\Collection implements MountableIn
         }
 
         return [
-            Acl::ALLOW => $allowedResponse,
-            Acl::DENY => $deniedResponse
+            Enum::ALLOW => $allowedResponse,
+            Enum::DENY => $deniedResponse
         ];
     }
 }
