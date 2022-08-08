@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Transformers;
 
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use PhalconApi\Exception;
 
 /**
@@ -48,11 +48,11 @@ class Transformer extends \League\Fractal\TransformerAbstract
     /**
      * Dependency Injector
      *
-     * @var \Phalcon\DiInterface
+     * @var \Phalcon\Di\DiInterface
      */
     protected $_dependencyInjector;
 
-    public function setDI(\Phalcon\DiInterface $dependencyInjector)
+    public function setDI(\Phalcon\Di\DiInterface $dependencyInjector)
     {
         $this->_dependencyInjector = $dependencyInjector;
     }
