@@ -75,6 +75,12 @@ class PhqlQueryParser extends Plugin
 
             $allConditions = $orConditions + $andConditions;
 
+            $fullAndConditions = [];
+            $fullAndBinds = [];
+
+            $fullOrConditions = [];
+            $fullOrBinds = [];
+
             /** @var Condition $condition */
             foreach ($allConditions as $conditionIndex => $condition) {
 
@@ -97,13 +103,23 @@ class PhqlQueryParser extends Plugin
                 switch ($condition->getType()) {
 
                     case Condition::TYPE_OR:
-                        $builder->orWhere($conditionString, $bindValues);
+                        $fullOrConditions[] = $conditionString;
+                        $fullOrBinds = array_merge($fullOrBinds, $bindValues);
                         break;
                     case Condition::TYPE_AND:
                     default:
-                        $builder->andWhere($conditionString, $bindValues);
+                        $fullAndConditions[] = $conditionString;
+                        $fullAndBinds = array_merge($fullAndBinds, $bindValues);
                         break;
                 }
+            }
+
+            if(count($fullAndConditions) > 0){
+                $builder->andWhere(implode(' AND ', $fullAndConditions), $fullAndBinds);
+            }
+
+            if(count($fullOrConditions) > 0){
+                $builder->andWhere(implode(' OR ', $fullOrConditions), $fullOrBinds);
             }
         }
 
