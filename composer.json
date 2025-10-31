@@ -2,12 +2,12 @@
     "name": "redound/phalcon-rest",
     "description": "Phalcon REST Library",
     "require": {
-        "php": ">=7.1",
-        "ext-phalcon": ">=4.0"
+        "php": ">=8.0",
+        "ext-phalcon": "^5.9"
     },
     "suggest": {
         "league/fractal": "^0.19.2",
-        "firebase/php-jwt": "^5.2.1"
+        "firebase/php-jwt": "^6.8"
     },
     "authors": [
         {

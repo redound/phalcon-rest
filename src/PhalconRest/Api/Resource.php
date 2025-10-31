@@ -3,7 +3,7 @@
 namespace PhalconRest\Api;
 
 use Phalcon\Acl;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use Phalcon\Mvc\Micro\CollectionInterface;
 use PhalconRest\Acl\MountableInterface;
 use PhalconRest\Constants\Services;

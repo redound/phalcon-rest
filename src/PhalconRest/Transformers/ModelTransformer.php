@@ -3,7 +3,7 @@
 namespace PhalconRest\Transformers;
 
 use Phalcon\Db\Column;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 
 class ModelTransformer extends Transformer
 {

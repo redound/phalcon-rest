@@ -2,7 +2,7 @@
 
 namespace PhalconRest\Transformers;
 
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use PhalconRest\Exception;
 
 /**
@@ -21,26 +21,26 @@ use PhalconRest\Exception;
  *
  * @property \Phalcon\Mvc\Dispatcher|\Phalcon\Mvc\DispatcherInterface $dispatcher;
  * @property \Phalcon\Mvc\Router|\Phalcon\Mvc\RouterInterface $router
- * @property \Phalcon\Mvc\Url|\Phalcon\Mvc\UrlInterface $url
+ * @property \Phalcon\Url|\Phalcon\Url\UrlInterface $url
  * @property \Phalcon\Http\Response\Cookies|\Phalcon\Http\Response\CookiesInterface $cookies
- * @property \Phalcon\Filter|\Phalcon\FilterInterface $filter
+ * @property \Phalcon\Filter\Filter|\Phalcon\Filter\FilterInterface $filter
  * @property \Phalcon\Flash\Direct $flash
  * @property \Phalcon\Flash\Session $flashSession
- * @property \Phalcon\Session\Adapter\Files|\Phalcon\Session\Adapter|\Phalcon\Session\AdapterInterface $session
- * @property \Phalcon\Events\Manager $eventsManager
- * @property \Phalcon\Db\AdapterInterface $db
- * @property \Phalcon\Security $security
- * @property \Phalcon\Crypt $crypt
- * @property \Phalcon\Tag $tag
- * @property \Phalcon\Escaper|\Phalcon\EscaperInterface $escaper
- * @property \Phalcon\Annotations\Adapter\Memory|\Phalcon\Annotations\Adapter $annotations
+ * @property \Phalcon\Session\Manager|\Phalcon\Session\ManagerInterface $session
+ * @property \Phalcon\Events\Manager|\Phalcon\Events\ManagerInterface $eventsManager
+ * @property \Phalcon\Db\Adapter\AdapterInterface $db
+ * @property \Phalcon\Encryption\Security $security
+ * @property \Phalcon\Encryption\Crypt|\Phalcon\Encryption\Crypt\CryptInterface $crypt
+ * @property \Phalcon\Html\TagFactory $tag
+ * @property \Phalcon\Html\Escaper|\Phalcon\Html\Escaper\EscaperInterface $escaper
+ * @property \Phalcon\Annotations\Adapter\Memory|\Phalcon\Annotations\Adapter\AdapterInterface $annotations
  * @property \Phalcon\Mvc\Model\Manager|\Phalcon\Mvc\Model\ManagerInterface $modelsManager
- * @property \Phalcon\Cache\BackendInterface $modelsCache
- * @property \Phalcon\Mvc\Model\MetaData\Memory|\Phalcon\Mvc\Model\MetadataInterface $modelsMetadata
- * @property \Phalcon\Mvc\Model\Transaction\Manager $transactionManager
+ * @property \Phalcon\Cache\Cache|\Phalcon\Cache\CacheInterface $modelsCache
+ * @property \Phalcon\Mvc\Model\MetaData\Memory|\Phalcon\Mvc\Model\MetaDataInterface $modelsMetadata
+ * @property \Phalcon\Mvc\Model\Transaction\Manager|\Phalcon\Mvc\Model\Transaction\ManagerInterface $transactionManager
  * @property \Phalcon\Assets\Manager $assets
- * @property \Phalcon\DI|\Phalcon\DiInterface $di
- * @property \Phalcon\Session\Bag $persistent
+ * @property \Phalcon\Di\Di|\Phalcon\Di\DiInterface $di
+ * @property \Phalcon\Session\Bag|\Phalcon\Session\BagInterface $persistent
  * @property \Phalcon\Mvc\View|\Phalcon\Mvc\ViewInterface $view
  */
 class Transformer extends \League\Fractal\TransformerAbstract
@@ -48,11 +48,11 @@ class Transformer extends \League\Fractal\TransformerAbstract
     /**
      * Dependency Injector
      *
-     * @var \Phalcon\DiInterface
+     * @var \Phalcon\Di\DiInterface
      */
     protected $_dependencyInjector;
 
-    public function setDI(\Phalcon\DiInterface $dependencyInjector)
+    public function setDI(\Phalcon\Di\DiInterface $dependencyInjector)
     {
         $this->_dependencyInjector = $dependencyInjector;
     }
