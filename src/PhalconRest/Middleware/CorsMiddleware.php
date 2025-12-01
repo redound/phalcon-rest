@@ -36,9 +36,9 @@ class CorsMiddleware extends Plugin implements MiddlewareInterface
      * @param array|null $allowedHeaders Allowed headers
      */
     public function __construct(
-        array $allowedOrigins = null,
-        array $allowedMethods = null,
-        array $allowedHeaders = null
+        ?array $allowedOrigins = null,
+        ?array $allowedMethods = null,
+        ?array $allowedHeaders = null
     ) {
         if($allowedOrigins === null){
             $allowedOrigins = self::$ALL_ORIGINS;

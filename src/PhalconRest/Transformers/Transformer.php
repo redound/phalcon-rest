@@ -43,6 +43,8 @@ use PhalconRest\Exception;
  * @property \Phalcon\Session\Bag|\Phalcon\Session\BagInterface $persistent
  * @property \Phalcon\Mvc\View|\Phalcon\Mvc\ViewInterface $view
  */
+
+#[\AllowDynamicProperties]
 class Transformer extends \League\Fractal\TransformerAbstract
 {
     /**
