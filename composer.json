@@ -1,6 +1,7 @@
 {
     "name": "redound/phalcon-rest",
     "description": "Phalcon REST Library",
+    "version": "3.0.0",
     "require": {
         "php": ">=8.0",
         "ext-phalcon": "^5.9"
